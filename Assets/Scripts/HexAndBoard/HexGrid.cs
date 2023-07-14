@@ -36,7 +36,7 @@ public class HexGrid : MonoBehaviour {
 	}
 	void CreateCell (int x, int z, int i)
 	{
-		Vector3 position = HexCoordinates.FromHexCoordinates(new HexCoordinates(x, z));
+		Vector3 position = HexCoordinates.FromHexCoordinates(HexCoordinates.FromXZ(x, z));
 		
 		HexCell cell = cells[i] = Instantiate<HexCell>(cell_prefab);
 		cell.transform.SetParent(transform, false);
@@ -58,6 +58,17 @@ public class HexGrid : MonoBehaviour {
 	{
 		return cells[hex_coords_to_index[hc]];
 	}
+
+    public void ClearOutOfBoundsCells(List<HexCoordinates> list)
+    {
+        HexCoordinates[] arr = list.ToArray();
+        Debug.Log(hex_coords_to_index);
+        foreach (HexCoordinates hex_coords in arr) {
+            if (!hex_coords_to_index.ContainsKey(hex_coords)) {
+                list.Remove(hex_coords);
+            }
+        }
+    }
 
 
 	

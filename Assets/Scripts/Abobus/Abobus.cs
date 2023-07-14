@@ -2,28 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum abobus_type {
-    pawn,
-    rook,
-    knight,
-    bishop
-
-}
-
-public class Abobus : MonoBehaviour
+public abstract class Abobus : MonoBehaviour
 {
+    private static Vector3[] turns;
     public HexCoordinates hex_coordinates;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    void Awake() {
-        
-    }
-
-
+    public abstract List<HexCoordinates> GetPossibleTurns(HexCoordinates? from = null);
 
 }

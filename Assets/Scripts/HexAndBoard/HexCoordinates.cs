@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public struct HexCoordinates {
@@ -17,10 +18,25 @@ public struct HexCoordinates {
 		}
 	}
 
-	public HexCoordinates (int x, int z) {
+	private HexCoordinates (int x, int z) {
 		this.x = x;
 		this.z = z;
 	}
+
+    public static HexCoordinates FromXY (int x, int y)
+    {
+        return new HexCoordinates(x, -y - x);
+    }
+    public static HexCoordinates FromXZ (int x, int z)
+    {
+        return new HexCoordinates(x, z);
+
+    }
+    public static HexCoordinates FromYZ (int y, int z)
+    {
+        return new HexCoordinates(-y - z, z);
+    }
+
     public int Y {
 		get {
 			return -X - Z;
@@ -61,7 +77,5 @@ public struct HexCoordinates {
 		
 		return new HexCoordinates(x, z);
 	}
-
-
 
 }

@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fd4afcf38ffabb499b08f39fdd39cba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hex_grid: {fileID: 2029799031}
+  hex_grid_go: {fileID: 2029799031}
   x: 0
   z: 0
 --- !u!4 &845149906
