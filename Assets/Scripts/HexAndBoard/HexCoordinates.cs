@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 [System.Serializable]
-public struct HexCoordinates {
+public struct HexCoordinates : IEquatable<HexCoordinates>{
     [SerializeField]
 	private int x, z;
 
@@ -42,6 +43,44 @@ public struct HexCoordinates {
 			return -X - Z;
 		}
 	}
+
+    public static bool operator ==(HexCoordinates hc1, HexCoordinates hc2)
+    {
+        if (ReferenceEquals(hc1, hc2)) 
+            return true;
+        if (ReferenceEquals(hc1, null)) 
+            return false;
+        if (ReferenceEquals(hc2, null))
+            return false;
+        return hc1.Equals(hc2);
+    }
+    public static bool operator !=(HexCoordinates hc1, HexCoordinates hc2)
+    {
+        return !(hc1 == hc2);
+    }
+    public bool Equals(HexCoordinates hc) {
+        if (ReferenceEquals(hc, null)) {
+            return false;
+        }
+        if (ReferenceEquals(this, hc)) {
+            return true;
+        }
+        return x.Equals(hc.X) && z.Equals(hc.Z);
+    }
+
+    #nullable enable
+    public override bool Equals(object? obj) => Equals(obj as HexCoordinates?);
+    #nullable disable
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hashCode = x.GetHashCode();
+            hashCode = (hashCode * 397) ^ z.GetHashCode();
+            return hashCode;
+        }
+    }
 
 	public override string ToString () {
 		return "(" +
