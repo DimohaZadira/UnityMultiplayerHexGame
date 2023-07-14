@@ -60,7 +60,7 @@ public class HexGrid : MonoBehaviour {
     public void ClearOutOfBoundsCells(List<HexCoordinates> list)
     {
         HexCoordinates[] arr = list.ToArray();
-        Debug.Log(hex_coords_to_index);
+        // Debug.Log(hex_coords_to_index);
         foreach (HexCoordinates hex_coords in arr) {
             if (!hex_coords_to_index.ContainsKey(hex_coords)) {
                 list.Remove(hex_coords);

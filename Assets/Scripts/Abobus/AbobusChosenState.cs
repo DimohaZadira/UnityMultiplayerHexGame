@@ -11,9 +11,9 @@ public class AbobusChosenState : AbobusState
         Vector3 cur_pos = abobus.transform.position;
         abobus.transform.position += new Vector3(0, -10, 0);
     }
-    override public void Meow() 
-    {
-        Debug.Log("Meow from idle state");
-    }
+    // override public void Meow() 
+    // {
+    //     Debug.Log("Meow from chosen state");
+    // }
 
 }

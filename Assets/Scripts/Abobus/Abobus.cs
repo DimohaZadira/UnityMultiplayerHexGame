@@ -24,7 +24,7 @@ public abstract class Abobus : MonoBehaviour
     void Awake()
     {
         InitStates();
-        state.Meow();
+        // state.Meow();
     }
 
     public void ChangeState(InputAction.CallbackContext? value = null)
