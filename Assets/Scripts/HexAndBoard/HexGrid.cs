@@ -41,15 +41,15 @@ public class HexGrid : MonoBehaviour {
 		HexCell cell = cells[i] = Instantiate<HexCell>(cell_prefab);
 		cell.transform.SetParent(transform, false);
 		cell.transform.localPosition = position;
-		cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
+		cell.hex_coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
 		
-		hex_coords_to_index.Add(cell.coordinates, i);
+		hex_coords_to_index.Add(cell.hex_coordinates, i);
 
 		TextMeshProUGUI label = Instantiate<TextMeshProUGUI>(cell_label_prefab);
 		label.rectTransform.SetParent(grid_canvas.transform, false);
 		label.rectTransform.anchoredPosition =
 			new Vector2(position.x, position.z);
-		label.text = cell.coordinates.ToStringOnSeparateLines();
+		label.text = cell.hex_coordinates.ToStringOnSeparateLines();
 	}
 
 	public HexCell GetCellByHexCoordinates(HexCoordinates hc) 

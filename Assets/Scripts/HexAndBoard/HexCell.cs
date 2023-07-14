@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HexCell : MonoBehaviour {
 
-	public HexCoordinates coordinates;
+	public HexCoordinates hex_coordinates;
 
 	void Awake() {
 	}

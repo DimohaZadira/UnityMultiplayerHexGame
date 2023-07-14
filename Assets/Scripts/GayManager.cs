@@ -22,12 +22,13 @@ public class GayManager : MonoBehaviour
         var hc = HexCoordinates.FromXZ((int)hex_coords_vec.x, (int)hex_coords_vec.y);
         GameObject abobus_go = Instantiate(original) as GameObject;
         abobus_go.AddComponent<Knight>();
-        abobus_go.GetComponent<Knight>().hex_coordinates = hc;
-        abobus_go.transform.SetParent(hex_grid_go.transform);
-        hc = HexCoordinates.ToOffsetCoordinates(hc.X, hc.Z);
-        abobus_go.transform.localPosition = HexCoordinates.FromHexCoordinates(hc);
+        abobus_go.GetComponent<Knight>().MoveToHexCoordinates(hc);
+        // abobus_go.GetComponent<Knight>().hex_coordinates = hc;
+        // abobus_go.transform.SetParent(hex_grid_go.transform);
+        // hc = HexCoordinates.ToOffsetCoordinates(hc.X, hc.Z);
+        // abobus_go.transform.localPosition = HexCoordinates.FromHexCoordinates(hc);
 
-        abobus_go.transform.localRotation = Quaternion.Euler(0, 120, 0);
+        // abobus_go.transform.localRotation = Quaternion.Euler(0, 120, 0);
 
         return abobus_go;
     }
@@ -48,6 +49,7 @@ public class GayManager : MonoBehaviour
 
         //touchControls.Player.Click.started += ctx => OnMouseClick(ctx);
         touchControls.Player.Click.performed += ctx => OnMouseClick(ctx);
+        touchControls.Player.RightClick.performed += ctx => OnRightMouseClick(ctx);
     }
 
 
@@ -83,32 +85,42 @@ public class GayManager : MonoBehaviour
             GameObject hit_go = hit.collider.transform.gameObject;
 
             Abobus abobus = hit_go.GetComponent<Abobus>();
-            if (hit_go.GetComponent<Abobus>()) {
+            if (abobus) {
+                abobus.ChangeState();
+                ListCellsChangeState(abobus.GetPossibleTurns());
+
                 if (ReferenceEquals(abobus, chosen_abobus)) {
                     chosen_abobus = null;
                 } else if (chosen_abobus) {
                     chosen_abobus.ChangeState();
                     ListCellsChangeState(chosen_abobus.GetPossibleTurns());
+                    chosen_abobus = abobus;
+                } else {
+                    chosen_abobus = abobus;
                 }
-                chosen_abobus = abobus;
-                chosen_abobus.ChangeState();
-                ListCellsChangeState(chosen_abobus.GetPossibleTurns());
-
-            } else if (hit_go.GetComponent<HexCell>()) {
-
             }
             
-            }
-        
+        }
         
         
     }
 
+    public void OnRightMouseClick(InputAction.CallbackContext value) {
+        Ray inputRay = Camera.main.ScreenPointToRay(touchControls.Player.ClickPosition.ReadValue<Vector2>());
+        RaycastHit hit;
+        if (Physics.Raycast(inputRay, out hit)) {
+            GameObject hit_go = hit.collider.transform.gameObject;
 
-
-
-    
-
-
+            HexCell hex_cell = hit_go.GetComponent<HexCell>();
+            if (hex_cell) {
+                if (hex_cell.GetComponent<HighlightableCell>().highlighted) {
+                    chosen_abobus.ChangeState();
+                    ListCellsChangeState(chosen_abobus.GetPossibleTurns());
+                    chosen_abobus.MoveToHexCoordinates(hex_cell.hex_coordinates);
+                    chosen_abobus = null;
+                }
+            }
+        }
+    }
 
 }

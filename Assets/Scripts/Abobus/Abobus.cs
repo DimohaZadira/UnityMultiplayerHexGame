@@ -27,6 +27,15 @@ public abstract class Abobus : MonoBehaviour
         // state.Meow();
     }
 
+    public void MoveToHexCoordinates(HexCoordinates hc)
+    {
+        hex_coordinates = hc;
+        hc = HexCoordinates.ToOffsetCoordinates(hc.X, hc.Z);
+        GetComponentInParent<Transform>().localPosition = HexCoordinates.FromHexCoordinates(hc);
+
+        GetComponentInParent<Transform>().localRotation = Quaternion.Euler(0, 120, 0);
+    }
+
     public void ChangeState(InputAction.CallbackContext? value = null)
     {
         state.HandleInput(this, value);
