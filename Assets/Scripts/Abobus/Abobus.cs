@@ -5,12 +5,15 @@ using UnityEngine.InputSystem;
 
 public abstract class Abobus : MonoBehaviour
 {
+    // у пешки да, у ладьи нет
+    public bool limited_turns;
+
     public GayManager.Teams team;
     private static Vector3[] turns;
     public HexCoordinates hex_coordinates;
 
 
-    public abstract List<HexCoordinates> GetPossibleTurns(HexCoordinates? from = null);
+    public abstract List<HexCoordinates> GetPossibleTurns(System.Func<HexCoordinates,bool> checker, HexCoordinates? from = null);
     
     // states
     public AbobusIdleState idle_state;

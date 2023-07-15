@@ -5,8 +5,6 @@ using UnityEngine.InputSystem;
 
 public class GayManager : MonoBehaviour
 {
-    private GameObject abobus_go;
-    private GameObject abobus_2_go;
     public GameObject hex_grid_go;
     private HexGrid hex_grid;
     private PlayerInput playerInput;
@@ -22,13 +20,14 @@ public class GayManager : MonoBehaviour
     
     public int x, z;
 
-    GameObject SpawnAbobus(Object original, Vector2 hex_coords_vec, Teams team)
+    static GameObject SpawnAbobus<T>(Object original, Vector2 hex_coords_vec, Teams team)
+    where T:UnityEngine.Component
     {
         var hc = HexCoordinates.FromXZ((int)hex_coords_vec.x, (int)hex_coords_vec.y);
         GameObject abobus_go = Instantiate(original) as GameObject;
-        abobus_go.AddComponent<Knight>();
-        abobus_go.GetComponent<Knight>().MoveToHexCoordinates(hc);
-        abobus_go.GetComponent<Knight>().team = team;
+        abobus_go.AddComponent<T>();
+        abobus_go.GetComponent<Abobus>().MoveToHexCoordinates(hc);
+        abobus_go.GetComponent<Abobus>().team = team;
 
         return abobus_go;
     }
@@ -44,11 +43,23 @@ public class GayManager : MonoBehaviour
         hex_grid = hex_grid_go.GetComponent<HexGrid>();
         hex_grid.CreateGrid();
         
-        abobus_go = SpawnAbobus(Resources.Load("Knight Variant"), new Vector2(0, 0), Teams.blue);
+        GameObject abobus_go = SpawnAbobus<Knight>(Resources.Load("Abobi/KnightPrefab"), new Vector2(0, 0), Teams.blue);
         abobi[Teams.blue].Add(abobus_go);
 
-        abobus_2_go = SpawnAbobus(Resources.Load("Knight Variant"), new Vector2(2, 1), Teams.yellow);
-        abobi[Teams.yellow].Add(abobus_2_go);
+        abobus_go = SpawnAbobus<Rook>(Resources.Load("Abobi/RookPrefab"), new Vector2(1, 0), Teams.yellow);
+        abobi[Teams.blue].Add(abobus_go);
+
+        abobus_go = SpawnAbobus<Bishop>(Resources.Load("Abobi/BishopPrefab"), new Vector2(2, 0), Teams.yellow);
+        abobi[Teams.blue].Add(abobus_go);
+        
+        abobus_go = SpawnAbobus<Pawn>(Resources.Load("Abobi/PawnPrefab"), new Vector2(3, 0), Teams.yellow);
+        abobi[Teams.yellow].Add(abobus_go);
+        
+        abobus_go = SpawnAbobus<Queen>(Resources.Load("Abobi/QueenPrefab"), new Vector2(4, 0), Teams.yellow);
+        abobi[Teams.yellow].Add(abobus_go);
+        
+
+        
 
         playerInput = GetComponent<PlayerInput>();
 
@@ -73,9 +84,9 @@ public class GayManager : MonoBehaviour
         // abobus_go.transform.position = HexCoordinates.FromHexCoordinates(hc);  
     }
 
-    public void ListCellsChangeState (List<HexCoordinates> coords_list) 
+    public void HandlePossibleTurns (Abobus abobus) 
     {
-        hex_grid.ClearOutOfBoundsCells(coords_list);
+        List<HexCoordinates> coords_list = abobus.GetPossibleTurns(hex_grid.CheckHexCoordsOutOfBounds);
 
         foreach (HexCoordinates hex_coords in coords_list) {
             HexCell hex_cell = hex_grid.GetCellByHexCoordinates(hex_coords);
@@ -109,14 +120,14 @@ public class GayManager : MonoBehaviour
                     chosen_abobus = null;
                 } else if (chosen_abobus) {
                     chosen_abobus.ChangeState();
-                    ListCellsChangeState(chosen_abobus.GetPossibleTurns());
+                    HandlePossibleTurns(chosen_abobus);
                     chosen_abobus = abobus;
                 } else {
                     chosen_abobus = abobus;
                 }
                 
                 abobus.ChangeState();
-                ListCellsChangeState(abobus.GetPossibleTurns());
+                HandlePossibleTurns(abobus);
             }
             
         }
@@ -134,7 +145,7 @@ public class GayManager : MonoBehaviour
             if (hex_cell) {
                 if (hex_cell.GetComponent<HighlightableCell>().highlighted) {
                     chosen_abobus.ChangeState();
-                    ListCellsChangeState(chosen_abobus.GetPossibleTurns());
+                    HandlePossibleTurns(chosen_abobus);
                     chosen_abobus.MoveToHexCoordinates(hex_cell.hex_coordinates);
                     chosen_abobus = null;
                 }

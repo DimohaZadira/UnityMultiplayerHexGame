@@ -68,6 +68,11 @@ public class HexGrid : MonoBehaviour {
         }
     }
 
+    public bool CheckHexCoordsOutOfBounds(HexCoordinates hex_coords)
+    {
+        return hex_coords_to_index.ContainsKey(hex_coords);
+    }
+
 
 	
 }
