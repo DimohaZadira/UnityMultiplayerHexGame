@@ -6,17 +6,17 @@ using UnityEngine;
 public abstract class Highlightable: MonoBehaviour
 {
     public bool highlighted;
-    public void SwitchHighlight(GayManager gm)
+    public void SwitchHighlight()
 	{
 		highlighted = !highlighted;
 		if (highlighted) {
-            SetHighlighted(gm);
+            SetHighlighted();
 		} else {
             SetDefault();
 		}
 	}
 
-    public abstract void SetHighlighted(GayManager gm);
+    public abstract void SetHighlighted();
     public abstract void SetDefault();
 
 }

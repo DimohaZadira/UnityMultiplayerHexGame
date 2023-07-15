@@ -5,10 +5,8 @@ using UnityEngine.InputSystem;
 
 public abstract class Abobus : MonoBehaviour
 {
-    public GayManager.Teams team;
     private static Vector3[] turns;
     public HexCoordinates hex_coordinates;
-
 
     public abstract List<HexCoordinates> GetPossibleTurns(HexCoordinates? from = null);
     
