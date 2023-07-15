@@ -19,7 +19,6 @@ public class Knight : LimitedAbobus
                         , new Vector3(-3,  1,  2)};
 
     override public Vector3[] GetBasisTurns() { 
-        Debug.Log("Getting basis knight turns");
         return turns; 
     }
 }

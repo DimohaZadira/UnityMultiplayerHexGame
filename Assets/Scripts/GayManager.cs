@@ -56,10 +56,7 @@ public class GayManager : MonoBehaviour
         abobi[Teams.yellow].Add(abobus_go);
         
         abobus_go = SpawnAbobus<Queen>(Resources.Load("Abobi/QueenPrefab"), new Vector2(4, 0), Teams.yellow);
-        abobi[Teams.yellow].Add(abobus_go);
-        
-
-        
+        abobi[Teams.yellow].Add(abobus_go);    
 
         playerInput = GetComponent<PlayerInput>();
 
@@ -84,13 +81,31 @@ public class GayManager : MonoBehaviour
         // abobus_go.transform.position = HexCoordinates.FromHexCoordinates(hc);  
     }
 
+    public enum HexCellState {
+        out_of_bounds, abobus, empty
+    };
+
+    HexCellState CellCheck (HexCoordinates hex_coords)
+    {
+        if (!hex_grid.CheckHexCoordsOutOfBounds(hex_coords)) {
+            return HexCellState.out_of_bounds;
+        }
+        if (GetListAbobiByHexCoordinates(hex_coords).Count > 0) {
+            return HexCellState.abobus;
+        }
+        return HexCellState.empty;
+
+    }
+
     public void HandlePossibleTurns (Abobus abobus) 
     {
-        List<HexCoordinates> coords_list = abobus.GetPossibleTurns(hex_grid.CheckHexCoordsOutOfBounds);
+        List<HexCoordinates> coords_list = abobus.GetPossibleTurns(CellCheck);
 
         foreach (HexCoordinates hex_coords in coords_list) {
             HexCell hex_cell = hex_grid.GetCellByHexCoordinates(hex_coords);
-            hex_cell.GetComponent<HighlightableCell>().SwitchHighlight(this);
+
+            HighlightableCell.States state = SolveStateForHexCoordinates(hex_coords);
+            hex_cell.GetComponent<HighlightableCell>().SetState(state);
         }
     }
 
@@ -107,6 +122,26 @@ public class GayManager : MonoBehaviour
         // Debug.Log("On cell " + hex_coordinates.ToString() + " detected " + ans.Count + " abobi");
         return ans;
     } 
+
+    public HighlightableCell.States SolveStateForHexCoordinates(HexCoordinates hex_coordinates)
+    {
+        List<Abobus> abobi_on_this_cell = GetListAbobiByHexCoordinates(hex_coordinates);
+        if (chosen_abobus == null) {
+            return HighlightableCell.States.default_;
+        }
+        foreach (Abobus abobus in abobi_on_this_cell) {
+            if (abobus.team != chosen_abobus.team) {
+                Debug.Log("HOHOL DETECTED");
+                return HighlightableCell.States.highlighted_red;
+            }
+        }
+        foreach (Abobus abobus in abobi_on_this_cell) {
+            if (abobus.team == chosen_abobus.team) {
+                return HighlightableCell.States.highlighted_blue;
+            }
+        }
+        return HighlightableCell.States.highlighted_green;
+    }
 
     public void OnMouseClick(InputAction.CallbackContext value) {
         Ray inputRay = Camera.main.ScreenPointToRay(touchControls.Player.ClickPosition.ReadValue<Vector2>());
@@ -143,7 +178,7 @@ public class GayManager : MonoBehaviour
 
             HexCell hex_cell = hit_go.GetComponent<HexCell>();
             if (hex_cell) {
-                if (hex_cell.GetComponent<HighlightableCell>().highlighted) {
+                if (hex_cell.GetComponent<HighlightableCell>().is_highlighted) {
                     chosen_abobus.ChangeState();
                     HandlePossibleTurns(chosen_abobus);
                     chosen_abobus.MoveToHexCoordinates(hex_cell.hex_coordinates);

@@ -13,7 +13,7 @@ public abstract class Abobus : MonoBehaviour
     public HexCoordinates hex_coordinates;
 
 
-    public abstract List<HexCoordinates> GetPossibleTurns(System.Func<HexCoordinates,bool> checker, HexCoordinates? from = null);
+    public abstract List<HexCoordinates> GetPossibleTurns(System.Func<HexCoordinates,GayManager.HexCellState> checker, HexCoordinates? from = null);
     
     // states
     public AbobusIdleState idle_state;

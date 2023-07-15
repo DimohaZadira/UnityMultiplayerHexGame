@@ -13,7 +13,6 @@ public class Rook : UnlimitedAbobus
                         , new Vector3(-1,  1,  0)};
     
     override public Vector3[] GetBasisTurns() { 
-        Debug.Log("Getting basis bishop turns");
         return turns; 
     }
 

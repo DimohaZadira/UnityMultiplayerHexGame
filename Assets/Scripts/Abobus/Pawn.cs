@@ -13,7 +13,6 @@ public class Pawn : LimitedAbobus
                         , new Vector3(-1,  1,  0)};
 
     override public Vector3[] GetBasisTurns() { 
-        Debug.Log("Getting basis knight turns");
         return turns; 
     }
 }
