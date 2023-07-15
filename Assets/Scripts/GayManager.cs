@@ -12,23 +12,23 @@ public class GayManager : MonoBehaviour
     private PlayerInput playerInput;
     private TouchControls touchControls;
 
-    //
-    private Abobus chosen_abobus;
+    public enum Teams {
+        blue, 
+        yellow
+    };
+    private Dictionary<Teams, List<GameObject>> abobi;
+
+    public Abobus chosen_abobus;
     
     public int x, z;
 
-    GameObject SpawnAbobus(Object original, Vector2 hex_coords_vec)
+    GameObject SpawnAbobus(Object original, Vector2 hex_coords_vec, Teams team)
     {
         var hc = HexCoordinates.FromXZ((int)hex_coords_vec.x, (int)hex_coords_vec.y);
         GameObject abobus_go = Instantiate(original) as GameObject;
         abobus_go.AddComponent<Knight>();
         abobus_go.GetComponent<Knight>().MoveToHexCoordinates(hc);
-        // abobus_go.GetComponent<Knight>().hex_coordinates = hc;
-        // abobus_go.transform.SetParent(hex_grid_go.transform);
-        // hc = HexCoordinates.ToOffsetCoordinates(hc.X, hc.Z);
-        // abobus_go.transform.localPosition = HexCoordinates.FromHexCoordinates(hc);
-
-        // abobus_go.transform.localRotation = Quaternion.Euler(0, 120, 0);
+        abobus_go.GetComponent<Knight>().team = team;
 
         return abobus_go;
     }
@@ -36,14 +36,19 @@ public class GayManager : MonoBehaviour
     void Start()
     {
         chosen_abobus = null;
+        abobi = new Dictionary<Teams, List<GameObject>>();
+        foreach (Teams team in System.Enum.GetValues(typeof(Teams))) {
+            abobi.Add(team, new List<GameObject>());
+        }
 
         hex_grid = hex_grid_go.GetComponent<HexGrid>();
         hex_grid.CreateGrid();
         
-        abobus_go = SpawnAbobus(Resources.Load("Knight Variant"), new Vector2(0, 0));
+        abobus_go = SpawnAbobus(Resources.Load("Knight Variant"), new Vector2(0, 0), Teams.blue);
+        abobi[Teams.blue].Add(abobus_go);
 
-        abobus_2_go = SpawnAbobus(Resources.Load("Knight Variant"), new Vector2(3, 3));
-        
+        abobus_2_go = SpawnAbobus(Resources.Load("Knight Variant"), new Vector2(2, 1), Teams.yellow);
+        abobi[Teams.yellow].Add(abobus_2_go);
 
         playerInput = GetComponent<PlayerInput>();
 
@@ -74,9 +79,23 @@ public class GayManager : MonoBehaviour
 
         foreach (HexCoordinates hex_coords in coords_list) {
             HexCell hex_cell = hex_grid.GetCellByHexCoordinates(hex_coords);
-            hex_cell.GetComponent<HighlightableCell>().SwitchHighlight();
+            hex_cell.GetComponent<HighlightableCell>().SwitchHighlight(this);
         }
     }
+
+    public List<Abobus> GetListAbobiByHexCoordinates (HexCoordinates hex_coordinates)
+    {
+        List<Abobus> ans = new List<Abobus>();
+        foreach(List<GameObject> abobi_in_team in abobi.Values) {
+            foreach(GameObject abobus_go in abobi_in_team) {
+                if (abobus_go.GetComponent<Abobus>().hex_coordinates == hex_coordinates) {
+                    ans.Add(abobus_go.GetComponent<Abobus>());
+                }
+            }
+        }
+        // Debug.Log("On cell " + hex_coordinates.ToString() + " detected " + ans.Count + " abobi");
+        return ans;
+    } 
 
     public void OnMouseClick(InputAction.CallbackContext value) {
         Ray inputRay = Camera.main.ScreenPointToRay(touchControls.Player.ClickPosition.ReadValue<Vector2>());
@@ -86,9 +105,6 @@ public class GayManager : MonoBehaviour
 
             Abobus abobus = hit_go.GetComponent<Abobus>();
             if (abobus) {
-                abobus.ChangeState();
-                ListCellsChangeState(abobus.GetPossibleTurns());
-
                 if (ReferenceEquals(abobus, chosen_abobus)) {
                     chosen_abobus = null;
                 } else if (chosen_abobus) {
@@ -98,6 +114,9 @@ public class GayManager : MonoBehaviour
                 } else {
                     chosen_abobus = abobus;
                 }
+                
+                abobus.ChangeState();
+                ListCellsChangeState(abobus.GetPossibleTurns());
             }
             
         }
