@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class GayManager : MonoBehaviour
 {
     public GameObject hex_grid_go;
-    private HexGrid hex_grid;
+    public HexGrid hex_grid;
     private PlayerInput playerInput;
     private TouchControls touchControls;
 
@@ -14,20 +14,29 @@ public class GayManager : MonoBehaviour
         blue, 
         yellow
     };
+
     private Dictionary<Teams, List<GameObject>> abobi;
 
     public Abobus chosen_abobus;
     
     public int x, z;
 
-    static GameObject SpawnAbobus<T>(Object original, Vector2 hex_coords_vec, Teams team)
+  
+    GameObject SpawnAbobus<T>(Object original, Vector2 hex_coords_vec, Teams team)
     where T:UnityEngine.Component
     {
+        if (!typeof(T).IsSubclassOf(typeof(Abobus))) {
+            Debug.Log("Trying to spawn abobus from non-abobus-derived component");
+            return null;
+        }
         var hc = HexCoordinates.FromXZ((int)hex_coords_vec.x, (int)hex_coords_vec.y);
         GameObject abobus_go = Instantiate(original) as GameObject;
+        
         abobus_go.AddComponent<T>();
         abobus_go.GetComponent<Abobus>().MoveToHexCoordinates(hc);
+        abobus_go.GetComponent<Abobus>().gay_manager = this;
         abobus_go.GetComponent<Abobus>().team = team;
+        abobus_go.GetComponent<Abobus>().InitStates();
 
         return abobus_go;
     }
@@ -43,20 +52,11 @@ public class GayManager : MonoBehaviour
         hex_grid = hex_grid_go.GetComponent<HexGrid>();
         hex_grid.CreateGrid();
         
-        GameObject abobus_go = SpawnAbobus<Knight>(Resources.Load("Abobi/KnightPrefab"), new Vector2(0, 0), Teams.blue);
-        abobi[Teams.blue].Add(abobus_go);
-
-        abobus_go = SpawnAbobus<Rook>(Resources.Load("Abobi/RookPrefab"), new Vector2(1, 0), Teams.yellow);
-        abobi[Teams.blue].Add(abobus_go);
-
-        abobus_go = SpawnAbobus<Bishop>(Resources.Load("Abobi/BishopPrefab"), new Vector2(2, 0), Teams.yellow);
+        GameObject abobus_go = SpawnAbobus<TwoTurnAbobus>(Resources.Load("Abobi/KnightPrefab"), new Vector2(0, 0), Teams.blue);
         abobi[Teams.blue].Add(abobus_go);
         
-        abobus_go = SpawnAbobus<Pawn>(Resources.Load("Abobi/PawnPrefab"), new Vector2(3, 0), Teams.yellow);
-        abobi[Teams.yellow].Add(abobus_go);
-        
-        abobus_go = SpawnAbobus<Queen>(Resources.Load("Abobi/QueenPrefab"), new Vector2(4, 0), Teams.yellow);
-        abobi[Teams.yellow].Add(abobus_go);    
+        abobus_go = SpawnAbobus<OneTurnAbobus>(Resources.Load("Abobi/PawnPrefab"), new Vector2(3, 0), Teams.yellow);
+        abobi[Teams.yellow].Add(abobus_go);  
 
         playerInput = GetComponent<PlayerInput>();
 
@@ -81,34 +81,28 @@ public class GayManager : MonoBehaviour
         // abobus_go.transform.position = HexCoordinates.FromHexCoordinates(hc);  
     }
 
-    public enum HexCellState {
-        out_of_bounds, abobus, empty
-    };
-
-    HexCellState CellCheck (HexCoordinates hex_coords)
+    public HexCell.State CellCheck (HexCoordinates hex_coords)
     {
         if (!hex_grid.CheckHexCoordsOutOfBounds(hex_coords)) {
-            return HexCellState.out_of_bounds;
+            return HexCell.State.out_of_bounds;
         }
         if (GetListAbobiByHexCoordinates(hex_coords).Count > 0) {
-            return HexCellState.abobus;
+            return HexCell.State.abobus;
         }
-        return HexCellState.empty;
+        return HexCell.State.empty;
 
     }
 
-    public void HandlePossibleTurns (Abobus abobus) 
+    public List<Abobus> GetAllAbobi()
     {
-        List<HexCoordinates> coords_list = abobus.GetPossibleTurns(CellCheck);
-
-        foreach (HexCoordinates hex_coords in coords_list) {
-            HexCell hex_cell = hex_grid.GetCellByHexCoordinates(hex_coords);
-
-            HighlightableCell.States state = SolveStateForHexCoordinates(hex_coords);
-            hex_cell.GetComponent<HighlightableCell>().SetState(state);
+        List<Abobus> ans = new List<Abobus>();
+        foreach(List<GameObject> abobi_in_team in abobi.Values) {
+            foreach(GameObject abobus_go in abobi_in_team) {
+                ans.Add(abobus_go.GetComponent<Abobus>());
+            }
         }
+        return ans;
     }
-
     public List<Abobus> GetListAbobiByHexCoordinates (HexCoordinates hex_coordinates)
     {
         List<Abobus> ans = new List<Abobus>();
@@ -119,26 +113,24 @@ public class GayManager : MonoBehaviour
                 }
             }
         }
-        // Debug.Log("On cell " + hex_coordinates.ToString() + " detected " + ans.Count + " abobi");
         return ans;
     } 
 
-    public HighlightableCell.States SolveStateForHexCoordinates(HexCoordinates hex_coordinates)
+    public bool HexCellContainsAbobus (HexCoordinates hex_coordinates)
+    {
+        List<Abobus> abobi_on_this_cell = GetListAbobiByHexCoordinates(hex_coordinates);
+        return (abobi_on_this_cell.Count > 0);
+    }
+
+    public HighlightableCell.States SolveHighlightStateForHexCoordinates(HexCoordinates hex_coordinates)
     {
         List<Abobus> abobi_on_this_cell = GetListAbobiByHexCoordinates(hex_coordinates);
         if (chosen_abobus == null) {
             return HighlightableCell.States.default_;
         }
-        foreach (Abobus abobus in abobi_on_this_cell) {
-            if (abobus.team != chosen_abobus.team) {
-                Debug.Log("HOHOL DETECTED");
-                return HighlightableCell.States.highlighted_red;
-            }
-        }
-        foreach (Abobus abobus in abobi_on_this_cell) {
-            if (abobus.team == chosen_abobus.team) {
-                return HighlightableCell.States.highlighted_blue;
-            }
+        if (abobi_on_this_cell.Count > 0) {
+            Debug.Log("HOHOL DETECTED");
+            return HighlightableCell.States.highlighted_yellow;
         }
         return HighlightableCell.States.highlighted_green;
     }
@@ -154,15 +146,13 @@ public class GayManager : MonoBehaviour
                 if (ReferenceEquals(abobus, chosen_abobus)) {
                     chosen_abobus = null;
                 } else if (chosen_abobus) {
-                    chosen_abobus.ChangeState();
-                    HandlePossibleTurns(chosen_abobus);
+                    chosen_abobus.idle_state.Enter();
                     chosen_abobus = abobus;
                 } else {
                     chosen_abobus = abobus;
                 }
                 
-                abobus.ChangeState();
-                HandlePossibleTurns(abobus);
+                abobus.chosen_state.Enter();
             }
             
         }
@@ -179,9 +169,7 @@ public class GayManager : MonoBehaviour
             HexCell hex_cell = hit_go.GetComponent<HexCell>();
             if (hex_cell) {
                 if (hex_cell.GetComponent<HighlightableCell>().is_highlighted) {
-                    chosen_abobus.ChangeState();
-                    HandlePossibleTurns(chosen_abobus);
-                    chosen_abobus.MoveToHexCoordinates(hex_cell.hex_coordinates);
+                    chosen_abobus.state.HandleInput(hex_cell);
                     chosen_abobus = null;
                 }
             }

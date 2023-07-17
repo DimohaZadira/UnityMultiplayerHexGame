@@ -5,7 +5,7 @@ using UnityEngine;
 public class HighlightableCell : MonoBehaviour
 {
     public enum States {
-        default_, highlighted_red, highlighted_blue, highlighted_green
+        default_, highlighted_red, highlighted_blue, highlighted_green, highlighted_yellow
     };
     private States state;
     public bool is_highlighted;
@@ -28,6 +28,10 @@ public class HighlightableCell : MonoBehaviour
                 break;
             case States.highlighted_green:
                 highlighted_color = Color.green;
+                SetHighlighted();
+                break;
+            case States.highlighted_yellow:
+                highlighted_color = Color.yellow;
                 SetHighlighted();
                 break;
             default:

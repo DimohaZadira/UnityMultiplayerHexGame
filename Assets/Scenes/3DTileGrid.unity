@@ -237,6 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hex_grid_go: {fileID: 2029799031}
+  chosen_abobus: {fileID: 0}
   x: 0
   z: 0
 --- !u!4 &845149906

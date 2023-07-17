@@ -8,12 +8,13 @@ public abstract class Abobus : MonoBehaviour
     // у пешки да, у ладьи нет
     public bool limited_turns;
 
+    public GayManager gay_manager;
     public GayManager.Teams team;
     private static Vector3[] turns;
     public HexCoordinates hex_coordinates;
 
 
-    public abstract List<HexCoordinates> GetPossibleTurns(System.Func<HexCoordinates,GayManager.HexCellState> checker, HexCoordinates? from = null);
+    public abstract List<HexCoordinates> GetPossibleTurns(System.Func<HexCoordinates,HexCell.State> checker, HexCoordinates? from = null);
     
     // states
     public AbobusIdleState idle_state;
@@ -22,14 +23,12 @@ public abstract class Abobus : MonoBehaviour
 
     public void InitStates()
     {
-        idle_state = new AbobusIdleState();
-        chosen_state = new AbobusChosenState();
-        state = idle_state;
-    }
-    void Awake()
-    {
-        InitStates();
-        // state.Meow();
+        Debug.Log("Initializing states");
+        idle_state = new AbobusIdleState(gay_manager, this);
+        chosen_state = new AbobusChosenState(gay_manager, this);
+        // movement_state = new AbobusMovementState(gay_manager, this);
+        // disabled_state = new AbobusDisabledState(gay_manager, this);
+        idle_state.Enter();
     }
 
     public void MoveToHexCoordinates(HexCoordinates hc)
@@ -40,9 +39,5 @@ public abstract class Abobus : MonoBehaviour
 
         GetComponentInParent<Transform>().localRotation = Quaternion.Euler(0, 120, 0);
     }
-
-    public void ChangeState(InputAction.CallbackContext? value = null)
-    {
-        state.HandleInput(this, value);
-    }
+    
 }
