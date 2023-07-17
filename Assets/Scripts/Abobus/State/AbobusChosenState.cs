@@ -8,8 +8,12 @@ public class AbobusChosenState : AbobusState
     public AbobusChosenState(GayManager gm, Abobus abobus_) : base(gm, abobus_) {}
     override public void Enter()
     {
+        Debug.Log("Chosen state enter");
+        if (abobus.state == abobus.disabled_state) {
+            return;
+        }
         abobus.transform.position += new Vector3(0, 10, 0);
-        if (abobus.state == abobus.idle_state) {
+        if (!abobus.moved_this_turn) {
             // Debug.Log("Entered chosen state from idle state");
             List<HexCoordinates> movement_coords_list = abobus.GetPossibleMovementTurns();
             foreach (HexCoordinates hex_coordinates in movement_coords_list) {
@@ -17,11 +21,14 @@ public class AbobusChosenState : AbobusState
                 hex_cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_green);
             }
         }
+        
         if (abobus.state == abobus.movement_state) {
+            Debug.Log("Chosen state from movement state");
             gay_manager.ClearAllHighlightedCells();
             if (abobus.GetPossibleSkillTurns().Count == 0) {
                 abobus.state = abobus.chosen_state;
-                abobus.idle_state.Enter();
+                abobus.disabled_state.Enter();
+                gay_manager.SwitchTurn();
                 return;
             }
         }
@@ -36,6 +43,7 @@ public class AbobusChosenState : AbobusState
     override public void HandleInput(HexCell hex_cell)
     {
         if (hex_cell.GetComponent<HighlightableCell>().GetState() == HighlightableCell.State.highlighted_green) {
+            Debug.Log("Chosen state handles input");
             abobus.movement_state.Enter();
             abobus.movement_state.HandleInput(hex_cell);
         }

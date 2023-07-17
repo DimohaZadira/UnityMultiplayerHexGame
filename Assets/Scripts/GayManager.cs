@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class GayManager : MonoBehaviour
 {
@@ -9,18 +11,35 @@ public class GayManager : MonoBehaviour
     public HexGrid hex_grid;
     private PlayerInput playerInput;
     private TouchControls touchControls;
+    public TextMeshProUGUI team_turn_text;
+    public Button end_turn_button;
 
-    public enum Teams {
-        blue, 
-        yellow
+    public enum Team {
+        blue = 0, 
+        yellow = 1
     };
 
-    private Dictionary<Teams, List<GameObject>> abobi;
+    public static int teams_num; 
+    public Team team_turn;
+    private static int cur_turn = -1;
+    public void SwitchTurn()
+    {
+        if (chosen_abobus) {
+            chosen_abobus.disabled_state.Enter();
+            chosen_abobus = null;
+        }
+        cur_turn = (cur_turn + 1) % teams_num;
+        team_turn = (Team)cur_turn;
+        team_turn_text.text = team_turn.ToString();
+        EnableAbobi(team_turn);
+    }
+
+    private Dictionary<Team, List<GameObject>> abobi;
 
     public Abobus chosen_abobus;
 
   
-    GameObject SpawnAbobus<T>(Object original, Vector2 hex_coords_vec, Teams team)
+    GameObject SpawnAbobus<T>(Object original, Vector2 hex_coords_vec, Team team)
     where T:UnityEngine.Component
     {
         if (!typeof(T).IsSubclassOf(typeof(Abobus))) {
@@ -38,26 +57,34 @@ public class GayManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        end_turn_button.GetComponent<Button>().onClick.AddListener(SwitchTurn);
+        teams_num = System.Enum.GetNames(typeof(Team)).Length;
+
         chosen_abobus = null;
-        abobi = new Dictionary<Teams, List<GameObject>>();
-        foreach (Teams team in System.Enum.GetValues(typeof(Teams))) {
+        abobi = new Dictionary<Team, List<GameObject>>();
+        foreach (Team team in System.Enum.GetValues(typeof(Team))) {
             abobi.Add(team, new List<GameObject>());
         }
 
         hex_grid = hex_grid_go.GetComponent<HexGrid>();
         hex_grid.CreateGrid();
         
-        GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KnightPrefab"), new Vector2(0, 0), Teams.blue);
-        abobi[Teams.blue].Add(abobus_go);
+        GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KnightPrefab"), new Vector2(0, 0), Team.blue);
+        abobi[Team.blue].Add(abobus_go);
         
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/PawnPrefab"), new Vector2(3, 0), Teams.yellow);
-        abobi[Teams.yellow].Add(abobus_go);  
+        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KnightPrefab"), new Vector2(1, 0), Team.blue);
+        abobi[Team.blue].Add(abobus_go);
+        
+        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/PawnPrefab"), new Vector2(3, 0), Team.yellow);
+        abobi[Team.yellow].Add(abobus_go);  
 
         playerInput = GetComponent<PlayerInput>();
 
         //touchControls.Player.Click.started += ctx => OnMouseClick(ctx);
         touchControls.Player.Click.performed += ctx => OnMouseClick(ctx);
         touchControls.Player.RightClick.performed += ctx => OnRightMouseClick(ctx);
+
+        SwitchTurn();
     }
 
 
@@ -74,6 +101,26 @@ public class GayManager : MonoBehaviour
     void Update() {
         // HexCoordinates hc = HexCoordinates.ToOffsetCoordinates(x,z);
         // abobus_go.transform.position = HexCoordinates.FromHexCoordinates(hc);  
+    }
+
+    public void DisableAbobi (Abobus abobus)
+    {
+        foreach(GameObject abobus_in_team in abobi[abobus.team]) {
+            if (abobus_in_team.GetComponent<Abobus>() != abobus) {
+                abobus_in_team.GetComponent<Abobus>().disabled_state.Enter();
+            }
+        }
+    }
+
+    public void EnableAbobi (Team team)
+    {
+        foreach(GameObject abobus_in_team in abobi[team]) {
+            Abobus abobus = abobus_in_team.GetComponent<Abobus>();
+            abobus.state = abobus.idle_state;
+            abobus.moved_this_turn = false;
+            abobus.started_performing_skill = false;
+            abobus.idle_state.Enter();
+        }
     }
 
     public List<Abobus> GetAllAbobi()
@@ -101,9 +148,9 @@ public class GayManager : MonoBehaviour
             GameObject hit_go = hit.collider.transform.gameObject;
 
             Abobus abobus = hit_go.GetComponent<Abobus>();
-            if (abobus) {
+            if (abobus && abobus.team == team_turn) {
                 if (ReferenceEquals(abobus, chosen_abobus)) {
-                    Debug.Log("Meow");
+                    // Debug.Log("Meow");
                     chosen_abobus.idle_state.Enter();
                     chosen_abobus = null;
                 } else if (chosen_abobus) {
@@ -131,8 +178,9 @@ public class GayManager : MonoBehaviour
             HexCell hex_cell = hit_go.GetComponent<HexCell>();
             if (hex_cell) {
                 if (hex_cell.GetComponent<HighlightableCell>().is_highlighted) {
+                    
                     chosen_abobus.state.HandleInput(hex_cell);
-                    if (chosen_abobus.state == chosen_abobus.idle_state) {
+                    if (chosen_abobus && (chosen_abobus.state == chosen_abobus.idle_state)) {
                         chosen_abobus = null;
                     }
                 }
