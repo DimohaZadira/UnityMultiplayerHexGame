@@ -47,10 +47,10 @@ public class GayManager : MonoBehaviour
         hex_grid = hex_grid_go.GetComponent<HexGrid>();
         hex_grid.CreateGrid();
         
-        GameObject abobus_go = SpawnAbobus<TwoTurnAbobus>(Resources.Load("Abobi/KnightPrefab"), new Vector2(0, 0), Teams.blue);
+        GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KnightPrefab"), new Vector2(0, 0), Teams.blue);
         abobi[Teams.blue].Add(abobus_go);
         
-        abobus_go = SpawnAbobus<OneTurnAbobus>(Resources.Load("Abobi/PawnPrefab"), new Vector2(3, 0), Teams.yellow);
+        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/PawnPrefab"), new Vector2(3, 0), Teams.yellow);
         abobi[Teams.yellow].Add(abobus_go);  
 
         playerInput = GetComponent<PlayerInput>();
@@ -76,18 +76,6 @@ public class GayManager : MonoBehaviour
         // abobus_go.transform.position = HexCoordinates.FromHexCoordinates(hc);  
     }
 
-    public HexCell.State CellCheck (HexCoordinates hex_coords)
-    {
-        if (!hex_grid.CheckHexCoordsOutOfBounds(hex_coords)) {
-            return HexCell.State.out_of_bounds;
-        }
-        if (GetListAbobiByHexCoordinates(hex_coords).Count > 0) {
-            return HexCell.State.abobus;
-        }
-        return HexCell.State.empty;
-
-    }
-
     public List<Abobus> GetAllAbobi()
     {
         List<Abobus> ans = new List<Abobus>();
@@ -98,30 +86,12 @@ public class GayManager : MonoBehaviour
         }
         return ans;
     }
-    public List<Abobus> GetListAbobiByHexCoordinates (HexCoordinates hex_coordinates)
+    
+    public void ClearAllHighlightedCells()
     {
-        List<Abobus> ans = new List<Abobus>();
-        foreach(List<GameObject> abobi_in_team in abobi.Values) {
-            foreach(GameObject abobus_go in abobi_in_team) {
-                if (abobus_go.GetComponent<Abobus>().hex_coordinates == hex_coordinates) {
-                    ans.Add(abobus_go.GetComponent<Abobus>());
-                }
-            }
+        foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
+            hex_cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
         }
-        return ans;
-    } 
-
-    public HighlightableCell.States SolveHighlightStateForHexCoordinates(HexCoordinates hex_coordinates)
-    {
-        List<Abobus> abobi_on_this_cell = GetListAbobiByHexCoordinates(hex_coordinates);
-        if (chosen_abobus == null) {
-            return HighlightableCell.States.default_;
-        }
-        if (abobi_on_this_cell.Count > 0) {
-            Debug.Log("HOHOL DETECTED");
-            return HighlightableCell.States.highlighted_yellow;
-        }
-        return HighlightableCell.States.highlighted_green;
     }
 
     public void OnMouseClick(InputAction.CallbackContext value) {
@@ -133,15 +103,18 @@ public class GayManager : MonoBehaviour
             Abobus abobus = hit_go.GetComponent<Abobus>();
             if (abobus) {
                 if (ReferenceEquals(abobus, chosen_abobus)) {
+                    Debug.Log("Meow");
+                    chosen_abobus.idle_state.Enter();
                     chosen_abobus = null;
                 } else if (chosen_abobus) {
                     chosen_abobus.idle_state.Enter();
                     chosen_abobus = abobus;
+                    abobus.chosen_state.Enter();
                 } else {
                     chosen_abobus = abobus;
+                    abobus.chosen_state.Enter();
                 }
                 
-                abobus.chosen_state.Enter();
             }
             
         }
@@ -159,7 +132,9 @@ public class GayManager : MonoBehaviour
             if (hex_cell) {
                 if (hex_cell.GetComponent<HighlightableCell>().is_highlighted) {
                     chosen_abobus.state.HandleInput(hex_cell);
-                    chosen_abobus = null;
+                    if (chosen_abobus.state == chosen_abobus.idle_state) {
+                        chosen_abobus = null;
+                    }
                 }
             }
         }

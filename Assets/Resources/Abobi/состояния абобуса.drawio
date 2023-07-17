@@ -1,29 +1,29 @@
-<mxfile host="app.diagrams.net" modified="2023-07-16T22:28:28.543Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" version="21.6.2" etag="wueQ_hkXKgP2u1FWRxRF" type="device">
+<mxfile host="app.diagrams.net" modified="2023-07-17T13:11:31.126Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="GT8dea0M1qf7fZY8JUJo" version="21.6.2" type="device">
   <diagram id="hcTMUBXdUPyNPQrtSxj0" name="Страница 1">
     <mxGraphModel dx="1050" dy="549" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="EXr3Spbnwlx9qCtGlrdF-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="EXr3Spbnwlx9qCtGlrdF-1" target="EXr3Spbnwlx9qCtGlrdF-2">
+        <mxCell id="EXr3Spbnwlx9qCtGlrdF-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="EXr3Spbnwlx9qCtGlrdF-1" target="EXr3Spbnwlx9qCtGlrdF-2" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="EXr3Spbnwlx9qCtGlrdF-1" value="AbobusIdleState" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="EXr3Spbnwlx9qCtGlrdF-1" value="AbobusIdleState" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="20" y="80" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="EXr3Spbnwlx9qCtGlrdF-5" value="Нажата &lt;font color=&quot;#15ff0d&quot;&gt;зелёная &lt;/font&gt;клетка" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="EXr3Spbnwlx9qCtGlrdF-2" target="EXr3Spbnwlx9qCtGlrdF-4">
+        <mxCell id="EXr3Spbnwlx9qCtGlrdF-5" value="Нажата &lt;font color=&quot;#15ff0d&quot;&gt;зелёная &lt;/font&gt;клетка" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="EXr3Spbnwlx9qCtGlrdF-2" target="EXr3Spbnwlx9qCtGlrdF-4" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="EXr3Spbnwlx9qCtGlrdF-7" value="Нажата &lt;font color=&quot;#ffd966&quot;&gt;жёлтая &lt;/font&gt;клетка" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="EXr3Spbnwlx9qCtGlrdF-2" target="EXr3Spbnwlx9qCtGlrdF-6">
+        <mxCell id="EXr3Spbnwlx9qCtGlrdF-7" value="Нажата &lt;font color=&quot;#ffd966&quot;&gt;жёлтая &lt;/font&gt;клетка" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="EXr3Spbnwlx9qCtGlrdF-2" target="EXr3Spbnwlx9qCtGlrdF-6" edge="1">
           <mxGeometry x="0.2973" y="20" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
         <UserObject label="AbobusChosenState" tooltip="- Сменить анимацию&#xa;- Сгенерить все ходы, если пришли из Idle&#xa;- Сгенерить только жёлтые ходы иначе&#xa;- Ждать инпута" id="EXr3Spbnwlx9qCtGlrdF-2">
-          <mxCell style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
             <mxGeometry x="190" y="80" width="120" height="60" as="geometry" />
           </mxCell>
         </UserObject>
-        <mxCell id="EXr3Spbnwlx9qCtGlrdF-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="EXr3Spbnwlx9qCtGlrdF-4" target="EXr3Spbnwlx9qCtGlrdF-2">
+        <mxCell id="EXr3Spbnwlx9qCtGlrdF-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="EXr3Spbnwlx9qCtGlrdF-4" target="EXr3Spbnwlx9qCtGlrdF-2" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="730" y="110" />
@@ -33,22 +33,22 @@
           </mxGeometry>
         </mxCell>
         <UserObject label="AbobusMovementState" tooltip="- Сменить анимацию&#xa;- Дизейбл остальных абобусов&#xa;" id="EXr3Spbnwlx9qCtGlrdF-4">
-          <mxCell style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
             <mxGeometry x="480" y="80" width="200" height="60" as="geometry" />
           </mxCell>
         </UserObject>
-        <mxCell id="EXr3Spbnwlx9qCtGlrdF-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="EXr3Spbnwlx9qCtGlrdF-6" target="EXr3Spbnwlx9qCtGlrdF-4">
+        <mxCell id="EXr3Spbnwlx9qCtGlrdF-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="EXr3Spbnwlx9qCtGlrdF-6" target="EXr3Spbnwlx9qCtGlrdF-4" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="EXr3Spbnwlx9qCtGlrdF-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="EXr3Spbnwlx9qCtGlrdF-6" target="EXr3Spbnwlx9qCtGlrdF-10">
+        <mxCell id="EXr3Spbnwlx9qCtGlrdF-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="EXr3Spbnwlx9qCtGlrdF-6" target="EXr3Spbnwlx9qCtGlrdF-10" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <UserObject label="AbobusSkillPerformingState" tooltip="- Дизейбл всех других абобусов&#xa;- В зависимости от внутреннего состояния решить, что делать дальше&#xa;" id="EXr3Spbnwlx9qCtGlrdF-6">
-          <mxCell style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
             <mxGeometry x="480" y="250" width="200" height="60" as="geometry" />
           </mxCell>
         </UserObject>
-        <mxCell id="EXr3Spbnwlx9qCtGlrdF-10" value="AbobusDisabledState" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="EXr3Spbnwlx9qCtGlrdF-10" value="AbobusDisabledState" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="480" y="390" width="200" height="60" as="geometry" />
         </mxCell>
       </root>

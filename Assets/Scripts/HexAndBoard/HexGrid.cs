@@ -3,19 +3,24 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+
 public class HexGrid : MonoBehaviour {
 
 	Canvas grid_canvas;
 		
 	public int width;
 	public int height;
+    public int cells_array_size;
 
 	public HexCell cell_prefab;
     public TextMeshProUGUI cell_label_prefab;
 	
 	public Dictionary<HexCoordinates, int> hex_coords_to_index;
-    HexCell[] cells;
-
+    private HexCell[] cells;
+    public System.ArraySegment<HexCell> GetAllCells () 
+    {
+        return new System.ArraySegment<HexCell>(cells, 0, cells_array_size);
+    }
 	public void CreateGrid () 
 	{
 		hex_coords_to_index = new Dictionary<HexCoordinates, int>();
@@ -33,6 +38,7 @@ public class HexGrid : MonoBehaviour {
 				}
 			}
 		}
+        cells_array_size = i;
 	}
 	void CreateCell (int x, int z, int i)
 	{
@@ -71,7 +77,7 @@ public class HexGrid : MonoBehaviour {
 
     public bool CheckHexCoordsOutOfBounds(HexCoordinates hex_coords)
     {
-        return hex_coords_to_index.ContainsKey(hex_coords);
+        return !hex_coords_to_index.ContainsKey(hex_coords);
     }
 
 

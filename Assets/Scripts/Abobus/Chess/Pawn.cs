@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+// using System.Collections;
+// using System.Collections.Generic;
+// using UnityEngine;
 
-public class Pawn : LimitedAbobus
-{
-    private Vector3[] turns = 
-           new Vector3[] {new Vector3(-1,  0,  1)
-                        , new Vector3( 0, -1,  1)
-                        , new Vector3( 1, -1,  0)
-                        , new Vector3( 1,  0, -1)
-                        , new Vector3( 0,  1, -1)
-                        , new Vector3(-1,  1,  0)};
+// public class Pawn : LimitedAbobus
+// {
+//     private Vector3[] turns = 
+//            new Vector3[] {new Vector3(-1,  0,  1)
+//                         , new Vector3( 0, -1,  1)
+//                         , new Vector3( 1, -1,  0)
+//                         , new Vector3( 1,  0, -1)
+//                         , new Vector3( 0,  1, -1)
+//                         , new Vector3(-1,  1,  0)};
 
-    override public Vector3[] GetBasisTurns() { 
-        return turns; 
-    }
-}
+//     override public Vector3[] GetBasisTurns() { 
+//         return turns; 
+//     }
+// }

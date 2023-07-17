@@ -13,12 +13,15 @@ public abstract class Abobus : MonoBehaviour
     private static Vector3[] turns;
     public HexCoordinates hex_coordinates;
 
-    // public abstract void DyeHexCell (HexCell hex_cell);
-    public abstract List<HexCoordinates> GetPossibleTurns(System.Func<HexCoordinates,HexCell.State> checker, HexCoordinates? from = null);
-    
+    public abstract List<HexCoordinates> GetPossibleMovementTurns();
+    public abstract List<HexCoordinates> GetPossibleSkillTurns();
+    // public abstract List<HexCoordinates> GetPossibleTurns();
+    public abstract void Init();
+
     // states
     public AbobusIdleState idle_state;
     public AbobusChosenState chosen_state;
+    public AbobusMovementState movement_state;
     public AbobusState state;
 
     public void Init(GayManager gm, GayManager.Teams team_, HexCoordinates start_hc)
@@ -29,9 +32,10 @@ public abstract class Abobus : MonoBehaviour
         MoveToHexCoordinates(start_hc);
         idle_state = new AbobusIdleState(gay_manager, this);
         chosen_state = new AbobusChosenState(gay_manager, this);
-        // movement_state = new AbobusMovementState(gay_manager, this);
+        movement_state = new AbobusMovementState(gay_manager, this);
         // disabled_state = new AbobusDisabledState(gay_manager, this);
         idle_state.Enter();
+        Init();
     }
 
     public void MoveToHexCoordinates(HexCoordinates hc)

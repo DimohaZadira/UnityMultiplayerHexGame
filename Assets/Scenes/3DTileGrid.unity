@@ -237,9 +237,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hex_grid_go: {fileID: 2029799031}
+  hex_grid: {fileID: 0}
   chosen_abobus: {fileID: 0}
-  x: 0
-  z: 0
 --- !u!4 &845149906
 Transform:
   m_ObjectHideFlags: 0
@@ -433,8 +432,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1710074179}
-  m_LocalRotation: {x: 0.6118783, y: 0, z: 0, w: 0.790952}
-  m_LocalPosition: {x: 72.9, y: 120.9, z: 21}
+  m_LocalRotation: {x: 0.39623022, y: 0, z: 0, w: 0.91815126}
+  m_LocalPosition: {x: 31.5, y: 44.3, z: -46.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -561,6 +560,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 9
   height: 9
+  cells_array_size: 0
   cell_prefab: {fileID: 1706980005194352517, guid: 66f151a5f5664ce49826e1fb2c9ee818,
     type: 3}
   cell_label_prefab: {fileID: 7290319757080336905, guid: fb2a92b9e08bce54dae640915135b958,
