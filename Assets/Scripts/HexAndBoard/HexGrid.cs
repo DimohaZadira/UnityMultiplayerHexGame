@@ -42,6 +42,7 @@ public class HexGrid : MonoBehaviour {
 		cell.transform.SetParent(transform, false);
 		cell.transform.localPosition = position;
 		cell.hex_coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
+        cell.state = HexCell.State.empty;
 		
 		hex_coords_to_index.Add(cell.hex_coordinates, i);
 

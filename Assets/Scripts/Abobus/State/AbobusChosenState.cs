@@ -11,9 +11,6 @@ public class AbobusChosenState : AbobusState
         if (abobus.state == abobus.idle_state) {
             abobus.transform.position += new Vector3(0, 10, 0);
         }
-        if (gay_manager == null) {
-            Debug.Log("gay_manager = null");
-        }
         List<HexCoordinates> coords_list = abobus.GetPossibleTurns(gay_manager.CellCheck);
 
         foreach (HexCoordinates hex_coords in coords_list) {

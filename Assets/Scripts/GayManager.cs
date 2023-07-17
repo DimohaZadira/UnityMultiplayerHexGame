@@ -18,8 +18,6 @@ public class GayManager : MonoBehaviour
     private Dictionary<Teams, List<GameObject>> abobi;
 
     public Abobus chosen_abobus;
-    
-    public int x, z;
 
   
     GameObject SpawnAbobus<T>(Object original, Vector2 hex_coords_vec, Teams team)
@@ -33,10 +31,7 @@ public class GayManager : MonoBehaviour
         GameObject abobus_go = Instantiate(original) as GameObject;
         
         abobus_go.AddComponent<T>();
-        abobus_go.GetComponent<Abobus>().MoveToHexCoordinates(hc);
-        abobus_go.GetComponent<Abobus>().gay_manager = this;
-        abobus_go.GetComponent<Abobus>().team = team;
-        abobus_go.GetComponent<Abobus>().InitStates();
+        abobus_go.GetComponent<Abobus>().Init(this, team, hc);
 
         return abobus_go;
     }
@@ -115,12 +110,6 @@ public class GayManager : MonoBehaviour
         }
         return ans;
     } 
-
-    public bool HexCellContainsAbobus (HexCoordinates hex_coordinates)
-    {
-        List<Abobus> abobi_on_this_cell = GetListAbobiByHexCoordinates(hex_coordinates);
-        return (abobi_on_this_cell.Count > 0);
-    }
 
     public HighlightableCell.States SolveHighlightStateForHexCoordinates(HexCoordinates hex_coordinates)
     {

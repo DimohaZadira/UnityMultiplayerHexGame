@@ -13,7 +13,7 @@ public abstract class Abobus : MonoBehaviour
     private static Vector3[] turns;
     public HexCoordinates hex_coordinates;
 
-
+    // public abstract void DyeHexCell (HexCell hex_cell);
     public abstract List<HexCoordinates> GetPossibleTurns(System.Func<HexCoordinates,HexCell.State> checker, HexCoordinates? from = null);
     
     // states
@@ -21,9 +21,12 @@ public abstract class Abobus : MonoBehaviour
     public AbobusChosenState chosen_state;
     public AbobusState state;
 
-    public void InitStates()
+    public void Init(GayManager gm, GayManager.Teams team_, HexCoordinates start_hc)
     {
-        Debug.Log("Initializing states");
+        gay_manager = gm;
+        team = team_;
+        hex_coordinates = start_hc;
+        MoveToHexCoordinates(start_hc);
         idle_state = new AbobusIdleState(gay_manager, this);
         chosen_state = new AbobusChosenState(gay_manager, this);
         // movement_state = new AbobusMovementState(gay_manager, this);
@@ -33,11 +36,14 @@ public abstract class Abobus : MonoBehaviour
 
     public void MoveToHexCoordinates(HexCoordinates hc)
     {
+        gay_manager.hex_grid.GetCellByHexCoordinates(hex_coordinates).state = HexCell.State.empty;
         hex_coordinates = hc;
         hc = HexCoordinates.ToOffsetCoordinates(hc.X, hc.Z);
         GetComponentInParent<Transform>().localPosition = HexCoordinates.FromHexCoordinates(hc);
 
         GetComponentInParent<Transform>().localRotation = Quaternion.Euler(0, 120, 0);
+
+        gay_manager.hex_grid.GetCellByHexCoordinates(hex_coordinates).state = HexCell.State.abobus;
     }
     
 }
