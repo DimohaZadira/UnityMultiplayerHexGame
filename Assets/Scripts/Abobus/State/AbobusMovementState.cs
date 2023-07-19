@@ -5,21 +5,31 @@ using UnityEngine.InputSystem;
 
 public class AbobusMovementState : AbobusState
 {
-    public AbobusMovementState(GayManager gm, Abobus abobus_) : base(gm, abobus_) {}
+    public AbobusMovementState(GayManager gm, Abobus abobus_) : base(gm, abobus_) {
+        Refresh();
+    }
     
+    public bool entered;
     override public void Enter()
     {
         Debug.Log("Movement state enter");
-        abobus.moved_this_turn = true;
+        this.entered = true;
         abobus.state = abobus.movement_state;
-        gay_manager.DisableAbobi(abobus);
     }
     
-    override public void HandleInput(HexCell hex_cell)
+    override public void HandleInput(HexCell hex_cell = null)
     {
-        Debug.Log("Movement state handles input");
-        abobus.MoveToHexCoordinates(hex_cell.hex_coordinates);
-        abobus.chosen_state.Enter();
+        if (hex_cell != null) {
+            Debug.Log("Movement state handles input");
+            abobus.MoveToHexCoordinates(hex_cell.hex_coordinates);
+            gay_manager.DisableAbobi(abobus);
+            // abobus.chosen_state.Enter();
+        }
+        
+    }
+    override public void Refresh()
+    {
+        entered = false;
     }
 
 }

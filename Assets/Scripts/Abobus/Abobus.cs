@@ -8,11 +8,12 @@ public abstract class Abobus : MonoBehaviour
 
     public GayManager gay_manager;
     public GayManager.Team team;
-    private static Vector3[] turns;
     public HexCoordinates hex_coordinates;
 
     public abstract List<HexCoordinates> GetPossibleMovementTurns();
-    public abstract List<HexCoordinates> GetPossibleSkillTurns();
+    public abstract List<HexCoordinates> GetPossibleSkillTriggerTurns();
+    public abstract List<HexCoordinates> GetPossibleSkillTurns(HexCell from);
+    public abstract void PerformSkill(HexCell from, HexCell to);
     // public abstract List<HexCoordinates> GetPossibleTurns();
     public abstract void Init();
 
@@ -22,24 +23,38 @@ public abstract class Abobus : MonoBehaviour
     public AbobusMovementState movement_state;
     public AbobusDisabledState disabled_state;
     public AbobusSkillPerformingState skill_performing_state;
+    private List<AbobusState> states;
     public AbobusState state;
-    public bool moved_this_turn;
-    public bool started_performing_skill;
-    public bool continuing_skill_performance;
+    public void React(HexCell? hex_cell = null)
+    {
+        state.HandleInput(hex_cell);
+    }
+    public void RefreshStates()
+    {
+        foreach (AbobusState state in states) {
+            state.Refresh();
+        }
+    }
 
     public void Init(GayManager gm, GayManager.Team team_, HexCoordinates start_hc)
     {
-        moved_this_turn = false;
-        started_performing_skill = false;
         gay_manager = gm;
         team = team_;
         hex_coordinates = start_hc;
         MoveToHexCoordinates(start_hc);
+        // states
+        states = new List<AbobusState>();
         idle_state = new AbobusIdleState(gay_manager, this);
+        states.Add(idle_state);
         chosen_state = new AbobusChosenState(gay_manager, this);
+        states.Add(chosen_state);
         movement_state = new AbobusMovementState(gay_manager, this);
+        states.Add(movement_state);
         disabled_state = new AbobusDisabledState(gay_manager, this);
+        states.Add(disabled_state);
         skill_performing_state = new AbobusSkillPerformingState(gay_manager, this);
+        states.Add(skill_performing_state);
+
         idle_state.Enter();
         Init();
     }
@@ -49,7 +64,9 @@ public abstract class Abobus : MonoBehaviour
         gay_manager.hex_grid.GetCellByHexCoordinates(hex_coordinates).state = HexCell.State.empty;
         hex_coordinates = hc;
         hc = HexCoordinates.ToOffsetCoordinates(hc.X, hc.Z);
-        GetComponentInParent<Transform>().localPosition = HexCoordinates.FromHexCoordinates(hc);
+        Vector3 from_hex_coords = HexCoordinates.FromHexCoordinates(hc);
+        from_hex_coords.y = GetComponentInParent<Transform>().localPosition.y;
+        GetComponentInParent<Transform>().localPosition = from_hex_coords;
 
         GetComponentInParent<Transform>().localRotation = Quaternion.Euler(0, 120, 0);
 

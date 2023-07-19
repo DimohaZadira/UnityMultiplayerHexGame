@@ -11,17 +11,20 @@ public class AbobusIdleState : AbobusState
         if (abobus.state == abobus.disabled_state) {
             return;
         }
-        if (abobus.state == abobus.chosen_state) {
-            gay_manager.ClearAllHighlightedCells();
-            abobus.transform.position += new Vector3(0, -10, 0);
-        }
+        // Debug.Log("Idle state enter");
         abobus.state = abobus.idle_state;
         
     }
     
-    override public void HandleInput(HexCell hex_cell)
+    override public void HandleInput(HexCell? hex_cell = null)
     {
+        // Debug.Log("Switching to chosen state");
         abobus.chosen_state.Enter();
+    }
+    
+    override public void Refresh()
+    {
+
     }
 
 }

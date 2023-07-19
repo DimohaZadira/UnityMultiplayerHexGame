@@ -14,4 +14,5 @@ public abstract class AbobusState
     }
     public abstract void HandleInput(HexCell hex_cell = null);
     public abstract void Enter();
+    public abstract void Refresh();
 }

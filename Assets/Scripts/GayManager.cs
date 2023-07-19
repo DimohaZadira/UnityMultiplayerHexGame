@@ -24,7 +24,9 @@ public class GayManager : MonoBehaviour
     private static int cur_turn = -1;
     public void SwitchTurn()
     {
+        ClearAllHighlightedCells();
         if (chosen_abobus) {
+            chosen_abobus.RefreshStates();
             chosen_abobus.disabled_state.Enter();
             chosen_abobus = null;
         }
@@ -116,9 +118,8 @@ public class GayManager : MonoBehaviour
     {
         foreach(GameObject abobus_in_team in abobi[team]) {
             Abobus abobus = abobus_in_team.GetComponent<Abobus>();
+            abobus.RefreshStates();
             abobus.state = abobus.idle_state;
-            abobus.moved_this_turn = false;
-            abobus.started_performing_skill = false;
             abobus.idle_state.Enter();
         }
     }
@@ -151,15 +152,15 @@ public class GayManager : MonoBehaviour
             if (abobus && abobus.team == team_turn) {
                 if (ReferenceEquals(abobus, chosen_abobus)) {
                     // Debug.Log("Meow");
-                    chosen_abobus.idle_state.Enter();
+                    chosen_abobus.React();
                     chosen_abobus = null;
                 } else if (chosen_abobus) {
-                    chosen_abobus.idle_state.Enter();
+                    chosen_abobus.React();
                     chosen_abobus = abobus;
-                    abobus.chosen_state.Enter();
+                    abobus.React();
                 } else {
                     chosen_abobus = abobus;
-                    abobus.chosen_state.Enter();
+                    abobus.React();
                 }
                 
             }
@@ -179,7 +180,7 @@ public class GayManager : MonoBehaviour
             if (hex_cell) {
                 if (hex_cell.GetComponent<HighlightableCell>().is_highlighted) {
                     
-                    chosen_abobus.state.HandleInput(hex_cell);
+                    chosen_abobus.React(hex_cell);
                     if (chosen_abobus && (chosen_abobus.state == chosen_abobus.idle_state)) {
                         chosen_abobus = null;
                     }
