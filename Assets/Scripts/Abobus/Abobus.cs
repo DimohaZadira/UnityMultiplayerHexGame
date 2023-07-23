@@ -19,13 +19,16 @@ public abstract class Abobus : MonoBehaviour
 
     // states
     public AbobusIdleState idle_state;
-    public AbobusChosenState chosen_state;
+    public AbobusSelectedState selected_state;
     public AbobusMovementState movement_state;
     public AbobusDisabledState disabled_state;
     public AbobusSkillPerformingState skill_performing_state;
     private List<AbobusState> states;
-    public AbobusState state;
-    public void React(HexCell? hex_cell = null)
+    private AbobusState state;
+    public AbobusState GetState() {
+        return state;
+    }
+    public void React(HexCell hex_cell = null)
     {
         state.HandleInput(hex_cell);
     }
@@ -34,6 +37,16 @@ public abstract class Abobus : MonoBehaviour
         foreach (AbobusState state in states) {
             state.Refresh();
         }
+    }
+    public void SwitchState(AbobusState state_, bool force_switch = false)
+    {
+        if (!force_switch && state == disabled_state) {
+            return;
+        }
+        Debug.Log("Switching from "+ state.class_name + " to " + state_.class_name, this);
+        state.Exit();
+        state = state_;
+        state.Enter();
     }
 
     public void Init(GayManager gm, GayManager.Team team_, HexCoordinates start_hc)
@@ -46,8 +59,8 @@ public abstract class Abobus : MonoBehaviour
         states = new List<AbobusState>();
         idle_state = new AbobusIdleState(gay_manager, this);
         states.Add(idle_state);
-        chosen_state = new AbobusChosenState(gay_manager, this);
-        states.Add(chosen_state);
+        selected_state = new AbobusSelectedState(gay_manager, this);
+        states.Add(selected_state);
         movement_state = new AbobusMovementState(gay_manager, this);
         states.Add(movement_state);
         disabled_state = new AbobusDisabledState(gay_manager, this);
@@ -55,7 +68,7 @@ public abstract class Abobus : MonoBehaviour
         skill_performing_state = new AbobusSkillPerformingState(gay_manager, this);
         states.Add(skill_performing_state);
 
-        idle_state.Enter();
+        state = disabled_state;
         Init();
     }
 

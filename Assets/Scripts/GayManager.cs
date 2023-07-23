@@ -25,15 +25,17 @@ public class GayManager : MonoBehaviour
     public void SwitchTurn()
     {
         ClearAllHighlightedCells();
+        DisableAbobi(team_turn);
         if (chosen_abobus) {
             chosen_abobus.RefreshStates();
-            chosen_abobus.disabled_state.Enter();
+            chosen_abobus.SwitchState(chosen_abobus.disabled_state);
             chosen_abobus = null;
         }
         cur_turn = (cur_turn + 1) % teams_num;
         team_turn = (Team)cur_turn;
         team_turn_text.text = team_turn.ToString();
         EnableAbobi(team_turn);
+        Debug.Log($"<color=green>New turn!</color>");
     }
 
     private Dictionary<Team, List<GameObject>> abobi;
@@ -105,12 +107,13 @@ public class GayManager : MonoBehaviour
         // abobus_go.transform.position = HexCoordinates.FromHexCoordinates(hc);  
     }
 
-    public void DisableAbobi (Abobus abobus)
+    public void DisableAbobi (Team team, Abobus except = null)
     {
-        foreach(GameObject abobus_in_team in abobi[abobus.team]) {
-            if (abobus_in_team.GetComponent<Abobus>() != abobus) {
-                abobus_in_team.GetComponent<Abobus>().disabled_state.Enter();
-            }
+        foreach(GameObject abobus_in_team in abobi[team]) {
+            if (abobus_in_team.GetComponent<Abobus>() != except) {
+                Abobus abobus_in_team_comp = abobus_in_team.GetComponent<Abobus>();
+                abobus_in_team_comp.SwitchState(abobus_in_team_comp.disabled_state);
+            } 
         }
     }
 
@@ -119,8 +122,7 @@ public class GayManager : MonoBehaviour
         foreach(GameObject abobus_in_team in abobi[team]) {
             Abobus abobus = abobus_in_team.GetComponent<Abobus>();
             abobus.RefreshStates();
-            abobus.state = abobus.idle_state;
-            abobus.idle_state.Enter();
+            abobus.SwitchState(abobus.idle_state, true);
         }
     }
 
@@ -162,12 +164,8 @@ public class GayManager : MonoBehaviour
                     chosen_abobus = abobus;
                     abobus.React();
                 }
-                
             }
-            
         }
-        
-        
     }
 
     public void OnRightMouseClick(InputAction.CallbackContext value) {
@@ -181,7 +179,7 @@ public class GayManager : MonoBehaviour
                 if (hex_cell.GetComponent<HighlightableCell>().is_highlighted) {
                     
                     chosen_abobus.React(hex_cell);
-                    if (chosen_abobus && (chosen_abobus.state == chosen_abobus.idle_state)) {
+                    if (chosen_abobus && (chosen_abobus.GetState() == chosen_abobus.idle_state)) {
                         chosen_abobus = null;
                     }
                 }
