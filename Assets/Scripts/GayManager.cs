@@ -35,7 +35,7 @@ public class GayManager : MonoBehaviour
         team_turn = (Team)cur_turn;
         team_turn_text.text = team_turn.ToString();
         EnableAbobi(team_turn);
-        Debug.Log($"<color=green>New turn!</color>");
+        Debug.Log($"<color=yellow>New turn!</color>");
     }
 
     private Dictionary<Team, List<GameObject>> abobi;

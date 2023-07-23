@@ -7,14 +7,14 @@ public class AbobusSelectedState : AbobusState
 {
     public AbobusSelectedState(GayManager gm, Abobus abobus_) : base(gm, abobus_) {}
     override public void Enter()
-    {
+    { 
         gay_manager.ClearAllHighlightedCells();
 
         abobus.transform.position += new Vector3(0, 10, 0);
         
 
         if ( (!abobus.movement_state.entered) && (!abobus.skill_performing_state.entered) ) {
-            Debug.Log("Highlighting possible movement cells", abobus);
+            Debug.Log($"Highlighting <color=yellow>Movement</color> cells", abobus);
             List<HexCoordinates> movement_coords_list = abobus.GetPossibleMovementTurns();
             foreach (HexCoordinates hex_coordinates in movement_coords_list) {
                 HexCell hex_cell = gay_manager.hex_grid.GetCellByHexCoordinates(hex_coordinates);
@@ -33,7 +33,7 @@ public class AbobusSelectedState : AbobusState
         }
         // подсветка ходов для апплая скила
         if (!abobus.skill_performing_state.entered) {
-            Debug.Log("Highlighting skill trigger cells", abobus);
+            Debug.Log($"Highlighting <color=yellow>SkillTrigger</color> cells", abobus);
             List<HexCoordinates> skill_trigger_coords_list = abobus.GetPossibleSkillTriggerTurns();
             foreach (HexCoordinates hex_coords in skill_trigger_coords_list) {
                 HexCell hex_cell = gay_manager.hex_grid.GetCellByHexCoordinates(hex_coords);
@@ -74,7 +74,6 @@ public class AbobusSelectedState : AbobusState
     {
         gay_manager.ClearAllHighlightedCells();
         abobus.transform.position += new Vector3(0, -10, 0);
-        entered = false;
     }
 
 }

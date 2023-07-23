@@ -18,9 +18,11 @@ public class AbobusSkillPerformingState : AbobusState
             return;
         }
         entered = true;
-        gay_manager.DisableAbobi(abobus.team, abobus);
+        abobus.transform.position += new Vector3(0, 10, 0);
 
-        List<HexCoordinates> skill_performing_coords_list = abobus.GetPossibleSkillTriggerTurns();
+        gay_manager.DisableAbobi(abobus.team, abobus);
+        Debug.Log($"Highlighting <color=yellow>SkillPerformingCells</color>");
+        List<HexCoordinates> skill_performing_coords_list = abobus.GetPossibleSkillTurns(applied_to);
         foreach (HexCoordinates hex_coords in skill_performing_coords_list) {
             HexCell hex_cell = gay_manager.hex_grid.GetCellByHexCoordinates(hex_coords);
             hex_cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
@@ -29,8 +31,14 @@ public class AbobusSkillPerformingState : AbobusState
     
     override public void HandleInput(HexCell hex_cell = null)
     {
+        if (abobus.GetState() == abobus.disabled_state) {
+            return;
+        }
+        if (abobus.GetState() == abobus.skill_performing_state && hex_cell == null) {
+            abobus.SwitchState(abobus.idle_state);
+        }
         if (hex_cell != null) {
-            if (hex_cell.GetComponent<HighlightableCell>().GetState() == HighlightableCell.State.highlighted_green) {
+            if (hex_cell.GetComponent<HighlightableCell>().GetState() == HighlightableCell.State.highlighted_yellow) {
                 Debug.Log("Skill performing state handles input", abobus);
                 abobus.PerformSkill(applied_to, hex_cell);
                 applied_to = null;
@@ -46,6 +54,7 @@ public class AbobusSkillPerformingState : AbobusState
     }
     override public void Exit()
     {
-
+        gay_manager.ClearAllHighlightedCells();
+        abobus.transform.position += new Vector3(0, -10, 0);
     }
 }

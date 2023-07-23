@@ -8,13 +8,15 @@ public class AbobusIdleState : AbobusState
     public AbobusIdleState(GayManager gm, Abobus abobus_) : base(gm, abobus_) {}
     override public void Enter() 
     {
-        if (abobus.GetState() == abobus.disabled_state) {
-            return;
-        }        
+         
     }
     override public void HandleInput(HexCell hex_cell = null)
     {
-        abobus.SwitchState(abobus.selected_state);
+        if (abobus.skill_performing_state.entered) {
+            abobus.SwitchState(abobus.skill_performing_state);
+        } else {
+            abobus.SwitchState(abobus.selected_state);
+        }
     }
 
     
