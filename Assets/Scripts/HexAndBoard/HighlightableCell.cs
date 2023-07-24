@@ -49,31 +49,33 @@ public class HighlightableCell : MonoBehaviour
     private HexCell hex_cell;
     private Renderer renderer_; 
 
-    public Material highlighted_material;
-    private Material default_material;
+    // public Material highlighted_material;
 
     private Color highlighted_color;
-    private Color default_color;
-
+    private Material default_material;
+    private Color? default_color;
     private float default_y;
     public float highlighted_y_offset;
 
     void Awake() {
         is_highlighted = false;
-        renderer_ = GetComponentInChildren<Renderer>();
-        hex_cell = GetComponentInChildren<HexCell>();
-        default_material = renderer_.material;
-        default_y = hex_cell.transform.position.y;
+        renderer_ = GetComponent<Renderer>();
+        hex_cell = GetComponent<HexCell>();
+        default_color = null;
     }
     private void SetHighlighted() {
         is_highlighted = true;
-        renderer_.material = highlighted_material;
+        // renderer_.material = highlighted_material;
+        default_color = renderer_.material.color;
+        default_y = hex_cell.transform.position.y;
         renderer_.material.color = highlighted_color;
         transform_.position = new Vector3(transform_.position.x, default_y + highlighted_y_offset, transform_.position.z);
     
     }
     private void SetDefault() {
-        renderer_.material = default_material;
+        if (default_color is Color default_color_) {
+            renderer_.material.color = default_color_;
+        }
         transform_.position = new Vector3(transform_.position.x, default_y, transform_.position.z);
     }
 }

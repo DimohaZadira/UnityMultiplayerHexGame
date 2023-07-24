@@ -32,14 +32,13 @@ public class AbobusSelectedState : AbobusState
             } 
         }
         // подсветка ходов для апплая скила
-        if (!abobus.skill_performing_state.entered) {
-            Debug.Log($"Highlighting <color=yellow>SkillTrigger</color> cells", abobus);
-            List<HexCoordinates> skill_trigger_coords_list = abobus.GetPossibleSkillTriggerTurns();
-            foreach (HexCoordinates hex_coords in skill_trigger_coords_list) {
-                HexCell hex_cell = gay_manager.hex_grid.GetCellByHexCoordinates(hex_coords);
-                hex_cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
-            }
-        } 
+        Debug.Log($"Highlighting <color=yellow>SkillTrigger</color> cells", abobus);
+        List<HexCoordinates> skill_trigger_coords_list = abobus.GetPossibleSkillTriggerTurns();
+        foreach (HexCoordinates hex_coords in skill_trigger_coords_list) {
+            HexCell hex_cell = gay_manager.hex_grid.GetCellByHexCoordinates(hex_coords);
+            hex_cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
+        }
+        
     }
     
     override public void HandleInput(HexCell hex_cell = null)

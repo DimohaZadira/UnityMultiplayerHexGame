@@ -17,6 +17,9 @@ public class Slong : Abobus
     override public void PerformSkill(HexCell from, HexCell to)
     {
         Debug.Log("Moving zveronic from " + from.hex_coordinates.ToString() + " to " + to.hex_coordinates.ToString());
+        Abobus to_move = gay_manager.GetAbobusByHexCoordinates(from.hex_coordinates);
+        to_move.MoveToHexCoordinates(to.hex_coordinates);
+        MoveToHexCoordinates(from.hex_coordinates);
     }
     private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
     {

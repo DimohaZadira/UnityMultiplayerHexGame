@@ -71,15 +71,15 @@ public class GayManager : MonoBehaviour
         }
 
         hex_grid = hex_grid_go.GetComponent<HexGrid>();
-        hex_grid.CreateGrid();
+        hex_grid.CreateGrid(9, 9);
         
-        GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KnightPrefab"), new Vector2(0, 0), Team.blue);
+        GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KnightPrefab"), new Vector2(5, 9), Team.blue);
         abobi[Team.blue].Add(abobus_go);
         
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KnightPrefab"), new Vector2(1, 0), Team.blue);
+        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KnightPrefab"), new Vector2(5, 10), Team.blue);
         abobi[Team.blue].Add(abobus_go);
         
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/PawnPrefab"), new Vector2(3, 0), Team.yellow);
+        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/PawnPrefab"), new Vector2(4, 9), Team.yellow);
         abobi[Team.yellow].Add(abobus_go);  
 
         playerInput = GetComponent<PlayerInput>();
@@ -136,7 +136,18 @@ public class GayManager : MonoBehaviour
         }
         return ans;
     }
-    
+
+    public Abobus GetAbobusByHexCoordinates(HexCoordinates hex_coordinates)
+    {
+        List<Abobus> abobi = GetAllAbobi();
+        foreach (Abobus abobus in abobi) {
+            if (abobus.hex_coordinates == hex_coordinates) {
+                return abobus;
+            }
+        }
+        return null;
+    }
+
     public void ClearAllHighlightedCells()
     {
         foreach (HexCell hex_cell in hex_grid.GetAllCells()) {

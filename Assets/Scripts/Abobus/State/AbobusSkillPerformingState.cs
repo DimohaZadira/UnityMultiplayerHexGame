@@ -17,10 +17,9 @@ public class AbobusSkillPerformingState : AbobusState
             Debug.Log($"<color=red>ERROR</color> Cannot perform skill with applied_to = null!");
             return;
         }
-        entered = true;
+        // entered = true;
         abobus.transform.position += new Vector3(0, 10, 0);
 
-        gay_manager.DisableAbobi(abobus.team, abobus);
         Debug.Log($"Highlighting <color=yellow>SkillPerformingCells</color>");
         List<HexCoordinates> skill_performing_coords_list = abobus.GetPossibleSkillTurns(applied_to);
         foreach (HexCoordinates hex_coords in skill_performing_coords_list) {
@@ -40,8 +39,9 @@ public class AbobusSkillPerformingState : AbobusState
         if (hex_cell != null) {
             if (hex_cell.GetComponent<HighlightableCell>().GetState() == HighlightableCell.State.highlighted_yellow) {
                 Debug.Log("Skill performing state handles input", abobus);
+                gay_manager.DisableAbobi(abobus.team, abobus);
                 abobus.PerformSkill(applied_to, hex_cell);
-                applied_to = null;
+                gay_manager.SwitchTurn();
             }
         }
         
@@ -50,11 +50,12 @@ public class AbobusSkillPerformingState : AbobusState
     override public void Refresh()
     {
         applied_to = null;
-        entered = false;
+        // entered = false;
     }
     override public void Exit()
     {
         gay_manager.ClearAllHighlightedCells();
+        applied_to = null;
         abobus.transform.position += new Vector3(0, -10, 0);
     }
 }

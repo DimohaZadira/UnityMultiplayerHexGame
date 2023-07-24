@@ -13,7 +13,7 @@ public class AbobusIdleState : AbobusState
     override public void HandleInput(HexCell hex_cell = null)
     {
         if (abobus.skill_performing_state.entered) {
-            abobus.SwitchState(abobus.skill_performing_state);
+            abobus.SwitchState(abobus.selected_state);
         } else {
             abobus.SwitchState(abobus.selected_state);
         }
