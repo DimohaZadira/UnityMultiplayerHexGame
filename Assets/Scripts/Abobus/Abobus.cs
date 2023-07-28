@@ -13,7 +13,7 @@ public abstract class Abobus : MonoBehaviour
     public abstract List<HexCoordinates> GetPossibleMovementTurns();
     public abstract List<HexCoordinates> GetPossibleSkillTriggerTurns();
     public abstract List<HexCoordinates> GetPossibleSkillTurns(HexCell from);
-    public abstract void PerformSkill(HexCell from, HexCell to);
+    public abstract bool PerformSkill(HexCell from, HexCell to);
     // public abstract List<HexCoordinates> GetPossibleTurns();
     public abstract void Init();
 
@@ -74,7 +74,7 @@ public abstract class Abobus : MonoBehaviour
 
     public void MoveToHexCoordinates(HexCoordinates hc)
     {
-        gay_manager.hex_grid.GetCellByHexCoordinates(hex_coordinates).state = HexCell.State.empty;
+        HexCoordinates old_coords = hex_coordinates;
         hex_coordinates = hc;
         hc = HexCoordinates.ToOffsetCoordinates(hc.X, hc.Z);
         Vector3 from_hex_coords = HexCoordinates.FromHexCoordinates(hc);
@@ -82,8 +82,9 @@ public abstract class Abobus : MonoBehaviour
         GetComponentInParent<Transform>().localPosition = from_hex_coords;
 
         GetComponentInParent<Transform>().localRotation = Quaternion.Euler(0, 120, 0);
-
-        gay_manager.hex_grid.GetCellByHexCoordinates(hex_coordinates).state = HexCell.State.abobus;
+        
+        gay_manager.RefreshHexCellState(old_coords);
+        gay_manager.RefreshHexCellState(hex_coordinates);
     }
     
 }

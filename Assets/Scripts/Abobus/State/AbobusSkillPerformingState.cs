@@ -10,6 +10,7 @@ public class AbobusSkillPerformingState : AbobusState
     }
     
     public HexCell applied_to;
+    public bool skill_performed;
 
     override public void Enter()
     {
@@ -40,8 +41,12 @@ public class AbobusSkillPerformingState : AbobusState
             if (hex_cell.GetComponent<HighlightableCell>().GetState() == HighlightableCell.State.highlighted_yellow) {
                 Debug.Log("Skill performing state handles input", abobus);
                 gay_manager.DisableAbobi(abobus.team, abobus);
-                abobus.PerformSkill(applied_to, hex_cell);
-                gay_manager.SwitchTurn();
+                skill_performed = abobus.PerformSkill(applied_to, hex_cell);
+                if (skill_performed) {
+                    gay_manager.SwitchTurn();
+                }
+                applied_to = hex_cell;
+                abobus.SwitchState(abobus.skill_performing_state);
             }
         }
         
@@ -50,12 +55,15 @@ public class AbobusSkillPerformingState : AbobusState
     override public void Refresh()
     {
         applied_to = null;
+        skill_performed = false;
         // entered = false;
     }
     override public void Exit()
     {
         gay_manager.ClearAllHighlightedCells();
-        applied_to = null;
+        if (skill_performed) {
+            applied_to = null;
+        }
         abobus.transform.position += new Vector3(0, -10, 0);
     }
 }

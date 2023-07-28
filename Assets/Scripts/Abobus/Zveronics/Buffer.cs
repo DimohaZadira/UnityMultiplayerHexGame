@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slong : Abobus
+public class Buffer : Abobus
 {
-    private RangeOneComponent movement_cells;
+    private RangeTwoComponent movement_cells;
     private RangeOneComponent skill_trigger_cells;
-    private RadiusThreeComponent skill_cells;
+    private RangeOneComponent skill_cells;
 
     override public void Init()
     {
-        movement_cells = new RangeOneComponent();
+        movement_cells = new RangeTwoComponent();
         skill_trigger_cells = new RangeOneComponent();
-        skill_cells = new RadiusThreeComponent();
+        skill_cells = new RangeOneComponent();
     }
     override public bool PerformSkill(HexCell from, HexCell to)
     {
-        Debug.Log("Moving zveronic from " + from.hex_coordinates.ToString() + " to " + to.hex_coordinates.ToString());
         Abobus to_move = gay_manager.GetAbobusByHexCoordinates(from.hex_coordinates);
         to_move.MoveToHexCoordinates(to.hex_coordinates);
         MoveToHexCoordinates(from.hex_coordinates);
+        
         return true;
     }
     private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
@@ -52,7 +52,9 @@ public class Slong : Abobus
     
     override public List<HexCoordinates> GetPossibleSkillTurns(HexCell from)
     {
-        return GetPossibleTurns(from.hex_coordinates, skill_cells.GetBasisTurns(), HexCell.State.empty);
+        List<HexCoordinates> ans = GetPossibleTurns(from.hex_coordinates, skill_cells.GetBasisTurns(), HexCell.State.empty);
+        ans.Add(hex_coordinates);
+        return ans;
     }
 
 }

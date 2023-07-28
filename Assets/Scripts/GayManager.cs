@@ -75,12 +75,15 @@ public class GayManager : MonoBehaviour
         
         GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KnightPrefab"), new Vector2(5, 9), Team.blue);
         abobi[Team.blue].Add(abobus_go);
+        RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
         
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KnightPrefab"), new Vector2(5, 10), Team.blue);
+        abobus_go = SpawnAbobus<Buffer>(Resources.Load("Abobi/BishopPrefab"), new Vector2(5, 10), Team.blue);
         abobi[Team.blue].Add(abobus_go);
+        RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
         
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/PawnPrefab"), new Vector2(4, 9), Team.yellow);
+        abobus_go = SpawnAbobus<Primar>(Resources.Load("Abobi/PawnPrefab"), new Vector2(4, 9), Team.yellow);
         abobi[Team.yellow].Add(abobus_go);  
+        RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
 
         playerInput = GetComponent<PlayerInput>();
 
@@ -153,6 +156,19 @@ public class GayManager : MonoBehaviour
         foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
             hex_cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
         }
+    }
+
+    public void RefreshHexCellState (HexCoordinates hex_coordinates) {
+        HexCell hex_cell = hex_grid.GetCellByHexCoordinates(hex_coordinates);
+        if (GetAbobusByHexCoordinates(hex_coordinates) != null) {
+            Debug.Log("kek");
+            hex_cell.state = HexCell.State.abobus;
+        } else if (hex_grid.CheckHexCoordsOutOfBounds(hex_coordinates)) {
+            hex_cell.state = HexCell.State.out_of_bounds;
+        } else {
+            hex_cell.state = HexCell.State.empty;
+        }
+
     }
 
     public void OnMouseClick(InputAction.CallbackContext value) {
