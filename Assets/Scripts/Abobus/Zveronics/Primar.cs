@@ -23,6 +23,9 @@ public class Primar : Abobus
         MoveToHexCoordinates(to.hex_coordinates);
         return true;
     }
+    override public void PrePerformSkill(HexCell to) {
+        MoveToHexCoordinates(to.hex_coordinates);
+    }
     private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
     {
         List<HexCoordinates> ans = new List<HexCoordinates>();

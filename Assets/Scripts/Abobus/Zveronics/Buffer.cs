@@ -22,6 +22,7 @@ public class Buffer : Abobus
         
         return true;
     }
+    override public void PrePerformSkill(HexCell to) {}
     private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
     {
         List<HexCoordinates> ans = new List<HexCoordinates>();

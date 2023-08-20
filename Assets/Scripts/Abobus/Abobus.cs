@@ -14,6 +14,7 @@ public abstract class Abobus : MonoBehaviour
     public abstract List<HexCoordinates> GetPossibleSkillTriggerTurns();
     public abstract List<HexCoordinates> GetPossibleSkillTurns(HexCell from);
     public abstract bool PerformSkill(HexCell from, HexCell to);
+    public abstract void PrePerformSkill(HexCell to);
     // public abstract List<HexCoordinates> GetPossibleTurns();
     public abstract void Init();
 

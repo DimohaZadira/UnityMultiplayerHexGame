@@ -10,6 +10,7 @@ public class AbobusMovementState : AbobusState
     }
     override public void Enter()
     {
+        gay_manager.DisableAbobi(abobus.team, abobus);
         entered = true;
     }
     
@@ -18,7 +19,6 @@ public class AbobusMovementState : AbobusState
         if (hex_cell != null) {
             Debug.Log("Movement state handles input", abobus);
             abobus.MoveToHexCoordinates(hex_cell.hex_coordinates);
-            gay_manager.DisableAbobi(abobus.team, abobus);
         }
         abobus.SwitchState(abobus.selected_state);
     }

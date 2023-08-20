@@ -18,8 +18,10 @@ public class AbobusSkillPerformingState : AbobusState
             Debug.Log($"<color=red>ERROR</color> Cannot perform skill with applied_to = null!");
             return;
         }
+        gay_manager.DisableAbobi(abobus.team, abobus);
         // entered = true;
         abobus.transform.position += new Vector3(0, 10, 0);
+        abobus.PrePerformSkill(applied_to);
 
         Debug.Log($"Highlighting <color=yellow>SkillPerformingCells</color>");
         List<HexCoordinates> skill_performing_coords_list = abobus.GetPossibleSkillTurns(applied_to);
@@ -35,7 +37,8 @@ public class AbobusSkillPerformingState : AbobusState
             return;
         }
         if (abobus.GetState() == abobus.skill_performing_state && hex_cell == null) {
-            abobus.SwitchState(abobus.idle_state);
+            return;
+            //abobus.SwitchState(abobus.idle_state);
         }
         if (hex_cell != null) {
             if (hex_cell.GetComponent<HighlightableCell>().GetState() == HighlightableCell.State.highlighted_yellow) {
