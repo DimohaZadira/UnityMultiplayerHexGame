@@ -1,19 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*ВЫБРАН СЛОНГ: зеленым подсвечиваются все гексы в радиусе 1 за исключением тех, на которых стоят другие звероники. 
+Если СЛОНГ граничит с противником, гекс, на котором стоит противник, подсвечивается желтым 
+(если противник не КАЙМАНЧ, гекс с КАЙМАНЧЕМ не подсвечивается). 
+Фигура звероника, стоящего на этом гексе, делается полупрозрачной и кликабельной. 
+После клика на полупрозрачную фигуру (это значит, что СЛОНГ применяет свою способность на этого звероника) 
+все клетки в радиусе 3 от выбранного противника тоже подсвечиваются желтым 
+(это клетки, на которые можно переместить выбранного противника). 
+Таким образом, чтобы применить способность, нужно сначала нажать на гекс с противником, куда будет перемещен 
+СЛОНГ при завершении хода, а затем – на гекс, куда должен быть перемещен противник после применения способности. 
+Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Slong : Abobus
 {
-    private RangeOneComponent movement_cells;
-    private RangeOneComponent skill_trigger_cells;
-    private RadiusThreeComponent skill_cells;
-
-    override public void Init()
-    {
-        movement_cells = new RangeOneComponent();
-        skill_trigger_cells = new RangeOneComponent();
-        skill_cells = new RadiusThreeComponent();
-    }
     override public bool PerformSkill(HexCell from, HexCell to)
     {
         Debug.Log("Moving zveronic from " + from.hex_coordinates.ToString() + " to " + to.hex_coordinates.ToString());
@@ -23,7 +22,8 @@ public class Slong : Abobus
         MoveToHexCoordinates(from.hex_coordinates);
         return true;
     }
-    override public void PrePerformSkill(HexCell to) {}
+    override public void PrePerformSkill(HexCell to) {
+    }
     private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
     {
         List<HexCoordinates> ans = new List<HexCoordinates>();
@@ -43,14 +43,14 @@ public class Slong : Abobus
 
     override public List<HexCoordinates> GetPossibleMovementTurns()
     {
-        return GetPossibleTurns(hex_coordinates, movement_cells.GetBasisTurns(), HexCell.State.empty);
+        return GetPossibleTurns(hex_coordinates, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
     }
 
     override public List<HexCoordinates> GetPossibleSkillTriggerTurns()
     {
         List<HexCoordinates> ans = new List<HexCoordinates>();
 
-        foreach (Vector3 turn in movement_cells.GetBasisTurns()) {
+        foreach (Vector3 turn in RangeOneComponent.GetBasisTurns()) {
             HexCoordinates candidate = HexCoordinates.FromXY(hex_coordinates.X + (int)turn[0], hex_coordinates.Y + (int)turn[1]);
             
             if (!gay_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
@@ -67,7 +67,7 @@ public class Slong : Abobus
     
     override public List<HexCoordinates> GetPossibleSkillTurns(HexCell from)
     {
-        return GetPossibleTurns(from.hex_coordinates, skill_cells.GetBasisTurns(), HexCell.State.empty);
+        return GetPossibleTurns(from.hex_coordinates, RadiusThreeComponent.GetBasisTurns(), HexCell.State.empty);
     }
 
 }

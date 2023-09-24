@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,9 +23,11 @@ public class AbobusSkillPerformingState : AbobusState
         // entered = true;
         abobus.transform.position += new Vector3(0, 10, 0);
         abobus.PrePerformSkill(applied_to);
-
         Debug.Log($"Highlighting <color=yellow>SkillPerformingCells</color>");
         List<HexCoordinates> skill_performing_coords_list = abobus.GetPossibleSkillTurns(applied_to);
+        if (skill_performing_coords_list.Count == 0) {
+            gay_manager.SwitchTurn();
+        }
         foreach (HexCoordinates hex_coords in skill_performing_coords_list) {
             HexCell hex_cell = gay_manager.hex_grid.GetCellByHexCoordinates(hex_coords);
             hex_cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);

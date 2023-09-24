@@ -16,7 +16,6 @@ public abstract class Abobus : MonoBehaviour
     public abstract bool PerformSkill(HexCell from, HexCell to);
     public abstract void PrePerformSkill(HexCell to);
     // public abstract List<HexCoordinates> GetPossibleTurns();
-    public abstract void Init();
 
     // states
     public AbobusIdleState idle_state;
@@ -70,7 +69,6 @@ public abstract class Abobus : MonoBehaviour
         states.Add(skill_performing_state);
 
         state = disabled_state;
-        Init();
     }
 
     public void MoveToHexCoordinates(HexCoordinates hc)

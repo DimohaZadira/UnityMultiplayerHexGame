@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RadiusThreeComponent
+public static class RadiusThreeComponent
 {
-    private Vector3[] turns = 
+    private static Vector3[] turns = 
            new Vector3[] {new Vector3(-3,  0,  3)
                         , new Vector3( 0, -3,  3)
                         , new Vector3( 3, -3,  0)
@@ -12,7 +12,7 @@ public class RadiusThreeComponent
                         , new Vector3( 0,  3, -3)
                         , new Vector3(-3,  3,  0)};
 
-    public Vector3[] GetBasisTurns() { 
+    public static Vector3[] GetBasisTurns() { 
         return turns; 
     }
 }

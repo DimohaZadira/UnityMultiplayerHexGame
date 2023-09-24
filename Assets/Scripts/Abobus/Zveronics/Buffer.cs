@@ -1,19 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*ВЫБРАН БАФФЕР: зеленым подсвечиваются все гексы в радиусе 2 за исключением тех, на которых стоят другие звероники. 
+Если БАФФЕР граничит с другим звероником (кроме КАЙМАНЧА), то гекс с соседом подсвечивается желтым. 
+При нажатии на него желтым подсвечиваются все гексы в радиусе 1 от выбранного. 
+Если на каком-то из них стоит другой звероник, то такой ход невозможен (желтым этот гекс не подсвечивается). 
+После нажатия на один из подсвеченных желтым гексов противник будет перемещен на выбранный гекс, а БАФФЕР – на гекс, 
+на котором стоял противник до применения способности. Поменять местами БАФФЕРА и любого его соседа возможно. 
+Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Buffer : Abobus
 {
-    private RangeTwoComponent movement_cells;
-    private RangeOneComponent skill_trigger_cells;
-    private RangeOneComponent skill_cells;
 
-    override public void Init()
-    {
-        movement_cells = new RangeTwoComponent();
-        skill_trigger_cells = new RangeOneComponent();
-        skill_cells = new RangeOneComponent();
-    }
     override public bool PerformSkill(HexCell from, HexCell to)
     {
         Abobus to_move = gay_manager.GetAbobusByHexCoordinates(from.hex_coordinates);
@@ -22,7 +19,7 @@ public class Buffer : Abobus
         
         return true;
     }
-    override public void PrePerformSkill(HexCell to) {}
+    override public void PrePerformSkill(HexCell to) { }
     private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
     {
         List<HexCoordinates> ans = new List<HexCoordinates>();
@@ -42,18 +39,18 @@ public class Buffer : Abobus
 
     override public List<HexCoordinates> GetPossibleMovementTurns()
     {
-        return GetPossibleTurns(hex_coordinates, movement_cells.GetBasisTurns(), HexCell.State.empty);
+        return GetPossibleTurns(hex_coordinates, RangeTwoComponent.GetBasisTurns(), HexCell.State.empty);
     }
 
     override public List<HexCoordinates> GetPossibleSkillTriggerTurns()
     {
-        return GetPossibleTurns(hex_coordinates, skill_trigger_cells.GetBasisTurns(), HexCell.State.abobus);
+        return GetPossibleTurns(hex_coordinates, RangeOneComponent.GetBasisTurns(), HexCell.State.abobus);
     }
 
     
     override public List<HexCoordinates> GetPossibleSkillTurns(HexCell from)
     {
-        List<HexCoordinates> ans = GetPossibleTurns(from.hex_coordinates, skill_cells.GetBasisTurns(), HexCell.State.empty);
+        List<HexCoordinates> ans = GetPossibleTurns(from.hex_coordinates, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
         ans.Add(hex_coordinates);
         return ans;
     }
