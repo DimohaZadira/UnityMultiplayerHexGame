@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2644048283959424702}
-  - component: {fileID: 25927175119498405}
+  - component: {fileID: 3044471878197181302}
   m_Layer: 0
   m_Name: KnightPrefab
   m_TagString: Untagged
@@ -25,15 +25,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6402351426786740817}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.43, y: 0.19, z: -2.85}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8439434619371421000}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &25927175119498405
+--- !u!136 &3044471878197181302
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -55,7 +55,7 @@ CapsuleCollider:
   m_Radius: 2
   m_Height: 10
   m_Direction: 1
-  m_Center: {x: 0, y: 4, z: 0}
+  m_Center: {x: -11.5, y: 5.62, z: -16.3}
 --- !u!1001 &8256325652957436579
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -72,17 +72,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 83e2b2de271a0b64d986c0155959a413,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 11.56
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 83e2b2de271a0b64d986c0155959a413,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.19
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 83e2b2de271a0b64d986c0155959a413,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 16.08
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 83e2b2de271a0b64d986c0155959a413,
         type: 3}

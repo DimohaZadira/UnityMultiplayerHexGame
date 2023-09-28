@@ -11,6 +11,8 @@ public class AbobusSelectedState : AbobusState
         gay_manager.ClearAllHighlightedCells();
 
         abobus.transform.position += new Vector3(0, 10, 0);
+
+        abobus.GetComponent<Animator>().SetBool("Selected", true);
         
 
         if ( (!abobus.movement_state.entered) && (!abobus.skill_performing_state.entered) ) {
@@ -73,6 +75,8 @@ public class AbobusSelectedState : AbobusState
     {
         gay_manager.ClearAllHighlightedCells();
         abobus.transform.position += new Vector3(0, -10, 0);
+        
+        abobus.GetComponent<Animator>().SetBool("Selected", false);
     }
 
 }

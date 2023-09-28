@@ -21,6 +21,7 @@ public class Sohad : Abobus
     }
     override public bool PerformSkill(HexCell from, HexCell to)
     {
+        visited.Add(hex_coordinates);
         MoveToHexCoordinates(to.hex_coordinates); 
         return !(GetSkillTurns(hex_coordinates).Count > 1);
     }
@@ -43,6 +44,7 @@ public class Sohad : Abobus
                 }
                 
                 HexCell cell_candidate = gay_manager.hex_grid.GetCellByHexCoordinates(candidate);
+                
                 if (cell_candidate.state == HexCell.State.empty) {
                     ans.Add(candidate);
                 } else {
