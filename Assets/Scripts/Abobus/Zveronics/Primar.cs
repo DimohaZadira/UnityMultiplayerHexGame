@@ -10,17 +10,27 @@ using UnityEngine;
 После клика на подсвеченную зеленым клетку ход заканчивается.*/
 public class Primar : Abobus
 {
+    public List<HexCoordinates> visited;
+    public Primar()
+    {
+        perform_skill_on_enter = true;
+        visited = new List<HexCoordinates>();
+    }
+    override public void RefreshSelf()
+    {
+        visited.Clear();
+    }
     override public bool PerformSkill(HexCell from, HexCell to)
     {
+        Debug.Log("Entered <color=yellow>PerformSkill</color>");
         if (gay_manager.GetAbobusByHexCoordinates(to.hex_coordinates)) {
+            Debug.Log("adding visited");
+            visited.Add(hex_coordinates);
             MoveToHexCoordinates(to.hex_coordinates);
             return false;
         }
         MoveToHexCoordinates(to.hex_coordinates);
         return true;
-    }
-    override public void PrePerformSkill(HexCell to) {
-        MoveToHexCoordinates(to.hex_coordinates);
     }
     private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
     {
@@ -52,8 +62,20 @@ public class Primar : Abobus
     
     override public List<HexCoordinates> GetPossibleSkillTurns(HexCell from)
     {
-        List<HexCoordinates> ans = GetPossibleTurns(from.hex_coordinates, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
-        ans.AddRange(GetPossibleTurns(from.hex_coordinates, RangeOneComponent.GetBasisTurns(), HexCell.State.abobus));
+        List<HexCoordinates> ans = new List<HexCoordinates>();
+        Vector3[] basis_turns = RangeOneComponent.GetBasisTurns();
+        foreach (Vector3 turn in basis_turns) {
+            HexCoordinates candidate = HexCoordinates.FromXY(from.hex_coordinates.X + (int)turn[0], from.hex_coordinates.Y + (int)turn[1]);
+            
+            if (!visited.Contains(candidate) && !gay_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
+                HexCell cell_candidate = gay_manager.hex_grid.GetCellByHexCoordinates(candidate);
+                if (cell_candidate.state == HexCell.State.empty
+                || cell_candidate.state == HexCell.State.abobus) {
+                    ans.Add(candidate);
+                }
+            }
+        }
+           
         return ans;
     }
 

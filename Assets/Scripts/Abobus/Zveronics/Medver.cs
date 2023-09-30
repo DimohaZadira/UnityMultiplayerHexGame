@@ -8,15 +8,17 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Medver : Abobus
 {
+    override public void RefreshSelf()
+    {
+    }
     override public bool PerformSkill(HexCell from, HexCell to)
     {
-        Abobus to_move = gay_manager.GetAbobusByHexCoordinates(from.hex_coordinates);
-        to_move.MoveToHexCoordinates(to.hex_coordinates);
-        MoveToHexCoordinates(from.hex_coordinates);
+        Abobus from_move = gay_manager.GetAbobusByHexCoordinates(from.hex_coordinates);
+        Abobus to_move = gay_manager.GetAbobusByHexCoordinates(to.hex_coordinates);
+        to_move.MoveToHexCoordinates(from.hex_coordinates);
+        from_move.MoveToHexCoordinates(to.hex_coordinates);
         
         return true;
-    }
-    override public void PrePerformSkill(HexCell to) {
     }
     private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
     {
@@ -37,7 +39,7 @@ public class Medver : Abobus
 
     override public List<HexCoordinates> GetPossibleMovementTurns()
     {
-        return GetPossibleTurns(hex_coordinates, RangeTwoComponent.GetBasisTurns(), HexCell.State.empty);
+        return GetPossibleTurns(hex_coordinates, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
     }
 
     override public List<HexCoordinates> GetPossibleSkillTriggerTurns()
@@ -48,7 +50,7 @@ public class Medver : Abobus
     
     override public List<HexCoordinates> GetPossibleSkillTurns(HexCell from)
     {
-        List<HexCoordinates> ans = GetPossibleTurns(from.hex_coordinates, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
+        List<HexCoordinates> ans = GetPossibleTurns(hex_coordinates, RangeOneComponent.GetBasisTurns(), HexCell.State.abobus);
         ans.Add(hex_coordinates);
         return ans;
     }

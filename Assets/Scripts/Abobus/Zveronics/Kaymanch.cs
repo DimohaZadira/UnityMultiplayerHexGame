@@ -11,6 +11,9 @@ using UnityEngine;
 public class Kaymanch : Abobus
 {
 
+    override public void RefreshSelf()
+    {
+    }
     override public bool PerformSkill(HexCell from, HexCell to)
     {
         Debug.Log("Moving zveronic from " + from.hex_coordinates.ToString() + " to " + to.hex_coordinates.ToString());
@@ -18,8 +21,6 @@ public class Kaymanch : Abobus
         Abobus to_move = gay_manager.GetAbobusByHexCoordinates(from.hex_coordinates);
         to_move.MoveToHexCoordinates(to.hex_coordinates);
         return true;
-    }
-    override public void PrePerformSkill(HexCell to) {
     }
     private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
     {

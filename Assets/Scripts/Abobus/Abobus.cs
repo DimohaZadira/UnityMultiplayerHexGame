@@ -9,13 +9,13 @@ public abstract class Abobus : MonoBehaviour
     public GayManager gay_manager;
     public GayManager.Team team;
     public HexCoordinates hex_coordinates;
-
+    public abstract void RefreshSelf();
     public abstract List<HexCoordinates> GetPossibleMovementTurns();
     public abstract List<HexCoordinates> GetPossibleSkillTriggerTurns();
     public abstract List<HexCoordinates> GetPossibleSkillTurns(HexCell from);
     public abstract bool PerformSkill(HexCell from, HexCell to);
-    public abstract void PrePerformSkill(HexCell to);
     // public abstract List<HexCoordinates> GetPossibleTurns();
+    public bool perform_skill_on_enter = false;
 
     // states
     public AbobusIdleState idle_state;
@@ -32,6 +32,11 @@ public abstract class Abobus : MonoBehaviour
     {
         state.HandleInput(hex_cell);
     }
+    public void Refresh()
+    {
+        RefreshStates();
+        RefreshSelf();
+    }
     public void RefreshStates()
     {
         foreach (AbobusState state in states) {
@@ -43,10 +48,11 @@ public abstract class Abobus : MonoBehaviour
         if (!force_switch && state == disabled_state) {
             return;
         }
-        Debug.Log("Switching from "+ state.class_name + " to " + state_.class_name, this);
+        Debug.Log("Switching from <color=yellow>"+ state.class_name + "</color> to <color=yellow>" + state_.class_name + "</color>", this);
         state.Exit();
         state = state_;
         state.Enter();
+        
     }
 
     public void Init(GayManager gm, GayManager.Team team_, HexCoordinates start_hc)

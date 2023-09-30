@@ -15,14 +15,14 @@ public class AbobusSkillPerformingState : AbobusState
 
     override public void Enter()
     {
+        Debug.Log("Entering <color=yellow>SkillPerformingState</color>");
         if (applied_to == null) {
             Debug.Log($"<color=red>ERROR</color> Cannot perform skill with applied_to = null!");
             return;
         }
         gay_manager.DisableAbobi(abobus.team, abobus);
-        // entered = true;
+        
         abobus.transform.position += new Vector3(0, 10, 0);
-        abobus.PrePerformSkill(applied_to);
         Debug.Log($"Highlighting <color=yellow>SkillPerformingCells</color>");
         List<HexCoordinates> skill_performing_coords_list = abobus.GetPossibleSkillTurns(applied_to);
         if (skill_performing_coords_list.Count == 0) {
@@ -32,6 +32,7 @@ public class AbobusSkillPerformingState : AbobusState
             HexCell hex_cell = gay_manager.hex_grid.GetCellByHexCoordinates(hex_coords);
             hex_cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
         }
+        HandleInput(applied_to);
     }
     
     override public void HandleInput(HexCell hex_cell = null)
@@ -41,11 +42,12 @@ public class AbobusSkillPerformingState : AbobusState
         }
         if (abobus.GetState() == abobus.skill_performing_state && hex_cell == null) {
             return;
-            //abobus.SwitchState(abobus.idle_state);
         }
         if (hex_cell != null) {
-            if (hex_cell.GetComponent<HighlightableCell>().GetState() == HighlightableCell.State.highlighted_yellow) {
+            if (hex_cell.GetComponent<HighlightableCell>().GetState() == HighlightableCell.State.highlighted_yellow
+            || (!entered && abobus.perform_skill_on_enter)){
                 Debug.Log("Skill performing state handles input", abobus);
+                entered = true;
                 gay_manager.DisableAbobi(abobus.team, abobus);
                 skill_performed = abobus.PerformSkill(applied_to, hex_cell);
                 if (skill_performed) {
@@ -62,10 +64,11 @@ public class AbobusSkillPerformingState : AbobusState
     {
         applied_to = null;
         skill_performed = false;
-        // entered = false;
+        entered = false;
     }
     override public void Exit()
     {
+        Debug.Log("Exiting <color=yellow>SkillPerformingState</color>");
         gay_manager.ClearAllHighlightedCells();
         if (skill_performed) {
             applied_to = null;

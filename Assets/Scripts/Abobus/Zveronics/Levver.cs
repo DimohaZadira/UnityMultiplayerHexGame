@@ -11,6 +11,9 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Levver : Abobus
 {
+    override public void RefreshSelf()
+    {
+    }
     override public bool PerformSkill(HexCell from, HexCell to)
     {
         Abobus to_move = gay_manager.GetAbobusByHexCoordinates(from.hex_coordinates);
@@ -18,8 +21,6 @@ public class Levver : Abobus
         MoveToHexCoordinates(from.hex_coordinates);
         
         return true;
-    }
-    override public void PrePerformSkill(HexCell to) {
     }
     private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
     {
@@ -48,7 +49,6 @@ public class Levver : Abobus
         Vector3[] basis_turns = RangeOneComponent.GetBasisTurns();
         List<HexCoordinates> ans = new List<HexCoordinates>();
         foreach (Vector3 turn in basis_turns) {
-            int i = 0;
             // while () {
             //     i++;
             // }

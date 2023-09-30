@@ -10,6 +10,9 @@ using UnityEngine;
 на экран выводится символ «конец хода».*/
 public class Volcher : Abobus
 {
+    override public void RefreshSelf()
+    {
+    }
     override public bool PerformSkill(HexCell from, HexCell to)
     {
         Abobus to_move = gay_manager.GetAbobusByHexCoordinates(from.hex_coordinates);
@@ -17,8 +20,6 @@ public class Volcher : Abobus
         MoveToHexCoordinates(from.hex_coordinates);
         
         return true;
-    }
-    override public void PrePerformSkill(HexCell to) {
     }
     private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
     {

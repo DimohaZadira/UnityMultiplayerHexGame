@@ -77,18 +77,17 @@ public class GayManager : MonoBehaviour
 
         hex_grid = hex_grid_go.GetComponent<HexGrid>();
         hex_grid.CreateGrid(9, 9);
-        
-        GameObject abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 9), Team.blue);
+        GameObject abobus_go = SpawnAbobus<Primar>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 9), Team.blue);
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.cyan;
         abobi[Team.blue].Add(abobus_go);
         RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
         
-        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 10), Team.blue);
+        abobus_go = SpawnAbobus<Primar>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 10), Team.blue);
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
         RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
         
-        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/KingPrefab"), new Vector2(4, 9), Team.yellow);
+        abobus_go = SpawnAbobus<Primar>(Resources.Load("Abobi/KingPrefab"), new Vector2(4, 9), Team.yellow);
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);  
         RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
@@ -132,7 +131,7 @@ public class GayManager : MonoBehaviour
     {
         foreach(GameObject abobus_in_team in abobi[team]) {
             Abobus abobus = abobus_in_team.GetComponent<Abobus>();
-            abobus.RefreshStates();
+            abobus.Refresh();
             abobus.SwitchState(abobus.idle_state, true);
         }
     }
@@ -169,7 +168,6 @@ public class GayManager : MonoBehaviour
     public void RefreshHexCellState (HexCoordinates hex_coordinates) {
         HexCell hex_cell = hex_grid.GetCellByHexCoordinates(hex_coordinates);
         if (GetAbobusByHexCoordinates(hex_coordinates) != null) {
-            Debug.Log("kek");
             hex_cell.state = HexCell.State.abobus;
         } else if (hex_grid.CheckHexCoordsOutOfBounds(hex_coordinates)) {
             hex_cell.state = HexCell.State.out_of_bounds;

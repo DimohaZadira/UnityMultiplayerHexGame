@@ -13,6 +13,9 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Slong : Abobus
 {
+    override public void RefreshSelf()
+    {
+    }
     override public bool PerformSkill(HexCell from, HexCell to)
     {
         Debug.Log("Moving zveronic from " + from.hex_coordinates.ToString() + " to " + to.hex_coordinates.ToString());
@@ -21,8 +24,6 @@ public class Slong : Abobus
         to_move.MoveToHexCoordinates(to.hex_coordinates);
         MoveToHexCoordinates(from.hex_coordinates);
         return true;
-    }
-    override public void PrePerformSkill(HexCell to) {
     }
     private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
     {

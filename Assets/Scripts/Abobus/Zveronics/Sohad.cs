@@ -15,20 +15,21 @@ public class Sohad : Abobus
 {
     
     private List<HexCoordinates> visited;
-    public void Start()
+    public Sohad()
     {
+        perform_skill_on_enter = true;
         visited = new List<HexCoordinates>();
+    }
+    override public void RefreshSelf()
+    {
+        visited.Clear();
     }
     override public bool PerformSkill(HexCell from, HexCell to)
     {
+        Debug.Log("Entered <color=yellow>PerformSkill</color>");
         visited.Add(hex_coordinates);
         MoveToHexCoordinates(to.hex_coordinates); 
-        return !(GetSkillTurns(hex_coordinates).Count > 1);
-    }
-    override public void PrePerformSkill(HexCell to) {
-        visited.Clear();
-        visited.Add(hex_coordinates);
-        MoveToHexCoordinates(to.hex_coordinates); 
+        return !(GetSkillTurns(to.hex_coordinates).Count > 0);
     }
 
     override public List<HexCoordinates> GetPossibleMovementTurns()
