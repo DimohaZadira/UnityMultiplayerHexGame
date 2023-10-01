@@ -20,6 +20,7 @@ public class HexGrid : MonoBehaviour {
     public TextMeshProUGUI cell_label_prefab;
 	
 	public Dictionary<HexCoordinates, int> hex_coords_to_index;
+	public List<HexCoordinates> playing_field_cells;
     private HexCell[] cells;
     public System.ArraySegment<HexCell> GetAllCells () 
     {
@@ -27,6 +28,7 @@ public class HexGrid : MonoBehaviour {
     }
 	public void CreateGrid (int real_x, int real_y) 
 	{
+		playing_field_cells = new List<HexCoordinates>();
 		hex_coords_to_index = new Dictionary<HexCoordinates, int>();
         grid_canvas = GetComponentInChildren<Canvas>();
 		cells = new HexCell[height * width];
@@ -41,9 +43,9 @@ public class HexGrid : MonoBehaviour {
 					 || (x > width - 1 - offset_horizontal)
 					 || (z > height - offset_vertical - 1)
 					 || (z < offset_vertical)) {
-						CreateCell(x, z, i++, out_of_bounds_cell_material);
+						CreateCell(x, z, i++, false);
 					} else {
-						CreateCell(x, z, i++, common_cell_material);
+						CreateCell(x, z, i++, true);
 					}
 				}
 			} else {
@@ -52,16 +54,16 @@ public class HexGrid : MonoBehaviour {
 					 || (x > width - 1 - offset_horizontal)
 					 || (z > height - offset_vertical - 1)
 					 || (z < offset_vertical)) {
-						CreateCell(x, z, i++, out_of_bounds_cell_material);
+						CreateCell(x, z, i++, false);
 					} else {
-						CreateCell(x, z, i++, common_cell_material);
+						CreateCell(x, z, i++, true);
 					}
 				}
 			}
 		}
         cells_array_size = i;
 	}
-	void CreateCell (int x, int z, int i, Material material = null)
+	void CreateCell (int x, int z, int i, bool playing_field_cell)
 	{
 		Vector3 position = HexCoordinates.FromHexCoordinates(HexCoordinates.FromXZ(x, z));
 		
@@ -69,9 +71,12 @@ public class HexGrid : MonoBehaviour {
 		cell.transform.SetParent(transform, false);
 		cell.transform.localPosition = position;
 		cell.hex_coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
-        cell.state = HexCell.State.empty; // TODO: передать всю логику HexCell.State в GayManager
-		cell.GetComponent<Renderer>().material = material;
+        cell.state = playing_field_cell ? HexCell.State.empty : HexCell.State.out_of_bounds; // TODO: передать всю логику HexCell.State в GayManager
+		cell.GetComponent<Renderer>().material = playing_field_cell ? common_cell_material : out_of_bounds_cell_material;
 		
+		if (playing_field_cell) {
+			playing_field_cells.Add(cell.hex_coordinates);
+		}
 		hex_coords_to_index.Add(cell.hex_coordinates, i);
 		#if SHOW_GRID_COORDS
 		TextMeshProUGUI label = Instantiate<TextMeshProUGUI>(cell_label_prefab);
@@ -100,7 +105,7 @@ public class HexGrid : MonoBehaviour {
 
     public bool CheckHexCoordsOutOfBounds(HexCoordinates hex_coords)
     {
-        return !hex_coords_to_index.ContainsKey(hex_coords);
+        return !playing_field_cells.Contains(hex_coords);
     }
 
 
