@@ -25,6 +25,9 @@ public class GayManager : MonoBehaviour
     public void SwitchTurn()
     {
         ClearAllHighlightedCells();
+        foreach (HexCell hc in hex_grid.GetAllCells()) {
+            RefreshHexCellState(hc.hex_coordinates);
+        }
         DisableAbobi(team_turn);
         if (chosen_abobus) {
             chosen_abobus.RefreshStates();
