@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class AbobusDisabledState : AbobusState
 {
-    public AbobusDisabledState(GayManager gm, Abobus abobus_) : base(gm, abobus_) {}
+    public AbobusDisabledState(GameManager gm, Abobus abobus_) : base(gm, abobus_) {}
     override public void Enter() 
     {
         entered = true;

@@ -40,11 +40,11 @@ public class Sohad : Abobus
             for (int i = 1; i <= 2; ++i) {
                 HexCoordinates candidate = HexCoordinates.FromXY(hex_coordinates.X + i * (int)turn[0], hex_coordinates.Y + i * (int)turn[1]);
 
-                if (gay_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
+                if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
                     break;
                 }
                 
-                HexCell cell_candidate = gay_manager.hex_grid.GetCellByHexCoordinates(candidate);
+                HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
                 
                 if (cell_candidate.state == HexCell.State.empty) {
                     ans.Add(candidate);
@@ -66,12 +66,12 @@ public class Sohad : Abobus
             HexCoordinates neighbour = HexCoordinates.FromXY(hc.X + (int)turn[0], hc.Y + (int)turn[1]);
             HexCoordinates candidate = HexCoordinates.FromXY(hc.X + 2 * (int)turn[0], hc.Y + 2 * (int)turn[1]);
 
-            if (gay_manager.hex_grid.CheckHexCoordsOutOfBounds(neighbour) || gay_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
+            if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(neighbour) || game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
                 break;
             }
             
-            HexCell cell_neighbour = gay_manager.hex_grid.GetCellByHexCoordinates(neighbour);
-            HexCell cell_candidate = gay_manager.hex_grid.GetCellByHexCoordinates(candidate);
+            HexCell cell_neighbour = game_manager.hex_grid.GetCellByHexCoordinates(neighbour);
+            HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
             if ( (cell_neighbour.state == HexCell.State.abobus)
               && (cell_candidate.state == HexCell.State.empty)
               && !visited.Contains(candidate)){

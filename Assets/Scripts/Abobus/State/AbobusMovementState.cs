@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class AbobusMovementState : AbobusState
 {
-    public AbobusMovementState(GayManager gm, Abobus abobus_) : base(gm, abobus_) {
+    public AbobusMovementState(GameManager gm, Abobus abobus_) : base(gm, abobus_) {
         Refresh();
     }
     override public void Enter()

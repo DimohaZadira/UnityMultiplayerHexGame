@@ -8,8 +8,8 @@ public abstract class AbobusState
     public Abobus abobus;
     public string class_name;
     public bool entered;
-    public GayManager gay_manager;
-    public AbobusState(GayManager gm, Abobus abobus_)
+    public GameManager gay_manager;
+    public AbobusState(GameManager gm, Abobus abobus_)
     {
         gay_manager = gm;
         abobus = abobus_;

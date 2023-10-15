@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class AbobusIdleState : AbobusState
 {
-    public AbobusIdleState(GayManager gm, Abobus abobus_) : base(gm, abobus_) {}
+    public AbobusIdleState(GameManager gm, Abobus abobus_) : base(gm, abobus_) {}
     override public void Enter() 
     {
          

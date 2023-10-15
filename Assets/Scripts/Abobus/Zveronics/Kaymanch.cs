@@ -18,7 +18,7 @@ public class Kaymanch : Abobus
     {
         Debug.Log("Moving zveronic from " + from.hex_coordinates.ToString() + " to " + to.hex_coordinates.ToString());
         
-        Abobus to_move = gay_manager.GetAbobusByHexCoordinates(from.hex_coordinates);
+        Abobus to_move = game_manager.GetAbobusByHexCoordinates(from.hex_coordinates);
         to_move.MoveToHexCoordinates(to.hex_coordinates);
         return true;
     }
@@ -29,8 +29,8 @@ public class Kaymanch : Abobus
         foreach (Vector3 turn in basis_turns) {
             HexCoordinates candidate = HexCoordinates.FromXY(from.X + (int)turn[0], from.Y + (int)turn[1]);
             
-            if (!gay_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
-                HexCell cell_candidate = gay_manager.hex_grid.GetCellByHexCoordinates(candidate);
+            if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
+                HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
                 if (cell_candidate.state == check) {
                     ans.Add(candidate);
                 }
@@ -51,9 +51,9 @@ public class Kaymanch : Abobus
         foreach (Vector3 turn in RangeOneComponent.GetBasisTurns()) {
             HexCoordinates candidate = HexCoordinates.FromXY(hex_coordinates.X + (int)turn[0], hex_coordinates.Y + (int)turn[1]);
             
-            if (!gay_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
-                HexCell cell_candidate = gay_manager.hex_grid.GetCellByHexCoordinates(candidate);
-                if ((cell_candidate.state == HexCell.State.abobus) && (gay_manager.GetAbobusByHexCoordinates(candidate).team == team)) {
+            if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
+                HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
+                if ((cell_candidate.state == HexCell.State.abobus) && (game_manager.GetAbobusByHexCoordinates(candidate).team == team)) {
                     ans.Add(candidate);
                 }
             }

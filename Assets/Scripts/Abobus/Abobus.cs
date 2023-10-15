@@ -6,8 +6,8 @@ using UnityEngine.InputSystem;
 public abstract class Abobus : MonoBehaviour
 {
 
-    public GayManager gay_manager;
-    public GayManager.Team team;
+    public GameManager game_manager;
+    public GameManager.Team team;
     public HexCoordinates hex_coordinates;
     public abstract void RefreshSelf();
     public abstract List<HexCoordinates> GetPossibleMovementTurns();
@@ -55,23 +55,23 @@ public abstract class Abobus : MonoBehaviour
         
     }
 
-    public void Init(GayManager gm, GayManager.Team team_, HexCoordinates start_hc)
+    public void Init(GameManager gm, GameManager.Team team_, HexCoordinates start_hc)
     {
-        gay_manager = gm;
+        game_manager = gm;
         team = team_;
         hex_coordinates = start_hc;
         MoveToHexCoordinates(start_hc);
         // states
         states = new List<AbobusState>();
-        idle_state = new AbobusIdleState(gay_manager, this);
+        idle_state = new AbobusIdleState(game_manager, this);
         states.Add(idle_state);
-        selected_state = new AbobusSelectedState(gay_manager, this);
+        selected_state = new AbobusSelectedState(game_manager, this);
         states.Add(selected_state);
-        movement_state = new AbobusMovementState(gay_manager, this);
+        movement_state = new AbobusMovementState(game_manager, this);
         states.Add(movement_state);
-        disabled_state = new AbobusDisabledState(gay_manager, this);
+        disabled_state = new AbobusDisabledState(game_manager, this);
         states.Add(disabled_state);
-        skill_performing_state = new AbobusSkillPerformingState(gay_manager, this);
+        skill_performing_state = new AbobusSkillPerformingState(game_manager, this);
         states.Add(skill_performing_state);
 
         state = disabled_state;
@@ -87,9 +87,10 @@ public abstract class Abobus : MonoBehaviour
         GetComponentInParent<Transform>().localPosition = from_hex_coords;
 
         GetComponentInParent<Transform>().localRotation = Quaternion.Euler(0, 120, 0);
+
         
-        gay_manager.RefreshHexCellState(old_coords);
-        gay_manager.RefreshHexCellState(hex_coordinates);
+        game_manager.RefreshHexCellState(old_coords);
+        game_manager.RefreshHexCellState(hex_coordinates);
     }
     
 }

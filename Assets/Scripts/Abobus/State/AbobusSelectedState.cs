@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class AbobusSelectedState : AbobusState
 {
-    public AbobusSelectedState(GayManager gm, Abobus abobus_) : base(gm, abobus_) {}
+    public AbobusSelectedState(GameManager gm, Abobus abobus_) : base(gm, abobus_) {}
     override public void Enter()
     { 
         gay_manager.ClearAllHighlightedCells();

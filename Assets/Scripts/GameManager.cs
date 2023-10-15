@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 
-public class GayManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     public GameObject hex_grid_go;
     public HexGrid hex_grid;

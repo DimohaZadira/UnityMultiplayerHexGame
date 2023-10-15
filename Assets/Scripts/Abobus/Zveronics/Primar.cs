@@ -23,7 +23,7 @@ public class Primar : Abobus
     override public bool PerformSkill(HexCell from, HexCell to)
     {
         Debug.Log("Entered <color=yellow>PerformSkill</color>");
-        if (gay_manager.GetAbobusByHexCoordinates(to.hex_coordinates)) {
+        if (game_manager.GetAbobusByHexCoordinates(to.hex_coordinates)) {
             Debug.Log("adding visited");
             visited.Add(hex_coordinates);
             MoveToHexCoordinates(to.hex_coordinates);
@@ -39,8 +39,8 @@ public class Primar : Abobus
         foreach (Vector3 turn in basis_turns) {
             HexCoordinates candidate = HexCoordinates.FromXY(from.X + (int)turn[0], from.Y + (int)turn[1]);
             
-            if (!gay_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
-                HexCell cell_candidate = gay_manager.hex_grid.GetCellByHexCoordinates(candidate);
+            if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
+                HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
                 if (cell_candidate.state == check) {
                     ans.Add(candidate);
                 }
@@ -67,8 +67,8 @@ public class Primar : Abobus
         foreach (Vector3 turn in basis_turns) {
             HexCoordinates candidate = HexCoordinates.FromXY(from.hex_coordinates.X + (int)turn[0], from.hex_coordinates.Y + (int)turn[1]);
             
-            if (!visited.Contains(candidate) && !gay_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
-                HexCell cell_candidate = gay_manager.hex_grid.GetCellByHexCoordinates(candidate);
+            if (!visited.Contains(candidate) && !game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
+                HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
                 if (cell_candidate.state == HexCell.State.empty
                 || cell_candidate.state == HexCell.State.abobus) {
                     ans.Add(candidate);

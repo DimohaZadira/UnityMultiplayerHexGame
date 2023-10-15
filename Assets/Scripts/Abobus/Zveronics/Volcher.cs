@@ -15,7 +15,7 @@ public class Volcher : Abobus
     }
     override public bool PerformSkill(HexCell from, HexCell to)
     {
-        Abobus to_move = gay_manager.GetAbobusByHexCoordinates(from.hex_coordinates);
+        Abobus to_move = game_manager.GetAbobusByHexCoordinates(from.hex_coordinates);
         to_move.MoveToHexCoordinates(to.hex_coordinates);
         MoveToHexCoordinates(from.hex_coordinates);
         
@@ -28,8 +28,8 @@ public class Volcher : Abobus
         foreach (Vector3 turn in basis_turns) {
             HexCoordinates candidate = HexCoordinates.FromXY(from.X + (int)turn[0], from.Y + (int)turn[1]);
             
-            if (!gay_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
-                HexCell cell_candidate = gay_manager.hex_grid.GetCellByHexCoordinates(candidate);
+            if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
+                HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
                 if (cell_candidate.state == check) {
                     ans.Add(candidate);
                 }

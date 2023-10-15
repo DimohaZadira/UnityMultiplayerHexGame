@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class AbobusSkillPerformingState : AbobusState
 {
-    public AbobusSkillPerformingState(GayManager gm, Abobus abobus_) : base(gm, abobus_) {
+    public AbobusSkillPerformingState(GameManager gm, Abobus abobus_) : base(gm, abobus_) {
         Refresh();
     }
     
