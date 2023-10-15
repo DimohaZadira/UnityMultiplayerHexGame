@@ -46,7 +46,6 @@ public class HighlightableCell : MonoBehaviour
 	}
 
     public Transform transform_;
-    private HexCell hex_cell;
     private Renderer renderer_; 
 
     // public Material highlighted_material;
@@ -60,14 +59,13 @@ public class HighlightableCell : MonoBehaviour
     void Awake() {
         is_highlighted = false;
         renderer_ = GetComponent<Renderer>();
-        hex_cell = GetComponent<HexCell>();
         default_color = null;
     }
     private void SetHighlighted() {
         is_highlighted = true;
         // renderer_.material = highlighted_material;
         default_color = renderer_.material.color;
-        default_y = hex_cell.transform.position.y;
+        default_y = transform.position.y;
         renderer_.material.color = highlighted_color;
         transform_.position = new Vector3(transform_.position.x, default_y + highlighted_y_offset, transform_.position.z);
     

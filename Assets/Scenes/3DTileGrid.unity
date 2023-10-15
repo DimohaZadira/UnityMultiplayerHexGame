@@ -715,7 +715,7 @@ GameObject:
   - component: {fileID: 845149905}
   m_Layer: 0
   m_Name: GayManager
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -737,7 +737,6 @@ MonoBehaviour:
   team_turn_text: {fileID: 554471381}
   end_turn_button: {fileID: 695640297}
   team_turn: 0
-  chosen_abobus: {fileID: 0}
 --- !u!4 &845149906
 Transform:
   m_ObjectHideFlags: 0
@@ -1071,6 +1070,7 @@ MonoBehaviour:
     type: 3}
   cell_label_prefab: {fileID: 7290319757080336905, guid: fb2a92b9e08bce54dae640915135b958,
     type: 3}
+  playing_field_cells: []
 --- !u!4 &2029799033
 Transform:
   m_ObjectHideFlags: 0
