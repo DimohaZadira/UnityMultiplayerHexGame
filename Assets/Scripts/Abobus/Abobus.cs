@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public abstract class Abobus : MonoBehaviour
     public GameManager game_manager;
     public GameManager.Team team;
     public HexCoordinates hex_coordinates;
+
+    public String abobus_name;
     public abstract void RefreshSelf();
     public abstract List<HexCoordinates> GetPossibleMovementTurns();
     public abstract List<HexCoordinates> GetPossibleSkillTriggerTurns();
@@ -55,8 +58,9 @@ public abstract class Abobus : MonoBehaviour
         
     }
 
-    public void Init(GameManager gm, GameManager.Team team_, HexCoordinates start_hc)
+    public void Init(GameManager gm, GameManager.Team team_, HexCoordinates start_hc, String name)
     {
+        abobus_name = name;
         game_manager = gm;
         team = team_;
         hex_coordinates = start_hc;

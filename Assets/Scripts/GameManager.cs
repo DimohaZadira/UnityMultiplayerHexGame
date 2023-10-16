@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,13 +23,39 @@ public class GameManager : MonoBehaviour
     public static int teams_num; 
     public Team team_turn;
     private static int cur_turn = -1;
+
+    
+    public void ClearAllHighlightedCells()
+    {
+        foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
+            hex_cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
+        }
+    }
+
+    public void ClearAllActions()
+    {
+        foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
+            hex_cell.actions.Clear();
+        }
+    }
+
+    public void SetAllCheckActions()
+    {
+        foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
+            hex_cell.actions.Add(new CheckMovement(hex_cell));
+        }
+    }
+
+
     public void SwitchTurn()
     {
         ClearAllHighlightedCells();
-        foreach (HexCell hc in hex_grid.GetAllCells()) {
-            // RefreshHexCellState(hc.hex_coordinates);
-            hc.Refresh();
+        ClearAllActions();
+
+        foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
+            hex_cell.actions.Add(new CheckMovement(hex_cell));
         }
+
         cur_turn = (cur_turn + 1) % teams_num;
         team_turn = (Team)cur_turn;
         team_turn_text.text = team_turn.ToString();
@@ -36,16 +63,11 @@ public class GameManager : MonoBehaviour
         Debug.Log($"<color=yellow>New turn!</color>");
     }
 
-    void RefreshHexCellSkills()
-    {
-
-    }
-
     private Dictionary<Team, List<GameObject>> abobi;
 
 
   
-    GameObject SpawnAbobus<T>(Object original, Vector2 hex_coords_vec, Team team)
+    GameObject SpawnAbobus<T>(UnityEngine.Object original, Vector2 hex_coords_vec, Team team, String name)
     where T:UnityEngine.Component
     {
         if (!typeof(T).IsSubclassOf(typeof(Abobus))) {
@@ -56,7 +78,7 @@ public class GameManager : MonoBehaviour
         GameObject abobus_go = Instantiate(original) as GameObject;
         
         abobus_go.AddComponent<T>();
-        abobus_go.GetComponent<Abobus>().Init(this, team, hc);
+        abobus_go.GetComponent<Abobus>().Init(this, team, hc, name);
 
         abobus_go.AddComponent<Animator>();
         abobus_go.GetComponent<Animator>().runtimeAnimatorController = Resources.Load("Animations/AbobusAnimCont") as RuntimeAnimatorController;
@@ -78,26 +100,25 @@ public class GameManager : MonoBehaviour
 
         hex_grid = hex_grid_go.GetComponent<HexGrid>();
         hex_grid.CreateGrid(9, 9);
-        GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 9), Team.blue);
+        GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 9), Team.blue, new string("cyan"));
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.cyan;
         abobi[Team.blue].Add(abobus_go);
         RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
         
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 10), Team.blue);
+        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 10), Team.blue,"blue");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
         RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
         
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(4, 9), Team.yellow);
+        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(4, 9), Team.yellow, "yellow");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);  
         RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
 
         playerInput = GetComponent<PlayerInput>();
 
-        //touchControls.Player.Click.started += ctx => OnMouseClick(ctx);
-        touchControls.Player.Click.performed += ctx => OnRightMouseClick(ctx);
-        touchControls.Player.RightClick.performed += ctx => OnRightMouseClick(ctx);
+        touchControls.Player.Click.performed += ctx => OnMouseClick(ctx);
+        touchControls.Player.RightClick.performed += ctx => OnMouseClick(ctx);
 
         SwitchTurn();
     }
@@ -111,11 +132,6 @@ public class GameManager : MonoBehaviour
     }
     void OnDisable() {
         touchControls.Disable();
-    }
-
-    void Update() {
-        // HexCoordinates hc = HexCoordinates.ToOffsetCoordinates(x,z);
-        // abobus_go.transform.position = HexCoordinates.FromHexCoordinates(hc);  
     }
 
     public void DisableAbobi (Team team, Abobus except = null)
@@ -159,24 +175,9 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    public void ClearAllHighlightedCells()
-    {
-        foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
-            hex_cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
-        }
-    }
-
     public void RefreshHexCellState (HexCoordinates hex_coordinates) {
         HexCell hex_cell = hex_grid.GetCellByHexCoordinates(hex_coordinates);
-        if (GetAbobusByHexCoordinates(hex_coordinates) != null) {
-            hex_cell.state = HexCell.State.abobus;
-            hex_cell.abobus = GetAbobusByHexCoordinates(hex_coordinates);
-        } else if (hex_grid.CheckHexCoordsOutOfBounds(hex_coordinates)) {
-            hex_cell.state = HexCell.State.out_of_bounds;
-        } else {
-            hex_cell.state = HexCell.State.empty;
-        }
-
+        hex_cell.Refresh();
     }
 
     // public void OnMouseClick(InputAction.CallbackContext value) {
@@ -203,13 +204,19 @@ public class GameManager : MonoBehaviour
     //     }
     // }
 
-    public void OnRightMouseClick(InputAction.CallbackContext value) {
+    public void OnMouseClick(InputAction.CallbackContext value) {
         Ray inputRay = Camera.main.ScreenPointToRay(touchControls.Player.ClickPosition.ReadValue<Vector2>());
         RaycastHit hit;
         if (Physics.Raycast(inputRay, out hit)) {
             GameObject hit_go = hit.collider.transform.gameObject;
 
             HexCell hex_cell = hit_go.GetComponent<HexCell>();
+            if (!hex_cell) {
+                Abobus abobus = hit_go.GetComponent<Abobus>();
+                if (abobus) {
+                    hex_cell = hex_grid.GetCellByHexCoordinates(abobus.hex_coordinates);
+                }
+            }
             if (hex_cell) {
                 hex_cell.React();
             }
