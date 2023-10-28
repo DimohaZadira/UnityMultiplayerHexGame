@@ -17,7 +17,6 @@ public class Sohad : Abobus
     private List<HexCoordinates> visited;
     public Sohad()
     {
-        perform_skill_on_enter = true;
         visited = new List<HexCoordinates>();
     }
     override public void RefreshSelf()

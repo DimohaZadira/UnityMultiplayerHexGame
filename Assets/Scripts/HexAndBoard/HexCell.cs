@@ -13,9 +13,6 @@ public class HexCell : MonoBehaviour {
         out_of_bounds, abobus, empty
     };
 
-    public int skills_size_var;
-
-
     public List<Action> actions;
     public String debug_str;
 
@@ -54,8 +51,8 @@ public class HexCell : MonoBehaviour {
     {
         Debug.Log("Cell <color=yellow>" + hex_coordinates.ToString() + "</color> reacts:\n" + ToString());
 
-        foreach (Action skill in actions) {
-            skill.Invoke();
+        for (int i = 0; i < actions.Count; ++i) {
+            actions[i].Invoke();
         }              
         
     }

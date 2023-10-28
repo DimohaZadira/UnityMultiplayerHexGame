@@ -139,7 +139,6 @@ public class GameManager : MonoBehaviour
         foreach(GameObject abobus_in_team in abobi[team]) {
             if (abobus_in_team.GetComponent<Abobus>() != except) {
                 Abobus abobus_in_team_comp = abobus_in_team.GetComponent<Abobus>();
-                abobus_in_team_comp.SwitchState(abobus_in_team_comp.disabled_state);
             } 
         }
     }
@@ -149,7 +148,6 @@ public class GameManager : MonoBehaviour
         foreach(GameObject abobus_in_team in abobi[team]) {
             Abobus abobus = abobus_in_team.GetComponent<Abobus>();
             abobus.Refresh();
-            abobus.SwitchState(abobus.idle_state, true);
         }
     }
 

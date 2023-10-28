@@ -13,7 +13,6 @@ public class Primar : Abobus
     public List<HexCoordinates> visited;
     public Primar()
     {
-        perform_skill_on_enter = true;
         visited = new List<HexCoordinates>();
     }
     override public void RefreshSelf()
