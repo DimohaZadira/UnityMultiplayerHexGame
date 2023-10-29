@@ -13,13 +13,13 @@ public class HexCell : MonoBehaviour {
         out_of_bounds, abobus, empty
     };
 
-    public List<Action> actions;
+    public List<IAction> actions;
     public String debug_str;
 
     public override string ToString () {
         String ans = "";
-        foreach (Action action in actions ) {
-            ans += action.ToString() + '\n';
+        foreach (IAction action in actions ) {
+            ans += action.DebugMessage() + '\n';
         }
 		return ans;
 	}
@@ -27,7 +27,7 @@ public class HexCell : MonoBehaviour {
     void Awake ()
     {
         game_manager = GameObject.FindGameObjectsWithTag("GameController")[0].GetComponent<GameManager>();
-        actions = new List<Action>();
+        actions = new List<IAction>();
     }
 
     void Update () {

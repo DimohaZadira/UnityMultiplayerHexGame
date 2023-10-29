@@ -51,10 +51,7 @@ public class GameManager : MonoBehaviour
     {
         ClearAllHighlightedCells();
         ClearAllActions();
-
-        foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
-            hex_cell.actions.Add(new CheckMovement(hex_cell));
-        }
+        SetAllCheckActions();
 
         cur_turn = (cur_turn + 1) % teams_num;
         team_turn = (Team)cur_turn;

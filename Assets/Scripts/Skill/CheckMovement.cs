@@ -2,22 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CheckMovement : Action
+public class CheckMovement : IAction
 {
     HexCell applied_to;
     private GameManager game_manager;
+    private Abobus abobus;
     public CheckMovement (HexCell applied_to)
     {
         this.applied_to = applied_to;
         game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        abobus = game_manager.GetAbobusByHexCoordinates(applied_to.hex_coordinates);
     }
-    override public void Invoke ()
+
+    public HexCell AppliedTo { 
+        get {
+            return applied_to;
+        }
+        set {
+            applied_to = value;
+        }
+    }
+
+    public string DebugMessage()
     {
-        Abobus abobus = game_manager.GetAbobusByHexCoordinates(applied_to.hex_coordinates);
-        if (abobus) {
-            game_manager.ClearAllHighlightedCells();
-            game_manager.ClearAllActions();
-            
+        return "Checking movement";
+    }
+
+    public void Invoke ()
+    {
+        if (abobus) {            
             foreach (HexCoordinates turn_coords in abobus.GetPossibleMovementTurns()) {
                 HexCell hc = game_manager.hex_grid.GetCellByHexCoordinates(turn_coords);
                 hc.actions.Clear();
@@ -27,7 +40,7 @@ public class CheckMovement : Action
                 turn_highlightable_cell.SetState(HighlightableCell.State.highlighted_green);
             }
             applied_to.actions.Clear();
-            applied_to.actions.Add(new ClearAllSelected(applied_to));
+            applied_to.actions.Add(new ClearAllHighlighted(applied_to));
         }
     }
 }

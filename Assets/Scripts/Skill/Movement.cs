@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 
-public class Movement : Action
+public class Movement : IAction
 {
     private GameManager game_manager;
-    public override string ToString () {
+    public string DebugMessage () {
 		return "Moving " + abobus.abobus_name + " abobus from " + from.hex_coordinates.ToString() + " to " + to.hex_coordinates.ToString();
 	}
 
@@ -18,8 +18,18 @@ public class Movement : Action
         game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
     }
     private HexCell from, to;
-    private Abobus abobus; 
-    public override void Invoke()
+    private Abobus abobus;
+
+    public HexCell AppliedTo {
+        get {
+            return to;
+        }
+        set {
+            to = value;
+        }
+    }
+
+    public void Invoke()
     {
         game_manager.ClearAllHighlightedCells();
         game_manager.ClearAllActions();

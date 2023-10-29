@@ -2,7 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Action
+public interface IAction
 {
+    public HexCell AppliedTo {
+        get;
+        set;
+    }
     public abstract void Invoke();
+
+    public abstract string DebugMessage();
 }
