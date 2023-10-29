@@ -51,10 +51,10 @@ public class HexCell : MonoBehaviour {
     {
         Debug.Log("Cell <color=yellow>" + hex_coordinates.ToString() + "</color> reacts:\n" + ToString());
 
-        for (int i = 0; i < actions.Count; ++i) {
+        int count = actions.Count;
+        for (int i = 0; i < count; ++i) {
             actions[i].Invoke();
-        }              
-        
+        }
     }
 
 }

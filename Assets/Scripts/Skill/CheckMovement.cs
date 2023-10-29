@@ -25,11 +25,12 @@ public class CheckMovement : IAction
 
     public string DebugMessage()
     {
-        return "Checking movement";
+        return "Will check movement";
     }
 
     public void Invoke ()
     {
+        Debug.Log("Checking movement");
         if (abobus) {            
             foreach (HexCoordinates turn_coords in abobus.GetPossibleMovementTurns()) {
                 HexCell hc = game_manager.hex_grid.GetCellByHexCoordinates(turn_coords);
@@ -38,9 +39,11 @@ public class CheckMovement : IAction
 
                 HighlightableCell turn_highlightable_cell = hc.GetComponent<HighlightableCell>();
                 turn_highlightable_cell.SetState(HighlightableCell.State.highlighted_green);
+                Debug.Log("set green state");
             }
             applied_to.actions.Clear();
             applied_to.actions.Add(new ClearAllHighlighted(applied_to));
+            applied_to.actions.Add(new SetCheckMovement(applied_to));
         }
     }
 }

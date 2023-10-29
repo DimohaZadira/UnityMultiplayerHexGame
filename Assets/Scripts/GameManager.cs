@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SetAllCheckActions()
+    public void SetAllCheckMovements()
     {
         foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
             hex_cell.actions.Add(new CheckMovement(hex_cell));
@@ -51,11 +51,12 @@ public class GameManager : MonoBehaviour
     {
         ClearAllHighlightedCells();
         ClearAllActions();
-        SetAllCheckActions();
+        SetAllCheckMovements();
 
         cur_turn = (cur_turn + 1) % teams_num;
         team_turn = (Team)cur_turn;
         team_turn_text.text = team_turn.ToString();
+        
         // EnableAbobi(team_turn);
         Debug.Log($"<color=yellow>New turn!</color>");
     }

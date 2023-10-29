@@ -20,6 +20,7 @@ public class CheckSkill : IAction
         this.applied_to = applied_to;
         game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
         abobus = game_manager.GetAbobusByHexCoordinates(applied_to.hex_coordinates);
+        
     }
 
     public void Invoke()
