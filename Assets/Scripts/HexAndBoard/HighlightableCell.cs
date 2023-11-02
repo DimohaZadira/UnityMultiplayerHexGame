@@ -45,7 +45,9 @@ public class HighlightableCell : MonoBehaviour
         }
 	}
 
+    [SerializeField]
     public Transform transform_;
+    
     private Renderer renderer_; 
 
     // public Material highlighted_material;

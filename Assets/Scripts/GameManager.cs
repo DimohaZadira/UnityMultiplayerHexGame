@@ -9,6 +9,7 @@ using System;
 public class GameManager : MonoBehaviour
 {
     public GameObject hex_grid_go;
+    [HideInInspector]
     public HexGrid hex_grid;
     private PlayerInput playerInput;
     private TouchControls touchControls;
@@ -42,7 +43,9 @@ public class GameManager : MonoBehaviour
     public void SetAllCheckMovements()
     {
         foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
-            hex_cell.actions.Add(new CheckMovement(hex_cell));
+            if (hex_cell.abobus) {
+                hex_cell.actions.Add(new CheckMovement(hex_cell));
+            }
         }
     }
 
@@ -64,7 +67,23 @@ public class GameManager : MonoBehaviour
     private Dictionary<Team, List<GameObject>> abobi;
 
 
-  
+    void SpawnAbobi ()
+    {
+        GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 9), Team.blue, new string("cyan"));
+        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.cyan;
+        abobi[Team.blue].Add(abobus_go);
+        RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
+        
+        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 10), Team.blue,"blue");
+        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
+        abobi[Team.blue].Add(abobus_go);
+        RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
+        
+        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(4, 9), Team.yellow, "yellow");
+        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
+        abobi[Team.yellow].Add(abobus_go);  
+        RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
+    }
     GameObject SpawnAbobus<T>(UnityEngine.Object original, Vector2 hex_coords_vec, Team team, String name)
     where T:UnityEngine.Component
     {
@@ -85,7 +104,7 @@ public class GameManager : MonoBehaviour
 
         return abobus_go;
     }
-    // Start is called before the first frame update
+    
     void Start()
     {
         end_turn_button.GetComponent<Button>().onClick.AddListener(SwitchTurn);
@@ -98,20 +117,8 @@ public class GameManager : MonoBehaviour
 
         hex_grid = hex_grid_go.GetComponent<HexGrid>();
         hex_grid.CreateGrid(9, 9);
-        GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 9), Team.blue, new string("cyan"));
-        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.cyan;
-        abobi[Team.blue].Add(abobus_go);
-        RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
         
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 10), Team.blue,"blue");
-        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
-        abobi[Team.blue].Add(abobus_go);
-        RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
-        
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(4, 9), Team.yellow, "yellow");
-        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
-        abobi[Team.yellow].Add(abobus_go);  
-        RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
+        SpawnAbobi();
 
         playerInput = GetComponent<PlayerInput>();
 

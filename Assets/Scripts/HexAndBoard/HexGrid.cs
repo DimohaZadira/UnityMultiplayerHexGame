@@ -4,12 +4,11 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using System.Linq;
 public class HexGrid : MonoBehaviour {
-
+	[SerializeField]
 	Canvas grid_canvas;
-
 	public Material common_cell_material;
-		
 	public Material center_cell_material;
 	public Material out_of_bounds_cell_material;
 	public int width;
@@ -20,7 +19,9 @@ public class HexGrid : MonoBehaviour {
     public TextMeshProUGUI cell_label_prefab;
 	
 	public Dictionary<HexCoordinates, int> hex_coords_to_index;
+	[SerializeField]
 	public List<HexCoordinates> playing_field_cells;
+	[SerializeField]
     private HexCell[] cells;
     public System.ArraySegment<HexCell> GetAllCells () 
     {
@@ -28,8 +29,17 @@ public class HexGrid : MonoBehaviour {
     }
 	public void CreateGrid (int real_x, int real_y) 
 	{
-		playing_field_cells = new List<HexCoordinates>();
 		hex_coords_to_index = new Dictionary<HexCoordinates, int>();
+
+		if (playing_field_cells is not null) {
+			Debug.Log("Initializing existing field");
+			for (int cell_i = 0; cell_i < cells.Count(); ++cell_i) {
+				HexCell cell = cells[cell_i];
+				hex_coords_to_index.Add(cell.hex_coordinates, cell_i);
+			}
+			return;
+		}
+		playing_field_cells = new List<HexCoordinates>();
         grid_canvas = GetComponentInChildren<Canvas>();
 		cells = new HexCell[height * width];
 		int i = 0;
