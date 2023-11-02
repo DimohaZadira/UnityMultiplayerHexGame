@@ -39,7 +39,7 @@ public class CheckMovement : IAction
 
                 HighlightableCell turn_highlightable_cell = hc.GetComponent<HighlightableCell>();
                 turn_highlightable_cell.SetState(HighlightableCell.State.highlighted_green);
-                Debug.Log("set green state");
+                // Debug.Log("set green state");
             }
             applied_to.actions.Clear();
             applied_to.actions.Add(new ClearAllHighlighted(applied_to));
