@@ -29,6 +29,7 @@ public class HighlightMovement : IAction
     {
         Abobus abobus = applied_to.abobus;
         if (abobus) {
+            game_manager.DisableAbobi(abobus.team, abobus);
             foreach (HexCoordinates hc in abobus.GetPossibleMovementTurns()) {
                 HexCell cell = game_manager.hex_grid.GetCellByHexCoordinates(hc);
                 cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_green);

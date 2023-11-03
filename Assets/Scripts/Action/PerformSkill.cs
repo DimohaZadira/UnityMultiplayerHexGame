@@ -2,17 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PerformSkill : MonoBehaviour
+public class PerformSkill : IAction
 {
-    // Start is called before the first frame update
-    void Start()
+    private HexCell applied_to;
+    private Abobus abobus;
+    private GameManager game_manager;
+    public PerformSkill (HexCell applied_to, Abobus abobus)
     {
-        
+        this.applied_to = applied_to;
+        this.abobus = abobus;
+        game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+    }
+    
+    public HexCell AppliedTo { 
+        get => applied_to; 
+        set {
+            applied_to = value;
+        } 
     }
 
-    // Update is called once per frame
-    void Update()
+    public string DebugMessage()
     {
-        
+        return abobus.abobus_name + "abobus perform skill";
+    }
+
+    public void Invoke()
+    {
+        throw new System.NotImplementedException();
     }
 }

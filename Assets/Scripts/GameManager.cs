@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     private PlayerInput playerInput;
     private TouchControls touchControls;
     public TextMeshProUGUI team_turn_text;
-    public Button end_turn_button;
 
     public enum Team {
         blue = 0, 
@@ -40,13 +39,36 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SetAllCheckMovements()
+    public void EnableAbobi()
     {
-        foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
-            if (hex_cell.abobus) {
-                hex_cell.actions.AddLast(new HighlightMovement(hex_cell));
+        foreach(GameObject abobus_in_team in abobi[team_turn]) {
+            Abobus abobus = abobus_in_team.GetComponent<Abobus>();
+            HexCell cell = hex_grid.GetCellByHexCoordinates(abobus.hex_coordinates);
+            cell.actions.AddLast(new HighlightMovement(cell));
+            cell.actions.AddLast(new HighlightSkillTrigger(cell));
+        }
+    }
+    public void DisableAbobi (Team team, Abobus except = null)
+    {
+        foreach(GameObject abobus_in_team in abobi[team]) {
+            if (abobus_in_team.GetComponent<Abobus>() != except) {
+                Abobus abobus = abobus_in_team.GetComponent<Abobus>();
+                HexCell cell = hex_grid.GetCellByHexCoordinates(abobus.hex_coordinates);
+                cell.DeleteFromActions<HighlightMovement>();
+                cell.DeleteFromActions<HighlightSkillTrigger>();
+            } 
+        }
+    }
+
+    public List<Abobus> GetAllAbobi()
+    {
+        List<Abobus> ans = new List<Abobus>();
+        foreach(List<GameObject> abobi_in_team in abobi.Values) {
+            foreach(GameObject abobus_go in abobi_in_team) {
+                ans.Add(abobus_go.GetComponent<Abobus>());
             }
         }
+        return ans;
     }
 
 
@@ -54,13 +76,12 @@ public class GameManager : MonoBehaviour
     {
         ClearAllHighlightedCells();
         ClearAllActions();
-        SetAllCheckMovements();
 
         cur_turn = (cur_turn + 1) % teams_num;
         team_turn = (Team)cur_turn;
         team_turn_text.text = team_turn.ToString();
+        EnableAbobi();
         
-        // EnableAbobi(team_turn);
         Debug.Log($"<color=yellow>New turn!</color>");
     }
 
@@ -107,7 +128,6 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
-        end_turn_button.GetComponent<Button>().onClick.AddListener(SwitchTurn);
         teams_num = System.Enum.GetNames(typeof(Team)).Length;
 
         abobi = new Dictionary<Team, List<GameObject>>();
@@ -137,34 +157,6 @@ public class GameManager : MonoBehaviour
     }
     void OnDisable() {
         touchControls.Disable();
-    }
-
-    public void DisableAbobi (Team team, Abobus except = null)
-    {
-        foreach(GameObject abobus_in_team in abobi[team]) {
-            if (abobus_in_team.GetComponent<Abobus>() != except) {
-                Abobus abobus_in_team_comp = abobus_in_team.GetComponent<Abobus>();
-            } 
-        }
-    }
-
-    public void EnableAbobi (Team team)
-    {
-        foreach(GameObject abobus_in_team in abobi[team]) {
-            Abobus abobus = abobus_in_team.GetComponent<Abobus>();
-            abobus.Refresh();
-        }
-    }
-
-    public List<Abobus> GetAllAbobi()
-    {
-        List<Abobus> ans = new List<Abobus>();
-        foreach(List<GameObject> abobi_in_team in abobi.Values) {
-            foreach(GameObject abobus_go in abobi_in_team) {
-                ans.Add(abobus_go.GetComponent<Abobus>());
-            }
-        }
-        return ans;
     }
 
     public Abobus GetAbobusByHexCoordinates(HexCoordinates hex_coordinates)
