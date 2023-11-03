@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
             if (hex_cell.abobus) {
-                hex_cell.actions.Add(new CheckMovement(hex_cell));
+                hex_cell.actions.AddLast(new HighlightMovement(hex_cell));
             }
         }
     }

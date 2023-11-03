@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Mono.Cecil.Cil;
-using Unity.VisualScripting;
 using System;
+using UnityEditor.PackageManager;
+
 
 public class HexCell : MonoBehaviour {
 	public HexCoordinates hex_coordinates;
@@ -13,8 +13,21 @@ public class HexCell : MonoBehaviour {
         out_of_bounds, abobus, empty
     };
 
-    public List<IAction> actions;
+    public Deque<IAction> actions;
     public String debug_str;
+    
+    public void DeleteFromActions<T> () {
+        List<IAction> to_remove = new List<IAction>();
+
+        foreach (IAction act in actions) {
+            if (act.GetType() == typeof(T)) {
+                to_remove.Add(act);
+            }
+        }
+        foreach (IAction act in to_remove) {
+            actions.Remove(act);
+        }
+    }
 
     public override string ToString () {
         String ans = "";
@@ -27,7 +40,7 @@ public class HexCell : MonoBehaviour {
     void Awake ()
     {
         game_manager = GameObject.FindGameObjectsWithTag("GameController")[0].GetComponent<GameManager>();
-        actions = new List<IAction>();
+        actions = new Deque<IAction>();
     }
 
     void Update () {
@@ -51,10 +64,11 @@ public class HexCell : MonoBehaviour {
     {
         Debug.Log("Cell <color=yellow>" + hex_coordinates.ToString() + "</color> reacts:\n" + ToString());
 
-        int count = actions.Count;
-        for (int i = 0; i < count; ++i) {
-            actions[i].Invoke();
-        }
+        // int count = actions.Count;
+        for (int i = 0; i < actions.size; ++i) {
+            actions.DequeueFirst().Invoke();
+        }        
+        
     }
 
 }
