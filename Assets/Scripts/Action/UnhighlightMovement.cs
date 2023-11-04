@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class UnhighlightMovement : IAction
 {
+    private List<HexCell> to_unhighligt;
+    public UnhighlightMovement (HexCell applied_to, List<HexCell> to_unhighligt)
+    {
+        game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        this.applied_to = applied_to;
+        this.to_unhighligt = to_unhighligt;
+    }
     private HexCell applied_to;
     private GameManager game_manager;
-    public UnhighlightMovement (HexCell applied_to)
-    {
-        this.applied_to = applied_to;
-        game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
-    }
     
     public HexCell AppliedTo { 
         get => applied_to; 
@@ -27,13 +29,11 @@ public class UnhighlightMovement : IAction
     public void Invoke()
     {
         Debug.Log("<color=red>Unhighlight</color> <color=green>movement</color>");
-        Abobus abobus = applied_to.abobus;
-        if (abobus) {
-            foreach (HexCell cell in abobus.GetPossibleMovementTurns()) {
-                cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
-            }
-            game_manager.EnableAbobi(abobus);
-            applied_to.actions.AddLast(new HighlightMovement(applied_to));
+        foreach (HexCell cell in to_unhighligt) {
+            cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
         }
+        game_manager.EnableAbobi(game_manager.GetAbobusByHexCoordinates(applied_to.hex_coordinates));
+        applied_to.actions.AddLast(new HighlightMovement(applied_to));
+        
     }
 }

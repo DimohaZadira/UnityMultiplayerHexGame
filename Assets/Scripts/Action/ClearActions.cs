@@ -24,7 +24,7 @@ public class ClearActions<T> : IAction
 
     public string DebugMessage()
     {
-        return "Clear actions";
+        return "Clear " + typeof(T).FullName + " actions";
     }
 
     public void Invoke()

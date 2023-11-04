@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class UnhighlightSkillTrigger : IAction
 {
-    private HexCell applied_to;
-    private GameManager game_manager;
-    public UnhighlightSkillTrigger (HexCell applied_to)
+    private List<HexCell> to_unhighligt;
+    public UnhighlightSkillTrigger (HexCell applied_to, List<HexCell> to_unhighligt)
     {
         this.applied_to = applied_to;
-        game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        this.to_unhighligt = to_unhighligt;
     }
+    private HexCell applied_to;
+    private GameManager game_manager;
     
     public HexCell AppliedTo { 
         get => applied_to; 
@@ -27,13 +28,10 @@ public class UnhighlightSkillTrigger : IAction
     public void Invoke()
     {
         Debug.Log("<color=red>Unhighlight</color> <color=yellow>skill trigger</color>");
-        Abobus abobus = applied_to.abobus;
-        if (abobus) {
-            foreach (HexCell cell in abobus.GetPossibleSkillTriggerTurns()) {
-                // cell.DeleteFromActions<PerformSkill>();
-                cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
-            }
-            applied_to.actions.AddLast(new HighlightSkillTrigger(applied_to));
+        foreach (HexCell cell in to_unhighligt) {
+            cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
         }
+        applied_to.actions.AddLast(new HighlightSkillTrigger(applied_to));
+        
     }
 }

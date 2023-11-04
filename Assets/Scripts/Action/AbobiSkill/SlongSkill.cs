@@ -30,9 +30,8 @@ public class SlongSkill : IAction
     public void Invoke()
     {
         Debug.Log("Slong invokes skill");
-        // foreach (HexCoordinates coords in abobus.GetPossibleSkillTurns(applied_to)) {
-        //     HexCell cell = game_manager.hex_grid.GetCellByHexCoordinates(coords);
-        //     // cell.actions.AddLast(new );
-        // }
+        foreach (HexCell cell in abobus.GetPossibleSkillTurns(applied_to)) {
+            
+        }
     }
 }
