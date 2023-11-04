@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,7 +31,7 @@ public class HighlightSkillTrigger : IAction
         if (abobus) {
             foreach (HexCell cell in abobus.GetPossibleSkillTriggerTurns()) {
                 cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
-                // cell.actions.AddLast(new PerformSkill(cell, abobus));
+                cell.actions.AddLast(new PerformSkill(cell, abobus));
             }
             applied_to.actions.AddLast(new UnhighlightSkillTrigger(applied_to));
         }

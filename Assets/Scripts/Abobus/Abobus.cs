@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public abstract class Abobus : MonoBehaviour
+public abstract class Abobus: MonoBehaviour 
 {
-
+    public Type action_type;
     public GameManager game_manager;
     public GameManager.Team team;
     public HexCell cell;

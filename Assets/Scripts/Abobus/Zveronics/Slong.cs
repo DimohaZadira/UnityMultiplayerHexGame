@@ -13,6 +13,10 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Slong : Abobus
 {
+    public Slong ()
+    {
+        action_type = typeof(SlongSkill);
+    }
     private List<HexCell> GetPossibleTurns(HexCell from,  Vector3[] basis_turns, HexCell.State check)
     {
         List<HexCell> ans = new List<HexCell>();
