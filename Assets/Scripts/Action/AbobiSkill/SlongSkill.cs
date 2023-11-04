@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Claims;
 using UnityEngine;
 
 public class SlongSkill : IAction
@@ -30,8 +31,13 @@ public class SlongSkill : IAction
     public void Invoke()
     {
         Debug.Log("Slong invokes skill");
-        foreach (HexCell cell in abobus.GetPossibleSkillTurns(applied_to)) {
-            
+        List<HexCell> skill_turns = abobus.GetPossibleSkillTurns(applied_to);
+        foreach (HexCell cell in skill_turns) {
+            cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
+            cell.actions.AddLast(new SimpleMovement(cell, game_manager.GetAbobusByHexCoordinates(applied_to.hex_coordinates)));
+            cell.actions.AddLast(new SimpleMovement(applied_to, abobus));
+            cell.actions.AddLast(new SimpleUnhighlight(applied_to, skill_turns));
+            cell.actions.AddLast(new ClearActions<SlongSkill>(applied_to, skill_turns));
         }
     }
 }
