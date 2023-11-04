@@ -64,8 +64,8 @@ public class HexCell : MonoBehaviour {
     {
         Debug.Log("Cell <color=yellow>" + hex_coordinates.ToString() + "</color> reacts:\n" + ToString());
 
-        // int count = actions.Count;
-        for (int i = 0; i < actions.size; ++i) {
+        int size = actions.size;
+        for (int i = 0; i < size; ++i) {
             actions.DequeueFirst().Invoke();
         }        
         

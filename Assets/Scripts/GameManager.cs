@@ -39,23 +39,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EnableAbobi()
+    public void EnableAbobi(Abobus except = null)
     {
         foreach(GameObject abobus_in_team in abobi[team_turn]) {
-            Abobus abobus = abobus_in_team.GetComponent<Abobus>();
-            HexCell cell = hex_grid.GetCellByHexCoordinates(abobus.hex_coordinates);
-            cell.actions.AddLast(new HighlightMovement(cell));
-            cell.actions.AddLast(new HighlightSkillTrigger(cell));
-        }
-    }
-    public void DisableAbobi (Team team, Abobus except = null)
-    {
-        foreach(GameObject abobus_in_team in abobi[team]) {
             if (abobus_in_team.GetComponent<Abobus>() != except) {
                 Abobus abobus = abobus_in_team.GetComponent<Abobus>();
-                HexCell cell = hex_grid.GetCellByHexCoordinates(abobus.hex_coordinates);
-                cell.DeleteFromActions<HighlightMovement>();
-                cell.DeleteFromActions<HighlightSkillTrigger>();
+                abobus.cell.actions.AddLast(new HighlightMovement(abobus.cell));
+                abobus.cell.actions.AddLast(new HighlightSkillTrigger(abobus.cell));
+            }
+        }
+    }
+    public void DisableAbobi (Abobus except = null)
+    {
+        foreach(GameObject abobus_in_team in abobi[team_turn]) {
+            if (abobus_in_team.GetComponent<Abobus>() != except) {
+                Abobus abobus = abobus_in_team.GetComponent<Abobus>();
+                abobus.cell.DeleteFromActions<HighlightMovement>();
+                abobus.cell.DeleteFromActions<HighlightSkillTrigger>();
             } 
         }
     }
@@ -93,17 +93,17 @@ public class GameManager : MonoBehaviour
         GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 9), Team.blue, new string("cyan"));
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.cyan;
         abobi[Team.blue].Add(abobus_go);
-        RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
+        abobus_go.GetComponent<Abobus>().cell.Refresh();
         
         abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 10), Team.blue,"blue");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
-        RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
+        abobus_go.GetComponent<Abobus>().cell.Refresh();
         
         abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(4, 9), Team.yellow, "yellow");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);  
-        RefreshHexCellState(abobus_go.GetComponent<Abobus>().hex_coordinates);
+        abobus_go.GetComponent<Abobus>().cell.Refresh();
     }
     GameObject SpawnAbobus<T>(UnityEngine.Object original, Vector2 hex_coords_vec, Team team, String name)
     where T:UnityEngine.Component
@@ -163,17 +163,13 @@ public class GameManager : MonoBehaviour
     {
         List<Abobus> abobi = GetAllAbobi();
         foreach (Abobus abobus in abobi) {
-            if (abobus.hex_coordinates == hex_coordinates) {
+            if (abobus.cell.hex_coordinates == hex_coordinates) {
                 return abobus;
             }
         }
         return null;
     }
 
-    public void RefreshHexCellState (HexCoordinates hex_coordinates) {
-        HexCell hex_cell = hex_grid.GetCellByHexCoordinates(hex_coordinates);
-        hex_cell.Refresh();
-    }
 
     // public void OnMouseClick(InputAction.CallbackContext value) {
     //     Ray inputRay = Camera.main.ScreenPointToRay(touchControls.Player.ClickPosition.ReadValue<Vector2>());
@@ -209,7 +205,7 @@ public class GameManager : MonoBehaviour
             if (!hex_cell) {
                 Abobus abobus = hit_go.GetComponent<Abobus>();
                 if (abobus) {
-                    hex_cell = hex_grid.GetCellByHexCoordinates(abobus.hex_coordinates);
+                    hex_cell = hex_grid.GetCellByHexCoordinates(abobus.cell.hex_coordinates);
                 }
             }
             if (hex_cell) {

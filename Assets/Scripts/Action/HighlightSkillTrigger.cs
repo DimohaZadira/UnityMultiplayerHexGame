@@ -21,16 +21,16 @@ public class HighlightSkillTrigger : IAction
 
     public string DebugMessage()
     {
-        return "Highlight movement";
+        return "Highlight skill trigger";
     }
     public void Invoke()
     {
+        Debug.Log("Highlight <color=yellow>skill trigger</color>");
         Abobus abobus = applied_to.abobus;
         if (abobus) {
-            foreach (HexCoordinates hc in abobus.GetPossibleSkillTriggerTurns()) {
-                HexCell cell = game_manager.hex_grid.GetCellByHexCoordinates(hc);
+            foreach (HexCell cell in abobus.GetPossibleSkillTriggerTurns()) {
                 cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
-                cell.actions.AddLast(new PerformSkill(cell, abobus));
+                // cell.actions.AddLast(new PerformSkill(cell, abobus));
             }
             applied_to.actions.AddLast(new UnhighlightSkillTrigger(applied_to));
         }

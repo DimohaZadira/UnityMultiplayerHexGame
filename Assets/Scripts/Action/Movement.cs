@@ -30,7 +30,7 @@ public class Movement : IAction
 
     public void Invoke()
     {
-        HexCell from = game_manager.hex_grid.GetCellByHexCoordinates(abobus.hex_coordinates);
+        HexCell from = abobus.cell;
         if (typeof(UnhighlightMovement) != from.actions.PeekFirst().GetType()) {
             throw new Exception();
         }
@@ -38,7 +38,7 @@ public class Movement : IAction
         from.actions.Clear();
         abobus.MoveToHexCoordinates(applied_to.hex_coordinates);
 
-        game_manager.DisableAbobi(abobus.team, abobus);
+        game_manager.DisableAbobi(abobus);
 
         if (applied_to.actions.size > 0) {
             throw new Exception();

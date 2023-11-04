@@ -11,57 +11,41 @@ using UnityEngine;
 public class Primar : Abobus
 {
     public List<HexCoordinates> visited;
-    public Primar()
+    public Primar ()
     {
         visited = new List<HexCoordinates>();
     }
-    override public void RefreshSelf()
+    private List<HexCell> GetPossibleTurns(HexCell from,  Vector3[] basis_turns, HexCell.State check)
     {
-        visited.Clear();
-    }
-    override public bool PerformSkill(HexCell from, HexCell to)
-    {
-        Debug.Log("Entered <color=yellow>PerformSkill</color>");
-        if (game_manager.GetAbobusByHexCoordinates(to.hex_coordinates)) {
-            Debug.Log("adding visited");
-            visited.Add(hex_coordinates);
-            MoveToHexCoordinates(to.hex_coordinates);
-            return false;
-        }
-        MoveToHexCoordinates(to.hex_coordinates);
-        return true;
-    }
-    private List<HexCoordinates> GetPossibleTurns(HexCoordinates from,  Vector3[] basis_turns, HexCell.State check)
-    {
-        List<HexCoordinates> ans = new List<HexCoordinates>();
+        List<HexCell> ans = new List<HexCell>();
 
         foreach (Vector3 turn in basis_turns) {
-            HexCoordinates candidate = HexCoordinates.FromXY(from.X + (int)turn[0], from.Y + (int)turn[1]);
+            HexCoordinates candidate = HexCoordinates.FromXY(from.hex_coordinates.X + (int)turn[0], from.hex_coordinates.Y + (int)turn[1]);
             
             if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
                 HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
                 if (cell_candidate.state == check) {
-                    ans.Add(candidate);
+                    ans.Add(cell_candidate);
                 }
             }
         }
         return ans;
     }
 
-    override public List<HexCoordinates> GetPossibleMovementTurns()
+    override public List<HexCell> GetPossibleMovementTurns()
     {
-        return GetPossibleTurns(hex_coordinates, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
+        return GetPossibleTurns(cell, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
     }
 
-    override public List<HexCoordinates> GetPossibleSkillTriggerTurns()
+    override public List<HexCell> GetPossibleSkillTriggerTurns()
     {
-        return GetPossibleTurns(hex_coordinates, RangeOneComponent.GetBasisTurns(), HexCell.State.abobus);
+        return GetPossibleTurns(cell, RangeOneComponent.GetBasisTurns(), HexCell.State.abobus);
     }
 
     
-    override public List<HexCoordinates> GetPossibleSkillTurns(HexCell from)
+    override public List<HexCell> GetPossibleSkillTurns(HexCell from)
     {
-        List<HexCoordinates> ans = new List<HexCoordinates>();
+        List<HexCell> ans = new List<HexCell>();
         Vector3[] basis_turns = RangeOneComponent.GetBasisTurns();
         foreach (Vector3 turn in basis_turns) {
             HexCoordinates candidate = HexCoordinates.FromXY(from.hex_coordinates.X + (int)turn[0], from.hex_coordinates.Y + (int)turn[1]);
@@ -70,7 +54,7 @@ public class Primar : Abobus
                 HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
                 if (cell_candidate.state == HexCell.State.empty
                 || cell_candidate.state == HexCell.State.abobus) {
-                    ans.Add(candidate);
+                    ans.Add(cell_candidate);
                 }
             }
         }

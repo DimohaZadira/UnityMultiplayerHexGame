@@ -19,25 +19,14 @@ public class Sohad : Abobus
     {
         visited = new List<HexCoordinates>();
     }
-    override public void RefreshSelf()
-    {
-        visited.Clear();
-    }
-    override public bool PerformSkill(HexCell from, HexCell to)
-    {
-        Debug.Log("Entered <color=yellow>PerformSkill</color>");
-        visited.Add(hex_coordinates);
-        MoveToHexCoordinates(to.hex_coordinates); 
-        return !(GetSkillTurns(to.hex_coordinates).Count > 0);
-    }
 
-    override public List<HexCoordinates> GetPossibleMovementTurns()
+    override public List<HexCell> GetPossibleMovementTurns()
     {
-        List<HexCoordinates> ans = new List<HexCoordinates>();
+        List<HexCell> ans = new List<HexCell>();
         Vector3[] basis_turns = RangeOneComponent.GetBasisTurns();
         foreach (Vector3 turn in basis_turns) {
             for (int i = 1; i <= 2; ++i) {
-                HexCoordinates candidate = HexCoordinates.FromXY(hex_coordinates.X + i * (int)turn[0], hex_coordinates.Y + i * (int)turn[1]);
+                HexCoordinates candidate = HexCoordinates.FromXY(cell.hex_coordinates.X + i * (int)turn[0], cell.hex_coordinates.Y + i * (int)turn[1]);
 
                 if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
                     break;
@@ -46,7 +35,7 @@ public class Sohad : Abobus
                 HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
                 
                 if (cell_candidate.state == HexCell.State.empty) {
-                    ans.Add(candidate);
+                    ans.Add(cell_candidate);
                 } else {
                     break;
                 }
@@ -57,13 +46,13 @@ public class Sohad : Abobus
         return ans;
     }
 
-    private List<HexCoordinates> GetSkillTurns(HexCoordinates hc)
+    private List<HexCell> GetSkillTurns(HexCell hc)
     {
-        List<HexCoordinates> ans = new List<HexCoordinates>();
+        List<HexCell> ans = new List<HexCell>();
         Vector3[] basis_turns = RangeOneComponent.GetBasisTurns();
         foreach (Vector3 turn in basis_turns) {
-            HexCoordinates neighbour = HexCoordinates.FromXY(hc.X + (int)turn[0], hc.Y + (int)turn[1]);
-            HexCoordinates candidate = HexCoordinates.FromXY(hc.X + 2 * (int)turn[0], hc.Y + 2 * (int)turn[1]);
+            HexCoordinates neighbour = HexCoordinates.FromXY(hc.hex_coordinates.X + (int)turn[0], hc.hex_coordinates.Y + (int)turn[1]);
+            HexCoordinates candidate = HexCoordinates.FromXY(hc.hex_coordinates.X + 2 * (int)turn[0], hc.hex_coordinates.Y + 2 * (int)turn[1]);
 
             if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(neighbour) || game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
                 break;
@@ -74,20 +63,20 @@ public class Sohad : Abobus
             if ( (cell_neighbour.state == HexCell.State.abobus)
               && (cell_candidate.state == HexCell.State.empty)
               && !visited.Contains(candidate)){
-                ans.Add(candidate);
+                ans.Add(cell_candidate);
             }            
         }
         return ans;
     }
-    override public List<HexCoordinates> GetPossibleSkillTriggerTurns()
+    override public List<HexCell> GetPossibleSkillTriggerTurns()
     {
-        return GetSkillTurns(hex_coordinates);
+        return GetSkillTurns(cell);
     }
 
     
-    override public List<HexCoordinates> GetPossibleSkillTurns(HexCell from)
+    override public List<HexCell> GetPossibleSkillTurns(HexCell from)
     {
-        return GetSkillTurns(hex_coordinates);
+        return GetSkillTurns(cell);
     }
 
 }

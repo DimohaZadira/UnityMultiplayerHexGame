@@ -27,16 +27,17 @@ public class HighlightMovement : IAction
 
     public void Invoke()
     {
+        Debug.Log("Highlight <color=green>movement</color>");
         Abobus abobus = applied_to.abobus;
         if (abobus) {
-            game_manager.DisableAbobi(abobus.team, abobus);
-            foreach (HexCoordinates hc in abobus.GetPossibleMovementTurns()) {
-                HexCell cell = game_manager.hex_grid.GetCellByHexCoordinates(hc);
+            game_manager.DisableAbobi(abobus);
+            foreach (HexCell cell in abobus.GetPossibleMovementTurns()) {
                 cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_green);
                 cell.actions.AddLast(new Movement(cell, abobus));
             }
         }
         applied_to.actions.AddLast(new UnhighlightMovement(applied_to));
+        applied_to.actions.AddLast(new ClearActions<Movement>(applied_to, abobus.GetPossibleMovementTurns()));
     }
 
     

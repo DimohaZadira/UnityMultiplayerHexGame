@@ -26,13 +26,13 @@ public class UnhighlightMovement : IAction
 
     public void Invoke()
     {
+        Debug.Log("<color=red>Unhighlight</color> <color=green>movement</color>");
         Abobus abobus = applied_to.abobus;
         if (abobus) {
-            foreach (HexCoordinates hc in abobus.GetPossibleMovementTurns()) {
-                HexCell cell = game_manager.hex_grid.GetCellByHexCoordinates(hc);
-                cell.DeleteFromActions<Movement>();
+            foreach (HexCell cell in abobus.GetPossibleMovementTurns()) {
                 cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
             }
+            game_manager.EnableAbobi(abobus);
             applied_to.actions.AddLast(new HighlightMovement(applied_to));
         }
     }

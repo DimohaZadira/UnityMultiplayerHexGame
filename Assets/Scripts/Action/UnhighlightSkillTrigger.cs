@@ -26,11 +26,11 @@ public class UnhighlightSkillTrigger : IAction
 
     public void Invoke()
     {
+        Debug.Log("<color=red>Unhighlight</color> <color=yellow>skill trigger</color>");
         Abobus abobus = applied_to.abobus;
         if (abobus) {
-            foreach (HexCoordinates hc in abobus.GetPossibleSkillTriggerTurns()) {
-                HexCell cell = game_manager.hex_grid.GetCellByHexCoordinates(hc);
-                cell.DeleteFromActions<PerformSkill>();
+            foreach (HexCell cell in abobus.GetPossibleSkillTriggerTurns()) {
+                // cell.DeleteFromActions<PerformSkill>();
                 cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
             }
             applied_to.actions.AddLast(new HighlightSkillTrigger(applied_to));

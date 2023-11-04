@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PerformSkill : IAction
+public class ClearActions<T> : IAction
 {
     private HexCell applied_to;
-    private Abobus abobus;
     private GameManager game_manager;
-    public PerformSkill (HexCell applied_to, Abobus abobus)
+    private List<HexCell> to_clear;
+
+    public ClearActions (HexCell applied_to, List<HexCell> cells)
     {
         this.applied_to = applied_to;
-        this.abobus = abobus;
+        to_clear = cells;
         game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
     }
     
@@ -23,11 +24,13 @@ public class PerformSkill : IAction
 
     public string DebugMessage()
     {
-        return abobus.abobus_name + "abobus perform skill";
+        return "Clear actions";
     }
 
     public void Invoke()
     {
-        throw new System.NotImplementedException();
+        foreach (HexCell cell in to_clear) {
+            cell.DeleteFromActions<T>();
+        }
     }
 }
