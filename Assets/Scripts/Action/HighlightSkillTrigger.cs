@@ -30,6 +30,11 @@ public class HighlightSkillTrigger : IAction
         Abobus abobus = applied_to.abobus;
         if (abobus) {
             List<HexCell> cells = abobus.GetPossibleSkillTriggerTurns();
+            if (cells.Count == 0 && game_manager.moved_this_turn) {
+                var end_ = new EndTurn(applied_to);
+                end_.Invoke();
+                return;
+            }
             foreach (HexCell cell in cells) {
                 cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
                 cell.actions.AddLast(new PerformSkill(cell, abobus));

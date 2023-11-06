@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
-public class UnselectAbobus : IAction
+public class EnableAbobi : IAction
 {
     private HexCell applied_to;
     private GameManager game_manager;
     private Abobus abobus;
-    public UnselectAbobus (HexCell applied_to, Abobus abobus)
+    public EnableAbobi (HexCell applied_to, Abobus abobus)
     {
         this.applied_to = applied_to;
         this.abobus = abobus;
@@ -24,15 +24,15 @@ public class UnselectAbobus : IAction
 
     public string DebugMessage()
     {
-        return "Unselect " + abobus.abobus_name + " abobus";
+        return "Enable all except " + abobus.abobus_name + " abobus";
     }
 
     public void Invoke()
     {
-        Debug.Log("Unselect <color=green>" + abobus.abobus_name + " </color> abobus");
-        game_manager.selected_abobus = null;
-        abobus.transform.position += new Vector3(0, -10, 0);
-        applied_to.actions.AddLast(new SelectAbobus(applied_to, abobus));
+        Debug.Log("Select <color=green>" + abobus.abobus_name + " </color> abobus");
+        game_manager.EnableAbobi(abobus);
+        applied_to.actions.AddLast(new DisableAbobi(applied_to, abobus));
+        
     }
 
     

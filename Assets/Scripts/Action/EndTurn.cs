@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
-public class UnselectAbobus : IAction
+public class EndTurn : IAction
 {
     private HexCell applied_to;
     private GameManager game_manager;
     private Abobus abobus;
-    public UnselectAbobus (HexCell applied_to, Abobus abobus)
+    public EndTurn (HexCell applied_to)
     {
         this.applied_to = applied_to;
-        this.abobus = abobus;
         game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
     }
     
@@ -24,15 +23,13 @@ public class UnselectAbobus : IAction
 
     public string DebugMessage()
     {
-        return "Unselect " + abobus.abobus_name + " abobus";
+        return "End turn";
     }
 
     public void Invoke()
     {
-        Debug.Log("Unselect <color=green>" + abobus.abobus_name + " </color> abobus");
-        game_manager.selected_abobus = null;
-        abobus.transform.position += new Vector3(0, -10, 0);
-        applied_to.actions.AddLast(new SelectAbobus(applied_to, abobus));
+        Debug.Log("End turn");
+        game_manager.SwitchTurn();        
     }
 
     

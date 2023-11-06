@@ -34,6 +34,8 @@ public class PerformSkill : IAction
         HexCell from = abobus.cell;
         from.React();
         from.actions.Clear();
+        var disable_ = new DisableAbobi(applied_to, abobus);
+        disable_.Invoke();
         IAction abobus_skill = (IAction)Activator.CreateInstance(abobus.action_type, applied_to, abobus);
         abobus_skill.Invoke();
     }

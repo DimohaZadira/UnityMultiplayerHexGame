@@ -42,7 +42,7 @@ public class SlongSkill : IAction
             cell.actions.AddLast(new SimpleMovement(applied_to, abobus));
             cell.actions.AddLast(new SimpleUnhighlight(applied_to, skill_turns));
             cell.actions.AddLast(new UnselectAbobus(cell, abobus));
-            cell.actions.AddLast(new ClearActions<IAction>(applied_to, skill_turns));
+            cell.actions.AddLast(new EndTurn(cell));
         }
         abobus.cell.actions.AddLast(new SimpleUnhighlight(abobus.cell, skill_turns));
         abobus.cell.actions.AddLast(new ClearActions<IAction>(abobus.cell, skill_turns));

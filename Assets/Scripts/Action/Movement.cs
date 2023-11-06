@@ -36,11 +36,15 @@ public class Movement : IAction
             from.actions.Clear();
             abobus.MoveToHexCoordinates(applied_to.hex_coordinates);
             game_manager.moved_this_turn = true;
+            
+            var select_ = new SelectAbobus(applied_to, abobus);
+            select_.Invoke();
+            
+            var disable_ = new DisableAbobi(applied_to, abobus);
+            disable_.Invoke();
 
             var highlight_ = new HighlightSkillTrigger(applied_to);
             highlight_.Invoke();
-            var select_ = new SelectAbobus(applied_to, abobus);
-            select_.Invoke();
         }
     }
 }

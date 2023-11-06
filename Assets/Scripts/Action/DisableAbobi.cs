@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class UnselectAbobus : IAction
+public class DisableAbobi : IAction
 {
     private HexCell applied_to;
     private GameManager game_manager;
     private Abobus abobus;
-    public UnselectAbobus (HexCell applied_to, Abobus abobus)
+    private bool force = false;
+    public DisableAbobi (HexCell applied_to, Abobus abobus, bool force = false)
     {
         this.applied_to = applied_to;
+        this.force = force;
         this.abobus = abobus;
         game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
     }
@@ -24,15 +27,19 @@ public class UnselectAbobus : IAction
 
     public string DebugMessage()
     {
-        return "Unselect " + abobus.abobus_name + " abobus";
+        return "Disable all except " + abobus.abobus_name + " abobus";
     }
 
     public void Invoke()
     {
-        Debug.Log("Unselect <color=green>" + abobus.abobus_name + " </color> abobus");
-        game_manager.selected_abobus = null;
-        abobus.transform.position += new Vector3(0, -10, 0);
-        applied_to.actions.AddLast(new SelectAbobus(applied_to, abobus));
+        Debug.Log("Select <color=green>" + abobus.abobus_name + " </color> abobus");
+        if (force) {
+            game_manager.DisableAbobi(null);
+        } else {
+            game_manager.DisableAbobi(abobus);
+        }
+        applied_to.actions.AddLast(new EnableAbobi(applied_to, abobus));
+        
     }
 
     

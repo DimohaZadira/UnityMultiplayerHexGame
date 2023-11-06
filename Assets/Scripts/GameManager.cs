@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
                 }
                 abobus.cell.actions.AddLast(new HighlightSkillTrigger(abobus.cell));
                 abobus.cell.actions.AddLast(new SelectAbobus(abobus.cell, abobus));
+                abobus.cell.actions.AddLast(new DisableAbobi(abobus.cell, abobus));
             }
         }
     }
@@ -62,6 +63,7 @@ public class GameManager : MonoBehaviour
                 abobus.cell.DeleteFromActions<HighlightMovement>();
                 abobus.cell.DeleteFromActions<HighlightSkillTrigger>();
                 abobus.cell.DeleteFromActions<SelectAbobus>();
+                abobus.cell.DeleteFromActions<DisableAbobi>();
             } 
         }
     }
@@ -80,6 +82,10 @@ public class GameManager : MonoBehaviour
 
     public void SwitchTurn()
     {
+        if (selected_abobus != null) {
+            var unselect_ = new UnselectAbobus(selected_abobus.cell, selected_abobus);
+            unselect_.Invoke();
+        }
         selected_abobus = null;
         moved_this_turn = false;
         started_skill_perform = false;
