@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Security.Cryptography;
 using UnityEngine;
 
@@ -33,11 +34,7 @@ public class PerformSkill : IAction
         HexCell from = abobus.cell;
         from.React();
         from.actions.Clear();
-        game_manager.DisableAbobi(abobus);
-
         IAction abobus_skill = (IAction)Activator.CreateInstance(abobus.action_type, applied_to, abobus);
-        applied_to.actions.AddLast(abobus_skill);
-
-        applied_to.React();
+        abobus_skill.Invoke();
     }
 }

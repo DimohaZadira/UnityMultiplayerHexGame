@@ -32,7 +32,6 @@ public class UnhighlightMovement : IAction
         foreach (HexCell cell in to_unhighligt) {
             cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
         }
-        game_manager.EnableAbobi(game_manager.GetAbobusByHexCoordinates(applied_to.hex_coordinates));
         applied_to.actions.AddLast(new HighlightMovement(applied_to));
         
     }

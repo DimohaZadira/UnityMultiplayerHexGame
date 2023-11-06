@@ -30,20 +30,17 @@ public class Movement : IAction
 
     public void Invoke()
     {
-        HexCell from = abobus.cell;
-        if (typeof(UnhighlightMovement) != from.actions.PeekFirst().GetType()) {
-            throw new Exception();
-        }
-        from.React();
-        from.actions.Clear();
-        abobus.MoveToHexCoordinates(applied_to.hex_coordinates);
+        if (!game_manager.moved_this_turn) {
+            HexCell from = abobus.cell;
+            from.React();
+            from.actions.Clear();
+            abobus.MoveToHexCoordinates(applied_to.hex_coordinates);
+            game_manager.moved_this_turn = true;
 
-        game_manager.DisableAbobi(abobus);
-
-        if (applied_to.actions.size > 0) {
-            throw new Exception();
+            var highlight_ = new HighlightSkillTrigger(applied_to);
+            highlight_.Invoke();
+            var select_ = new SelectAbobus(applied_to, abobus);
+            select_.Invoke();
         }
-        applied_to.actions.AddLast(new HighlightSkillTrigger(applied_to));
-        applied_to.React();
     }
 }

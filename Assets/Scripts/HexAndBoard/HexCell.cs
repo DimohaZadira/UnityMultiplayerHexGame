@@ -17,6 +17,9 @@ public class HexCell : MonoBehaviour {
     public String debug_str;
     
     public void DeleteFromActions<T> () {
+        if (typeof(T) == typeof(IAction)) {
+            actions.Clear();
+        }
         List<IAction> to_remove = new List<IAction>();
 
         foreach (IAction act in actions) {

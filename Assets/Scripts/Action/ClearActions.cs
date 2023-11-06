@@ -29,6 +29,7 @@ public class ClearActions<T> : IAction
 
     public void Invoke()
     {
+        Debug.Log("Clear <color=yellow>" + typeof(T).FullName + "</color> actions");
         foreach (HexCell cell in to_clear) {
             cell.DeleteFromActions<T>();
         }
