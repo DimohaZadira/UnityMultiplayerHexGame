@@ -105,7 +105,14 @@ public class GameManager : MonoBehaviour
 
     void SpawnAbobi ()
     {
-        GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 9), Team.blue, new string("cyan"));
+        /*GameObject abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 9), Team.blue, new string("cyan"));
+        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.cyan;
+        abobi[Team.blue].Add(abobus_go);
+        abobus_go.GetComponent<Abobus>().cell.Refresh();*/
+
+        GameObject abobus_go;
+        // Slong 
+        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(5, 9), Team.blue, new string("cyan"));
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.cyan;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
@@ -114,11 +121,22 @@ public class GameManager : MonoBehaviour
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
+
+        // Levver
+        abobus_go = SpawnAbobus<Levver>(Resources.Load("Abobi/LevverPrefab"), new Vector2(6, 9), Team.yellow, "yellow");
+        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.red;
+        abobi[Team.yellow].Add(abobus_go);
+        abobus_go.GetComponent<Abobus>().cell.Refresh();
         
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(4, 9), Team.yellow, "yellow");
+        abobus_go = SpawnAbobus<Levver>(Resources.Load("Abobi/LevverPrefab"), new Vector2(6, 10), Team.yellow, "yellow");
+        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
+        abobi[Team.yellow].Add(abobus_go);
+        abobus_go.GetComponent<Abobus>().cell.Refresh();
+        
+        /*abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/KingPrefab"), new Vector2(4, 9), Team.yellow, "yellow");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);  
-        abobus_go.GetComponent<Abobus>().cell.Refresh();
+        abobus_go.GetComponent<Abobus>().cell.Refresh();*/
     }
     GameObject SpawnAbobus<T>(UnityEngine.Object original, Vector2 hex_coords_vec, Team team, String name)
     where T:UnityEngine.Component
