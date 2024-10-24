@@ -8,6 +8,7 @@ public class LevverSkill : IAction
     private HexCell applied_to;
     private Abobus abobus;
     private GameManager game_manager;
+
     public LevverSkill(HexCell applied_to, Abobus abobus)
     {
         this.applied_to = applied_to;
@@ -44,7 +45,7 @@ public class LevverSkill : IAction
         foreach (HexCell cell in skill_turns)
         {
             cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_blue);
-
+            
             Abobus target_abobus = game_manager.GetAbobusByHexCoordinates(cell.hex_coordinates);
             if (target_abobus != null)
             {
@@ -59,6 +60,7 @@ public class LevverSkill : IAction
             cell.actions.AddLast(new UnselectAbobus(cell, abobus));
             cell.actions.AddLast(new EndTurn(cell));
         }
+
         abobus.cell.actions.AddLast(new SimpleUnhighlight(abobus.cell, skill_turns));
         abobus.cell.actions.AddLast(new ClearActions<IAction>(abobus.cell, skill_turns));
         abobus.cell.actions.AddLast(new ReturnHighlights(abobus.cell, abobus));
@@ -78,7 +80,7 @@ public class LevverSkill : IAction
             if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(neighborCoords))
             {
                 HexCell neighborCell = game_manager.hex_grid.GetCellByHexCoordinates(neighborCoords);
-
+                
                 Abobus target_abobus = game_manager.GetAbobusByHexCoordinates(neighborCell.hex_coordinates);
                 if (target_abobus != null)
                 {
@@ -94,13 +96,13 @@ public class LevverSkill : IAction
     {
         int deltaX = startCell.hex_coordinates.X - abobus.cell.hex_coordinates.X;
         int deltaY = startCell.hex_coordinates.Y - abobus.cell.hex_coordinates.Y;
-        
+
         Vector3 direction = new Vector3(deltaX, deltaY, 0);
         
         HexCoordinates destinationCoords = HexCoordinates.FromXY(
             startCell.hex_coordinates.X + (int)direction.x,
             startCell.hex_coordinates.Y + (int)direction.y);
-            
+
         if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(destinationCoords))
         {
             HexCell destinationCell = game_manager.hex_grid.GetCellByHexCoordinates(destinationCoords);
@@ -109,6 +111,7 @@ public class LevverSkill : IAction
                 return destinationCell;
             }
         }
-    return null;
+
+        return null;
     }
 }
