@@ -17,12 +17,12 @@ public class LevverSkill : IAction
     }
 
     public HexCell AppliedTo 
-    {
-        get => applied_to;
+    { 
+        get => applied_to; 
         set 
         {
             applied_to = value;
-        }
+        } 
     }
 
     public string DebugMessage()
@@ -34,74 +34,51 @@ public class LevverSkill : IAction
     {
         Debug.Log("Levver invokes skill");
 
-        if (game_manager.selected_abobus == null)
+        if (game_manager.selected_abobus == null) 
         {
             SelectAbobus select_abobus = new SelectAbobus(abobus.cell, abobus);
             select_abobus.Invoke();
         }
 
-        List<HexCell> skill_turns = GetPossibleJumpTurns();
+        // Получаем клетки для подсветки: зеленые клетки в радиусе 1 и желтые для пути через врага
+        List<HexCell> greenCells = abobus.GetGreenCellsInRadius1(applied_to);
+        List<HexCell> yellowCells = abobus.GetYellowCellsThroughEnemy(applied_to);
 
-        foreach (HexCell cell in skill_turns)
+        // Обработка зеленых клеток: подсветка и добавление действий
+        foreach (HexCell cell in greenCells) 
         {
-            cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_blue);
-            
-            Abobus target_abobus = game_manager.GetAbobusByHexCoordinates(cell.hex_coordinates);
-            if (target_abobus != null)
-            {
-                HexCell destination = GetDestinationCell(cell, target_abobus);
+            cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_green);
+            cell.actions.AddLast(new SimpleMovement(cell, abobus));
+            cell.actions.AddLast(new SimpleUnhighlight(applied_to, greenCells));
+            cell.actions.AddLast(new UnselectAbobus(cell, abobus));}
 
-                if (destination != null)
-                {
-                    cell.actions.AddLast(new SimpleMovement(destination, target_abobus));
-                }
-            }
-            cell.actions.AddLast(new SimpleUnhighlight(applied_to, skill_turns));
-            cell.actions.AddLast(new UnselectAbobus(cell, abobus));
-            cell.actions.AddLast(new EndTurn(cell));
-        }
+        // Обработка желтых клеток: подсветка и добавление действий для перемещения врага
+        foreach (HexCell cell in greenCells) 
+        {
+            cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_green);
+            cell.actions.AddLast(new SimpleMovement(cell, abobus));
+            cell.actions.AddLast(new SimpleUnhighlight(applied_to, greenCells));
+            cell.actions.AddLast(new UnselectAbobus(cell, abobus));}
 
-        abobus.cell.actions.AddLast(new SimpleUnhighlight(abobus.cell, skill_turns));
-        abobus.cell.actions.AddLast(new ClearActions<IAction>(abobus.cell, skill_turns));
+        // Завершение хода для текущего Abobus
+        abobus.cell.actions.AddLast(new SimpleUnhighlight(abobus.cell, greenCells));
+        abobus.cell.actions.AddLast(new ClearActions<IAction>(abobus.cell, greenCells));
         abobus.cell.actions.AddLast(new ReturnHighlights(abobus.cell, abobus));
+        abobus.cell.actions.AddLast(new EndTurn(abobus.cell));
     }
 
-    private List<HexCell> GetPossibleJumpTurns()
-    {
-        Vector3[] basis_turns = RangeOneComponent.GetBasisTurns();
-        List<HexCell> possible_turns = new List<HexCell>();
-
-        foreach (Vector3 turn in basis_turns)
-        {
-            HexCoordinates neighborCoords = HexCoordinates.FromXY(
-                abobus.cell.hex_coordinates.X + (int)turn.x,
-                abobus.cell.hex_coordinates.Y + (int)turn.y);
-
-            if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(neighborCoords))
-            {
-                HexCell neighborCell = game_manager.hex_grid.GetCellByHexCoordinates(neighborCoords);
-                
-                Abobus target_abobus = game_manager.GetAbobusByHexCoordinates(neighborCell.hex_coordinates);
-                if (target_abobus != null)
-                {
-                    possible_turns.Add(neighborCell);
-                }
-            }
-        }
-
-        return possible_turns;
-    }
-
+    // Метод для получения следующей клетки, если по прямой находится другой звероник
     private HexCell GetDestinationCell(HexCell startCell, Abobus target_abobus)
     {
         int deltaX = startCell.hex_coordinates.X - abobus.cell.hex_coordinates.X;
         int deltaY = startCell.hex_coordinates.Y - abobus.cell.hex_coordinates.Y;
-
-        Vector3 direction = new Vector3(deltaX, deltaY, 0);
         
+        Vector3 direction = new Vector3(deltaX, deltaY, 0);
+
         HexCoordinates destinationCoords = HexCoordinates.FromXY(
             startCell.hex_coordinates.X + (int)direction.x,
-            startCell.hex_coordinates.Y + (int)direction.y);
+            startCell.hex_coordinates.Y + (int)direction.y
+        );
 
         if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(destinationCoords))
         {
@@ -111,7 +88,7 @@ public class LevverSkill : IAction
                 return destinationCell;
             }
         }
-
+        
         return null;
     }
 }
