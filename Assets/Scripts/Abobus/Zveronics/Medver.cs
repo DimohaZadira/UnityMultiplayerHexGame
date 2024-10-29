@@ -8,6 +8,10 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Medver : Abobus
 {
+    public Medver()
+    {
+        action_type = typeof(MedverSkill);
+    }
     private List<HexCell> GetPossibleTurns(HexCell from,  Vector3[] basis_turns, HexCell.State check)
     {
         List<HexCell> ans = new List<HexCell>();
