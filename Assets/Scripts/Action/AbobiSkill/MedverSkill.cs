@@ -6,12 +6,12 @@ using UnityEngine;
 public class MedverSkill : IAction
 {
     private HexCell applied_to;
-    private Medver initialAbobus;
+    private Medver initial_abobus;
     private GameManager game_manager;
-    public MedverSkill(HexCell applied_to, Abobus initialAbobus)
+    public MedverSkill(HexCell applied_to, Abobus initial_abobus)
     {
         this.applied_to = applied_to;
-        this.initialAbobus = initialAbobus.GetComponent<Medver>();
+        this.initial_abobus = initial_abobus.GetComponent<Medver>();
         game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
     }
 
@@ -36,7 +36,7 @@ public class MedverSkill : IAction
     }
     private List<HexCell> GetNearby(HexCell from)
     {
-        List<HexCell> ans = initialAbobus.GetPossibleTurns(from, RangeOneComponent.GetBasisTurns(), HexCell.State.abobus);
+        List<HexCell> ans = initial_abobus.GetPossibleTurns(from, RangeOneComponent.GetBasisTurns(), HexCell.State.abobus);
         return ans;
     }
 
@@ -44,7 +44,7 @@ public class MedverSkill : IAction
     {
         Debug.Log("Medver invokes skill");
 
-        Abobus selectedAbobus = applied_to.abobus;
+        Abobus selected_abobus = applied_to.abobus;
 
         if (game_manager.selected_abobus == null)
         {
@@ -56,27 +56,29 @@ public class MedverSkill : IAction
             throw new System.Exception("Не отработала чистка в PerformAction");
         }
 
-        List<HexCell> initialNearbyAbobi = GetNearbyIncludingSelf(initialAbobus.cell);
-        List<HexCell> selectedNearbyAbobi = GetNearby(selectedAbobus.cell);
+        List<HexCell> initial_nearby_abobi = GetNearbyIncludingSelf(initial_abobus.cell);
+        List<HexCell> selected_nearby_abobi = GetNearby(selected_abobus.cell);
 
 
-        List<HexCell> skillTurns = new List<HexCell>();
+        List<HexCell> skill_turns = new List<HexCell>();
 
-        foreach (HexCell cell in initialNearbyAbobi)
+        foreach (HexCell cell in initial_nearby_abobi)
         {
-            if (selectedNearbyAbobi.Contains(cell))
+            if (selected_nearby_abobi.Contains(cell))
             {
-                skillTurns.Add(cell);
+                skill_turns.Add(cell);
             }
         }
 
-        foreach (HexCell cell in skillTurns)
+        foreach (HexCell cell in skill_turns)
         {
             cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
-            cell.actions.AddLast(new Swap(cell, selectedAbobus));
-            cell.actions.AddLast(new SimpleUnhighlight(cell, skillTurns));
+            cell.actions.AddLast(new Swap(cell, selected_abobus));
+            cell.actions.AddLast(new SimpleUnhighlight(cell, skill_turns));
             cell.actions.AddLast(new EndTurn(cell));
-
         }
+        selected_abobus.cell.actions.AddLast(new SimpleUnhighlight(selected_abobus.cell, skill_turns));
+        selected_abobus.cell.actions.AddLast(new ClearActions<IAction>(selected_abobus.cell, initial_nearby_abobi));
+        selected_abobus.cell.actions.AddLast(new ReturnHighlights(initial_abobus.cell, initial_abobus));
     }
 }
