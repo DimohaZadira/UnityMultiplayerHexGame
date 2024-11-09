@@ -12,22 +12,6 @@ public class Medver : Abobus
     {
         action_type = typeof(MedverSkill);
     }
-    private List<HexCell> GetPossibleTurns(HexCell from,  Vector3[] basis_turns, HexCell.State check)
-    {
-        List<HexCell> ans = new List<HexCell>();
-
-        foreach (Vector3 turn in basis_turns) {
-            HexCoordinates candidate = HexCoordinates.FromXY(from.hex_coordinates.X + (int)turn[0], from.hex_coordinates.Y + (int)turn[1]);
-            
-            if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
-                HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
-                if (cell_candidate.state == check) {
-                    ans.Add(cell_candidate);
-                }
-            }
-        }
-        return ans;
-    }
 
     override public List<HexCell> GetPossibleMovementTurns()
     {
@@ -37,14 +21,6 @@ public class Medver : Abobus
     override public List<HexCell> GetPossibleSkillTriggerTurns()
     {
         return GetPossibleTurns(cell, RangeOneComponent.GetBasisTurns(), HexCell.State.abobus);
-    }
-
-    
-    override public List<HexCell> GetPossibleSkillTurns(HexCell from)
-    {
-        List<HexCell> ans = GetPossibleTurns(cell, RangeOneComponent.GetBasisTurns(), HexCell.State.abobus);
-        ans.Add(cell);
-        return ans;
     }
 
 }

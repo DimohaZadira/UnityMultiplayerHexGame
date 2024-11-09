@@ -9,17 +9,13 @@ public class Swap : IAction
     private Abobus abobus2;
     private HexCell applied_to; //хекс 1-ого звероника
     private GameManager game_manager;
-
-
-    public Swap(HexCell applied_to, Abobus abobus1, Abobus abobus2)
+    public Swap(HexCell applied_to, Abobus abobus2)
     {
-        this.abobus1 = abobus1;
         this.abobus2 = abobus2;
-
+        game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
         this.applied_to = applied_to;
 
-        game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
-        
+        this.abobus1 = game_manager.GetAbobusByHexCoordinates(applied_to.hex_coordinates);
     }
     public HexCell AppliedTo
     {
@@ -42,8 +38,8 @@ public class Swap : IAction
 
     private void SwapPositions()
     {
-        var tempCoordinates = abobus1.cell.hex_coordinates;
+        var temp_coordinates = abobus1.cell.hex_coordinates;
         abobus1.MoveToHexCoordinates(abobus2.cell.hex_coordinates);
-        abobus2.MoveToHexCoordinates(tempCoordinates);
+        abobus2.MoveToHexCoordinates(temp_coordinates);
     }
 }

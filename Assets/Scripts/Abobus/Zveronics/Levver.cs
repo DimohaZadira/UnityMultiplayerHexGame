@@ -11,23 +11,6 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Levver : Abobus
 {
-    private List<HexCell> GetPossibleTurns(HexCell from,  Vector3[] basis_turns, HexCell.State check)
-    {
-        List<HexCell> ans = new List<HexCell>();
-
-        foreach (Vector3 turn in basis_turns) {
-            HexCoordinates candidate = HexCoordinates.FromXY(from.hex_coordinates.X + (int)turn[0], from.hex_coordinates.Y + (int)turn[1]);
-            
-            if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
-                HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
-                if (cell_candidate.state == check) {
-                    ans.Add(cell_candidate);
-                }
-            }
-        }
-        return ans;
-    }
-
     override public List<HexCell> GetPossibleMovementTurns()
     {
         return GetPossibleTurns(cell, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
@@ -37,19 +20,12 @@ public class Levver : Abobus
     {
         Vector3[] basis_turns = RangeOneComponent.GetBasisTurns();
         List<HexCell> ans = new List<HexCell>();
-        foreach (Vector3 turn in basis_turns) {
+        foreach (Vector3 turn in basis_turns)
+        {
             // while () {
             //     i++;
             // }
         }
-        return ans;
-    }
-
-    
-    override public List<HexCell> GetPossibleSkillTurns(HexCell from)
-    {
-        List<HexCell> ans = GetPossibleTurns(from, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
-        ans.Add(cell);
         return ans;
     }
 

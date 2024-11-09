@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public abstract class Abobus: MonoBehaviour 
+public abstract class Abobus : MonoBehaviour
 {
     public Type action_type;
     public GameManager game_manager;
@@ -14,8 +14,7 @@ public abstract class Abobus: MonoBehaviour
     public String abobus_name;
     public abstract List<HexCell> GetPossibleMovementTurns();
     public abstract List<HexCell> GetPossibleSkillTriggerTurns();
-    public abstract List<HexCell> GetPossibleSkillTurns(HexCell from);
-    
+
     public void Init(GameManager gm, GameManager.Team team_, HexCoordinates start_hc, String name)
     {
         abobus_name = name;
@@ -36,9 +35,29 @@ public abstract class Abobus: MonoBehaviour
 
         GetComponentInParent<Transform>().localRotation = Quaternion.Euler(0, 120, 0);
 
-        
+
         old_cell.Refresh();
         cell.Refresh();
     }
-    
+
+    public List<HexCell> GetPossibleTurns(HexCell from, Vector3[] basis_turns, HexCell.State check)
+    {
+        List<HexCell> ans = new List<HexCell>();
+
+        foreach (Vector3 turn in basis_turns)
+        {
+            HexCoordinates candidate = HexCoordinates.FromXY(from.hex_coordinates.X + (int)turn[0], from.hex_coordinates.Y + (int)turn[1]);
+
+            if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate))
+            {
+                HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
+                if (cell_candidate.state == check)
+                {
+                    ans.Add(cell_candidate);
+                }
+            }
+        }
+        return ans;
+    }
+
 }
