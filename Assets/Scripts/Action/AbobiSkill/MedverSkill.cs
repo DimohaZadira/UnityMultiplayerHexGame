@@ -78,7 +78,8 @@ public class MedverSkill : IAction
             cell.actions.AddLast(new EndTurn(cell));
         }
         selected_abobus.cell.actions.AddLast(new SimpleUnhighlight(selected_abobus.cell, skill_turns));
-        selected_abobus.cell.actions.AddLast(new ClearActions<IAction>(selected_abobus.cell, initial_nearby_abobi));
+        selected_abobus.cell.actions.AddLast(new MedverClearActions<IAction>(selected_abobus.cell, initial_nearby_abobi));
         selected_abobus.cell.actions.AddLast(new ReturnHighlights(initial_abobus.cell, initial_abobus));
+        //selected_abobus.cell.actions.AddLast(new SelectAbobus(initial_abobus.cell, initial_abobus));
     }
 }
