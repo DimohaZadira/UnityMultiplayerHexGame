@@ -40,5 +40,14 @@ public abstract class Abobus: MonoBehaviour
         old_cell.Refresh();
         cell.Refresh();
     }
-    
+
+    internal List<HexCell> GetGreenCellsInRadius1(HexCell applied_to)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal List<HexCell> GetYellowCellsThroughEnemy(HexCell applied_to)
+    {
+        throw new NotImplementedException();
+    }
 }
