@@ -1,7 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Security.Claims;
 using UnityEngine;
 
+namespace LevverSkills {
 public class LevverSkillMovement : IAction
 {
     private HexCell applied_to;
@@ -13,6 +16,17 @@ public class LevverSkillMovement : IAction
         this.applied_to = applied_to;
         this.abobus = abobus;
         game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+    }
+
+    public HexCell AppliedTo
+    {
+        get => applied_to;
+        set => applied_to = value;
+    }
+
+    public string DebugMessage()
+    {
+        return "Levver skill movement";
     }
 
     public void Invoke()
@@ -31,7 +45,7 @@ public class LevverSkillMovement : IAction
         {
             if (HexGrid.GetDistance(abobus.cell, cell) <= 1 && cell.state == HexCell.State.empty)
             {
-                cell.state = HexCell.State.empty; // Используем состояние "empty" как "highlighted_green"
+                cell.state = HexCell.State.empty; 
                 cell.actions.AddLast(new SimpleMovement(cell, abobus));
                 cell.actions.AddLast(new SimpleUnhighlight(cell, skill_turns));
                 cell.actions.AddLast(new UnselectAbobus(cell, abobus));
@@ -43,4 +57,5 @@ public class LevverSkillMovement : IAction
         abobus.cell.actions.AddLast(new ReturnHighlights(abobus.cell, abobus));
         abobus.cell.actions.AddLast(new EndTurn(abobus.cell));
     }
+}
 }

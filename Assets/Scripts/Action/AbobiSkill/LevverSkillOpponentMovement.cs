@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Security.Claims;
 using UnityEngine;
 
 public class LevverSkillOpponentMovement : IAction
@@ -13,6 +15,17 @@ public class LevverSkillOpponentMovement : IAction
         this.applied_to = applied_to;
         this.abobus = abobus;
         game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+    }
+
+    public HexCell AppliedTo
+    {
+        get => applied_to;
+        set => applied_to = value;
+    }
+
+    public string DebugMessage()
+    {
+        return "Levver opponent movement skill";
     }
 
     public void Invoke()
