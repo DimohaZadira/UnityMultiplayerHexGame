@@ -10,7 +10,7 @@ public class HexCell : MonoBehaviour {
     public Abobus abobus;
     public State state;
     public enum State {
-        out_of_bounds, abobus, empty
+        out_of_bounds, abobus, empty, occupied
     };
 
     public Deque<IAction> actions;
