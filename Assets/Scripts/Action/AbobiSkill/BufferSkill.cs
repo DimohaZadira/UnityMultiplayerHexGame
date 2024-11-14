@@ -38,35 +38,21 @@ public class BufferSkill : IAction
 
         Abobus targetAbobus = applied_to.abobus;
 
-        // Получаем список клеток для возможного применения способности (уже исключены клетки с Kaymanch)
-        List<HexCell> all_skill_trigger_cells = buffer.GetPossibleSkillTriggerTurns();
-        
-        List<HexCell> skill_turns = new List<HexCell>();
+        List<HexCell> skill_trigger_cells = targetAbobus.GetPossibleTurns(targetAbobus.cell, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
 
-        // Подсвечиваем клетки, которые можно использовать для способности
-        foreach (HexCell cell in all_skill_trigger_cells)
+        foreach (HexCell cell in skill_trigger_cells)
         {
-            cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_blue);
-            cell.actions.AddLast(new SimpleMovement(cell, game_manager.GetAbobusByHexCoordinates(applied_to.hex_coordinates)));
-            cell.actions.AddLast(new SimpleMovement(applied_to, buffer));
-            cell.actions.AddLast(new SimpleUnhighlight(cell, all_skill_trigger_cells));
-            cell.actions.AddLast(new EndTurn(cell));
+            if (cell.abobus == null)
+            {
+                cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
+                cell.actions.AddLast(new SimpleMovement(cell, game_manager.GetAbobusByHexCoordinates(applied_to.hex_coordinates)));
+                cell.actions.AddLast(new SimpleMovement(applied_to, buffer));
+                cell.actions.AddLast(new SimpleUnhighlight(cell, skill_trigger_cells));
+                cell.actions.AddLast(new EndTurn(cell));
+            }
         }
-
-        buffer.cell.actions.AddLast(new ClearActions<IAction>(buffer.cell, all_skill_trigger_cells));
+        buffer.cell.actions.AddLast(new SimpleUnhighlight(buffer.cell, skill_trigger_cells));
+        buffer.cell.actions.AddLast(new ClearActions<IAction>(buffer.cell, skill_trigger_cells));
         buffer.cell.actions.AddLast(new ReturnHighlights(buffer.cell, buffer));
     }
 }
-
-
-        // {
-        //     // if (cell.abobus == null || !(cell.abobus.GetComponent<Kaymanch>()))
-        //     // if !(cell.abobus is Kaymanch)
-        //     // if (cell.abobus == null || (cell.abobus.GetComponent<Kaymanch>()))
-        //     // if (cell.abobus == null)
-        //     // (cell.abobus.GetType() == typeof(Kaymanch)
-        //     if (cell.abobus == null || !(cell.abobus.GetComponent<Kaymanch>() == null))
-        //     {
-        //          all_skill_trigger_cells.Add(cell);
-        //     }
-        // }

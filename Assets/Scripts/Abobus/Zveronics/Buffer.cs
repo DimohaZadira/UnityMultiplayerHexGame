@@ -31,10 +31,8 @@ public class Buffer : Abobus
             if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate))
             {
                 HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
-                if ((cell_candidate.state == HexCell.State.abobus) && (game_manager.GetAbobusByHexCoordinates(candidate).team != team))
+                if (cell_candidate.state == HexCell.State.abobus)
                 {
-                    // ans.Add(cell_candidate);
-
                     if (cell_candidate.abobus != null && !(cell_candidate.abobus is Kaymanch))
                     {
                         ans.Add(cell_candidate);
@@ -44,10 +42,4 @@ public class Buffer : Abobus
         }
         return ans;
     }
-
-    // public List<HexCell> GetPossibleSkillTurns(HexCell from)
-    // {
-    //     return GetPossibleTurns(from, RadiusTwoComponent.GetBasisTurns(), HexCell.State.empty);
-    // }
-
 }
