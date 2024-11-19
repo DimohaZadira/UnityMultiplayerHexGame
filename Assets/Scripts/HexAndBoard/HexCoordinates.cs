@@ -29,7 +29,15 @@ public struct HexCoordinates : IEquatable<HexCoordinates>
         this.x = x;
         this.z = z;
     }
-
+//
+    public static HexCoordinates operator +(HexCoordinates hex, Vector3 vector)
+    {
+        return new HexCoordinates(
+            hex.X + (int)vector.x,
+            hex.Z + (int)vector.z
+        );
+    }
+//
     public static HexCoordinates FromXY(int x, int y)
     {
         return new HexCoordinates(x, -y - x);
@@ -79,12 +87,23 @@ public struct HexCoordinates : IEquatable<HexCoordinates>
         return x.Equals(hc.X) && z.Equals(hc.Z);
     }
 
+/*
     public static int L1Distance(HexCoordinates a, HexCoordinates b)
     {
         return Mathf.Max(
             Mathf.Abs(a.X - b.X),
             Mathf.Abs(a.Y - b.Y),
             Mathf.Abs(a.Z - b.Z)
+        );
+    }
+*/
+
+    public static int L1Distance(Vector3 a, Vector3 b)
+    {
+        return Mathf.Max(
+            Mathf.Abs((int)a.x - (int)b.x),
+            Mathf.Abs((int)a.y - (int)b.y),
+            Mathf.Abs((int)a.z - (int)b.z)
         );
     }
 
@@ -145,5 +164,6 @@ public struct HexCoordinates : IEquatable<HexCoordinates>
 
         return new HexCoordinates(x, z);
     }
+
 
 }
