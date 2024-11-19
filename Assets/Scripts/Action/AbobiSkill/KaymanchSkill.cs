@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using UnityEngine;
 
-public class SlongSkill : IAction
+public class KaymanchSkill : IAction
 {
     private HexCell applied_to;
     private Slong abobus;
     private GameManager game_manager;
-    public SlongSkill(HexCell applied_to, Abobus abobus)
+    public KaymanchSkill(HexCell applied_to, Abobus abobus)
     {
         this.applied_to = applied_to;
         this.abobus = abobus.GetComponent<Slong>();
@@ -27,12 +27,12 @@ public class SlongSkill : IAction
 
     public string DebugMessage()
     {
-        return "Slong skill";
+        return "Kaymanch skill";
     }
 
     public void Invoke()
     {
-        Debug.Log("Slong invokes skill");
+        Debug.Log("Kaymanch invokes skill");
         if (game_manager.selected_abobus == null)
         {
             SelectAbobus select_abobus = new SelectAbobus(abobus.cell, abobus);
@@ -48,7 +48,6 @@ public class SlongSkill : IAction
             cell.actions.AddLast(new UnselectAbobus(cell, abobus));
             cell.actions.AddLast(new EndTurn(cell));
         }
-        abobus.cell.actions.AddLast(new UnselectAbobus(abobus.cell, abobus));
         abobus.cell.actions.AddLast(new SimpleUnhighlight(abobus.cell, skill_turns));
         abobus.cell.actions.AddLast(new ClearActions<IAction>(abobus.cell, skill_turns));
         abobus.cell.actions.AddLast(new ReturnHighlights(abobus.cell, abobus));

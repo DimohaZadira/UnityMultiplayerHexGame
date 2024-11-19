@@ -36,7 +36,6 @@ public class SelectAbobus : IAction
         abobus.transform.position += new Vector3(0, 10, 0);
 
         game_manager.selected_abobus = abobus;
-        applied_to.actions.AddLast(new UnselectAbobus(applied_to, abobus));
     }
 
 
