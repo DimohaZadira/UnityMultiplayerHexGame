@@ -142,16 +142,19 @@ public class GameManager : MonoBehaviour
     //Buffer // Kaymanch // Levver // Medver // Primar // Slong // Sohad // Volcher
     void SpawnAbobi ()
     {
+        
         GameObject abobus_go = SpawnAbobus<Medver>(Resources.Load("Abobi/RookPrefab"), new Vector2(5, 9), Team.blue, new string("cyan"));
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.cyan;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
+        
         /*
         _ = SpawnAbobus<Levver>(Resources.Load("Abobi/QueenPrefab"), new Vector2(4, 9), Team.yellow, "yellow");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
         */
+        /*
         abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/QueenPrefab"), new Vector2(5, 10), Team.blue,"blue");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
@@ -166,8 +169,8 @@ public class GameManager : MonoBehaviour
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
-
-        abobus_go = SpawnAbobus<Medver>(Resources.Load("Abobi/RookPrefab"), new Vector2(4, 8), Team.yellow, "red");
+        */
+        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/RookPrefab"), new Vector2(4, 8), Team.yellow, "red");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.red;
         abobi[Team.yellow].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
@@ -287,4 +290,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    internal HexCell GetAbobusByHexCoordinates(Vector3 targetCoordinates)
+    {
+        throw new NotImplementedException();
+    }
 }
