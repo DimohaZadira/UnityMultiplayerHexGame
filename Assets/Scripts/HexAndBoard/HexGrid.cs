@@ -5,7 +5,8 @@ using TMPro;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System.Linq;
-public class HexGrid : MonoBehaviour {
+public class HexGrid : MonoBehaviour
+{
 	[SerializeField]
 	Canvas grid_canvas;
 	public Material common_cell_material;
@@ -13,111 +14,132 @@ public class HexGrid : MonoBehaviour {
 	public Material out_of_bounds_cell_material;
 	public int width;
 	public int height;
-    public int cells_array_size;
+	public int cells_array_size;
 
 	public HexCell cell_prefab;
-    public TextMeshProUGUI cell_label_prefab;
-	
+	public TextMeshProUGUI cell_label_prefab;
+
 	public Dictionary<HexCoordinates, int> hex_coords_to_index;
 	[SerializeField]
 	public List<HexCoordinates> playing_field_cells;
 	[SerializeField]
-    private HexCell[] cells;
-    public System.ArraySegment<HexCell> GetAllCells () 
-    {
-        return new System.ArraySegment<HexCell>(cells, 0, cells_array_size);
-    }
-	public void CreateGrid (int real_x, int real_y) 
+	private HexCell[] cells;
+	public System.ArraySegment<HexCell> GetAllCells()
+	{
+		return new System.ArraySegment<HexCell>(cells, 0, cells_array_size);
+	}
+	public void CreateGrid(int real_x, int real_y)
 	{
 		hex_coords_to_index = new Dictionary<HexCoordinates, int>();
 
-		if (playing_field_cells is not null) {
+		if (playing_field_cells is not null)
+		{
 			Debug.Log("Initializing existing field");
-			for (int cell_i = 0; cell_i < cells.Count(); ++cell_i) {
+			for (int cell_i = 0; cell_i < cells.Count(); ++cell_i)
+			{
 				HexCell cell = cells[cell_i];
 				hex_coords_to_index.Add(cell.hex_coordinates, cell_i);
 			}
 			return;
 		}
 		playing_field_cells = new List<HexCoordinates>();
-        grid_canvas = GetComponentInChildren<Canvas>();
+		grid_canvas = GetComponentInChildren<Canvas>();
 		cells = new HexCell[height * width];
 		int i = 0;
 
 		int offset_horizontal = (width - real_x) / 2;
 		int offset_vertical = (height - real_y) / 2;
-		for (int z = 0; z < height; z++) {
-			if (z % 2 == 0) {
-				for (int x = 0; x < width; x++) {
-					if ((x < offset_horizontal + 1) 
+		for (int z = 0; z < height; z++)
+		{
+			if (z % 2 == 0)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					if ((x < offset_horizontal + 1)
 					 || (x > width - 1 - offset_horizontal)
 					 || (z > height - offset_vertical - 1)
-					 || (z < offset_vertical)) {
+					 || (z < offset_vertical))
+					{
 						CreateCell(x, z, i++, false);
-					} else {
+					}
+					else
+					{
 						CreateCell(x, z, i++, true);
 					}
 				}
-			} else {
-				for (int x = 0; x < width; x++) {
-					if ((x < offset_horizontal) 
+			}
+			else
+			{
+				for (int x = 0; x < width; x++)
+				{
+					if ((x < offset_horizontal)
 					 || (x > width - 1 - offset_horizontal)
 					 || (z > height - offset_vertical - 1)
-					 || (z < offset_vertical)) {
+					 || (z < offset_vertical))
+					{
 						CreateCell(x, z, i++, false);
-					} else {
+					}
+					else
+					{
 						CreateCell(x, z, i++, true);
 					}
 				}
 			}
 		}
-        cells_array_size = i;
+		cells_array_size = i;
 	}
-	void CreateCell (int x, int z, int i, bool playing_field_cell)
+	void CreateCell(int x, int z, int i, bool playing_field_cell)
 	{
 		Vector3 position = HexCoordinates.FromHexCoordinates(HexCoordinates.FromXZ(x, z));
-		
+
 		HexCell cell = cells[i] = Instantiate<HexCell>(cell_prefab);
 		cell.transform.SetParent(transform, false);
 		cell.transform.localPosition = position;
 		cell.hex_coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
-        cell.state = playing_field_cell ? HexCell.State.empty : HexCell.State.out_of_bounds; // TODO: передать всю логику HexCell.State в GayManager
+		cell.state = playing_field_cell ? HexCell.State.empty : HexCell.State.out_of_bounds; // TODO: передать всю логику HexCell.State в GayManager
 		cell.GetComponent<Renderer>().material = playing_field_cell ? common_cell_material : out_of_bounds_cell_material;
-		
-		if (playing_field_cell) {
+
+		if (playing_field_cell)
+		{
 			playing_field_cells.Add(cell.hex_coordinates);
 		}
 		hex_coords_to_index.Add(cell.hex_coordinates, i);
-		#if SHOW_GRID_COORDS
+#if SHOW_GRID_COORDS
 		TextMeshProUGUI label = Instantiate<TextMeshProUGUI>(cell_label_prefab);
 		label.rectTransform.SetParent(grid_canvas.transform, false);
 		label.rectTransform.anchoredPosition =
 			new Vector2(position.x, position.z);
 		label.text = cell.hex_coordinates.ToStringOnSeparateLines();
-		#endif
+#endif
 	}
 
-	public HexCell GetCellByHexCoordinates(HexCoordinates hc) 
+	public HexCell GetCellByHexCoordinates(HexCoordinates hc)
 	{
 		return cells[hex_coords_to_index[hc]];
 	}
 
-    public void ClearOutOfBoundsCells(List<HexCoordinates> list)
-    {
-        HexCoordinates[] arr = list.ToArray();
-        // Debug.Log(hex_coords_to_index);
-        foreach (HexCoordinates hex_coords in arr) {
-            if (!hex_coords_to_index.ContainsKey(hex_coords)) {
-                list.Remove(hex_coords);
-            }
-        }
-    }
+	public void ClearOutOfBoundsCells(List<HexCoordinates> list)
+	{
+		HexCoordinates[] arr = list.ToArray();
+		// Debug.Log(hex_coords_to_index);
+		foreach (HexCoordinates hex_coords in arr)
+		{
+			if (!hex_coords_to_index.ContainsKey(hex_coords))
+			{
+				list.Remove(hex_coords);
+			}
+		}
+	}
 
-    public bool CheckHexCoordsOutOfBounds(HexCoordinates hex_coords)
-    {
-        return !playing_field_cells.Contains(hex_coords);
-    }
+	public bool CheckHexCoordsOutOfBounds(HexCoordinates hex_coords)
+	{
+		return !playing_field_cells.Contains(hex_coords);
+	}
+
+	public static int GetDistance(HexCell a, HexCell b)
+	{
+		return HexCoordinates.L1Distance(a.hex_coordinates, b.hex_coordinates);
+	}
 
 
-	
 }

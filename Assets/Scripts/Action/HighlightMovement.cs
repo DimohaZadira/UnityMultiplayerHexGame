@@ -7,17 +7,19 @@ public class HighlightMovement : IAction
 {
     private HexCell applied_to;
     private GameManager game_manager;
-    public HighlightMovement (HexCell applied_to)
+    public HighlightMovement(HexCell applied_to)
     {
         this.applied_to = applied_to;
         game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
     }
-    
-    public HexCell AppliedTo { 
-        get => applied_to; 
-        set {
+
+    public HexCell AppliedTo
+    {
+        get => applied_to;
+        set
+        {
             applied_to = value;
-        } 
+        }
     }
 
     public string DebugMessage()
@@ -29,21 +31,26 @@ public class HighlightMovement : IAction
     {
         Debug.Log("Highlight <color=green>movement</color>");
         Abobus abobus = applied_to.abobus;
-        if (abobus) {
-            if (!game_manager.moved_this_turn) {
+        if (abobus)
+        {
+            if (!game_manager.moved_this_turn)
+            {
                 List<HexCell> cells = abobus.GetPossibleMovementTurns();
-                foreach (HexCell cell in cells) {
+                foreach (HexCell cell in cells)
+                {
                     cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_green);
                     cell.actions.AddLast(new Movement(cell, abobus));
                 }
                 applied_to.actions.AddLast(new UnhighlightMovement(applied_to, cells));
                 applied_to.actions.AddLast(new ClearActions<Movement>(applied_to, cells));
             }
-            
-        } else {
-            throw new System.Exception();
+
+        }
+        else
+        {
+            throw new System.Exception(); // TODO: разумный эксепшн
         }
     }
 
-    
+
 }
