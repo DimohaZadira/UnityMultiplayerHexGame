@@ -32,7 +32,6 @@ public class UnhighlightMovement : IAction
         foreach (HexCell cell in to_unhighligt) {
             cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
         }
-        applied_to.actions.AddLast(new HighlightMovement(applied_to));
-        
+        applied_to.actions.AddLast(new HighlightMovement(applied_to));   
     }
 }

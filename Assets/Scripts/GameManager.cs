@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
                 abobus.cell.actions.AddLast(new HighlightSkillTrigger(abobus.cell));
                 abobus.cell.actions.AddLast(new SelectAbobus(abobus.cell, abobus));
                 abobus.cell.actions.AddLast(new DisableAbobi(abobus.cell, abobus));
+                // abobus.cell.actions.AddLast(new BringInNextClickUnselectAbobi(abobus.cell, abobus));
             }
         }
     }
@@ -64,6 +65,7 @@ public class GameManager : MonoBehaviour
                 abobus.cell.DeleteFromActions<HighlightSkillTrigger>();
                 abobus.cell.DeleteFromActions<SelectAbobus>();
                 abobus.cell.DeleteFromActions<DisableAbobi>();
+                abobus.cell.DeleteFromActions<SelectAbobus>();
             } 
         }
     }

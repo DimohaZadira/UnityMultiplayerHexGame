@@ -40,7 +40,8 @@ public class HighlightSkillTrigger : IAction
                 cell.actions.AddLast(new PerformSkill(cell, abobus));
             }
             applied_to.actions.AddLast(new UnhighlightSkillTrigger(applied_to, cells));
-            applied_to.actions.AddLast(new ClearActions<PerformSkill>(applied_to, cells));            
+            applied_to.actions.AddLast(new ClearActions<PerformSkill>(applied_to, cells)); 
+            applied_to.actions.AddLast(new UnselectAbobus(applied_to, abobus));  
         } else {
             throw new System.Exception();
         }

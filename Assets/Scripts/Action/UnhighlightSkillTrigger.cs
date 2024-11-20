@@ -33,5 +33,7 @@ public class UnhighlightSkillTrigger : IAction
         }
         applied_to.actions.AddLast(new HighlightSkillTrigger(applied_to));
         
+        applied_to.actions.AddLast(new SelectAbobus(applied_to, applied_to.abobus));
+        
     }
 }

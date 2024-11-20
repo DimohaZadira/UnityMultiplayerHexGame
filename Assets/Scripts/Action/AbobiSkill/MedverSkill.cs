@@ -73,13 +73,15 @@ public class MedverSkill : IAction
         foreach (HexCell cell in skill_turns)
         {
             cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
+            selected_abobus.cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_blue);
             cell.actions.AddLast(new Swap(cell, selected_abobus));
             cell.actions.AddLast(new SimpleUnhighlight(cell, skill_turns));
+            cell.actions.AddLast(new SimpleUnhighlight(selected_abobus.cell, skill_turns));
             cell.actions.AddLast(new EndTurn(cell));
         }
+        selected_abobus.cell.actions.AddLast(new UnselectAbobus(selected_abobus.cell, selected_abobus));
         selected_abobus.cell.actions.AddLast(new SimpleUnhighlight(selected_abobus.cell, skill_turns));
         selected_abobus.cell.actions.AddLast(new MedverClearActions<IAction>(selected_abobus.cell, initial_nearby_abobi));
         selected_abobus.cell.actions.AddLast(new ReturnHighlights(initial_abobus.cell, initial_abobus));
-        //selected_abobus.cell.actions.AddLast(new SelectAbobus(initial_abobus.cell, initial_abobus));
     }
 }
