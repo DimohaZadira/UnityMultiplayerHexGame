@@ -10,15 +10,36 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Buffer : Abobus
 {
+    public Buffer()
+    {
+        action_type = typeof(BufferSkill);
+    }
 
     override public List<HexCell> GetPossibleMovementTurns()
     {
         return GetPossibleTurns(cell, RangeTwoComponent.GetBasisTurns(), HexCell.State.empty);
     }
 
-    override public List<HexCell> GetPossibleSkillTriggerTurns()
+   override public List<HexCell> GetPossibleSkillTriggerTurns()
     {
-        return GetPossibleTurns(cell, RangeOneComponent.GetBasisTurns(), HexCell.State.abobus);
-    }
+        List<HexCell> ans = new List<HexCell>();
 
+        foreach (Vector3 turn in RangeOneComponent.GetBasisTurns())
+        {
+            HexCoordinates candidate = HexCoordinates.FromXY(cell.hex_coordinates.X + (int)turn[0], cell.hex_coordinates.Y + (int)turn[1]);
+
+            if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate))
+            {
+                HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
+                if (cell_candidate.state == HexCell.State.abobus)
+                {
+                    if (cell_candidate.abobus != null && !(cell_candidate.abobus is Kaymanch))
+                    {
+                        ans.Add(cell_candidate);
+                    } 
+                }
+            }
+        }
+        return ans;
+    }
 }

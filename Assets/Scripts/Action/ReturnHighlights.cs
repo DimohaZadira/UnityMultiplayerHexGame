@@ -24,7 +24,7 @@ public class ReturnHighlights : IAction
 
     public string DebugMessage()
     {
-        return "Unselect return highlights" + abobus.abobus_name + " abobus";
+        return "Unselect return highlights " + abobus.abobus_name + " abobus";
     }
 
     public void Invoke()
@@ -35,6 +35,7 @@ public class ReturnHighlights : IAction
             abobus.cell.actions.AddLast(new HighlightMovement(abobus.cell));
         }
         abobus.cell.actions.AddLast(new HighlightSkillTrigger(abobus.cell));
+        abobus.cell.actions.AddLast(new SelectAbobus(abobus.cell, abobus));
 
     }
 

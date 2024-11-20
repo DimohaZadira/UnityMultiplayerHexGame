@@ -31,8 +31,6 @@ public class EnableAbobi : IAction
     {
         Debug.Log("Select <color=green>" + abobus.abobus_name + " </color> abobus");
         game_manager.EnableAbobi(abobus);
-        applied_to.actions.AddLast(new DisableAbobi(applied_to, abobus));
-        
     }
 
     

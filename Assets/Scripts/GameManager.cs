@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
                 abobus.cell.actions.AddLast(new HighlightSkillTrigger(abobus.cell));
                 abobus.cell.actions.AddLast(new SelectAbobus(abobus.cell, abobus));
                 abobus.cell.actions.AddLast(new DisableAbobi(abobus.cell, abobus));
+                // abobus.cell.actions.AddLast(new BringInNextClickUnselectAbobi(abobus.cell, abobus));
             }
         }
     }
@@ -64,6 +65,7 @@ public class GameManager : MonoBehaviour
                 abobus.cell.DeleteFromActions<HighlightSkillTrigger>();
                 abobus.cell.DeleteFromActions<SelectAbobus>();
                 abobus.cell.DeleteFromActions<DisableAbobi>();
+                abobus.cell.DeleteFromActions<SelectAbobus>();
             } 
         }
     }
@@ -102,15 +104,15 @@ public class GameManager : MonoBehaviour
 
     private Dictionary<Team, List<GameObject>> abobi;
 
-//Buffer // Kaymanch // Levver // Medver // Primar // Slong // Sohad // Volcher
+    //Buffer // Kaymanch // Levver // Medver // Primar // Slong // Sohad // Volcher
     void SpawnAbobi ()
     {
-        GameObject abobus_go = SpawnAbobus<Medver>(Resources.Load("Abobi/RookPrefab"), new Vector2(5, 9), Team.blue, new string("cyan"));
+        GameObject abobus_go = SpawnAbobus<Buffer>(Resources.Load("Abobi/RookPrefab"), new Vector2(5, 9), Team.blue, new string("cyan"));
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.cyan;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
         
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/QueenPrefab"), new Vector2(5, 10), Team.blue,"blue");
+        abobus_go = SpawnAbobus<Medver>(Resources.Load("Abobi/QueenPrefab"), new Vector2(5, 10), Team.blue,"blue");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
@@ -119,19 +121,30 @@ public class GameManager : MonoBehaviour
         abobus_go.GetComponentInChildren<Renderer>().material.color = new Color(0.038f, 0.574f, 1.000f);
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
+
+        abobus_go = SpawnAbobus<Kaymanch>(Resources.Load("Abobi/BishopPrefab"), new Vector2(4, 11), Team.blue, "purple");
+        abobus_go.GetComponentInChildren<Renderer>().material.color = new Color(0.372f,0.109f,1.000f);
+        abobi[Team.blue].Add(abobus_go);  
+        abobus_go.GetComponent<Abobus>().cell.Refresh();
+
         
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/QueenPrefab"), new Vector2(4, 9), Team.yellow, "yellow");
+        abobus_go = SpawnAbobus<Medver>(Resources.Load("Abobi/QueenPrefab"), new Vector2(4, 9), Team.yellow, "yellow");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Medver>(Resources.Load("Abobi/RookPrefab"), new Vector2(4, 8), Team.yellow, "red");
+        abobus_go = SpawnAbobus<Buffer>(Resources.Load("Abobi/RookPrefab"), new Vector2(4, 8), Team.yellow, "red");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.red;
         abobi[Team.yellow].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
         abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/PawnPrefab"), new Vector2(4, 7), Team.yellow, "orange");
         abobus_go.GetComponentInChildren<Renderer>().material.color = new Color(1.0f, 0.295f, 0.004f);
+        abobi[Team.yellow].Add(abobus_go);  
+        abobus_go.GetComponent<Abobus>().cell.Refresh();
+
+        abobus_go = SpawnAbobus<Kaymanch>(Resources.Load("Abobi/BishopPrefab"), new Vector2(5, 7), Team.yellow, "lime");
+        abobus_go.GetComponentInChildren<Renderer>().material.color = new Color(1.000f,0.998f,0.364f);
         abobi[Team.yellow].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
