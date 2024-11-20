@@ -10,21 +10,9 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Buffer : Abobus
 {
-    private List<HexCell> GetPossibleTurns(HexCell from,  Vector3[] basis_turns, HexCell.State check)
+    public Buffer()
     {
-        List<HexCell> ans = new List<HexCell>();
-
-        foreach (Vector3 turn in basis_turns) {
-            HexCoordinates candidate = HexCoordinates.FromXY(from.hex_coordinates.X + (int)turn[0], from.hex_coordinates.Y + (int)turn[1]);
-            
-            if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
-                HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
-                if (cell_candidate.state == check) {
-                    ans.Add(cell_candidate);
-                }
-            }
-        }
-        return ans;
+        action_type = typeof(BufferSkill);
     }
 
     override public List<HexCell> GetPossibleMovementTurns()
@@ -32,17 +20,26 @@ public class Buffer : Abobus
         return GetPossibleTurns(cell, RangeTwoComponent.GetBasisTurns(), HexCell.State.empty);
     }
 
-    override public List<HexCell> GetPossibleSkillTriggerTurns()
+   override public List<HexCell> GetPossibleSkillTriggerTurns()
     {
-        return GetPossibleTurns(cell, RangeOneComponent.GetBasisTurns(), HexCell.State.abobus);
-    }
+        List<HexCell> ans = new List<HexCell>();
 
-    
-    override public List<HexCell> GetPossibleSkillTurns(HexCell from)
-    {
-        List<HexCell> ans = GetPossibleTurns(from, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
-        ans.Add(cell);
+        foreach (Vector3 turn in RangeOneComponent.GetBasisTurns())
+        {
+            HexCoordinates candidate = HexCoordinates.FromXY(cell.hex_coordinates.X + (int)turn[0], cell.hex_coordinates.Y + (int)turn[1]);
+
+            if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate))
+            {
+                HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
+                if (cell_candidate.state == HexCell.State.abobus)
+                {
+                    if (cell_candidate.abobus != null && !(cell_candidate.abobus is Kaymanch))
+                    {
+                        ans.Add(cell_candidate);
+                    } 
+                }
+            }
+        }
         return ans;
     }
-
 }

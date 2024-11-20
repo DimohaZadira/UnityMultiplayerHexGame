@@ -13,7 +13,7 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Sohad : Abobus
 {
-    
+
     private List<HexCoordinates> visited;
     public Sohad()
     {
@@ -24,22 +24,28 @@ public class Sohad : Abobus
     {
         List<HexCell> ans = new List<HexCell>();
         Vector3[] basis_turns = RangeOneComponent.GetBasisTurns();
-        foreach (Vector3 turn in basis_turns) {
-            for (int i = 1; i <= 2; ++i) {
+        foreach (Vector3 turn in basis_turns)
+        {
+            for (int i = 1; i <= 2; ++i)
+            {
                 HexCoordinates candidate = HexCoordinates.FromXY(cell.hex_coordinates.X + i * (int)turn[0], cell.hex_coordinates.Y + i * (int)turn[1]);
 
-                if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
+                if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate))
+                {
                     break;
                 }
-                
+
                 HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
-                
-                if (cell_candidate.state == HexCell.State.empty) {
+
+                if (cell_candidate.state == HexCell.State.empty)
+                {
                     ans.Add(cell_candidate);
-                } else {
+                }
+                else
+                {
                     break;
                 }
-                
+
             }
         }
 
@@ -50,31 +56,28 @@ public class Sohad : Abobus
     {
         List<HexCell> ans = new List<HexCell>();
         Vector3[] basis_turns = RangeOneComponent.GetBasisTurns();
-        foreach (Vector3 turn in basis_turns) {
+        foreach (Vector3 turn in basis_turns)
+        {
             HexCoordinates neighbour = HexCoordinates.FromXY(hc.hex_coordinates.X + (int)turn[0], hc.hex_coordinates.Y + (int)turn[1]);
             HexCoordinates candidate = HexCoordinates.FromXY(hc.hex_coordinates.X + 2 * (int)turn[0], hc.hex_coordinates.Y + 2 * (int)turn[1]);
 
-            if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(neighbour) || game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate)) {
+            if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(neighbour) || game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate))
+            {
                 break;
             }
-            
+
             HexCell cell_neighbour = game_manager.hex_grid.GetCellByHexCoordinates(neighbour);
             HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
-            if ( (cell_neighbour.state == HexCell.State.abobus)
+            if ((cell_neighbour.state == HexCell.State.abobus)
               && (cell_candidate.state == HexCell.State.empty)
-              && !visited.Contains(candidate)){
+              && !visited.Contains(candidate))
+            {
                 ans.Add(cell_candidate);
-            }            
+            }
         }
         return ans;
     }
     override public List<HexCell> GetPossibleSkillTriggerTurns()
-    {
-        return GetSkillTurns(cell);
-    }
-
-    
-    override public List<HexCell> GetPossibleSkillTurns(HexCell from)
     {
         return GetSkillTurns(cell);
     }
