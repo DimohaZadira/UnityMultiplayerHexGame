@@ -87,7 +87,7 @@ public struct HexCoordinates : IEquatable<HexCoordinates>
         return x.Equals(hc.X) && z.Equals(hc.Z);
     }
 
-/*
+
     public static int L1Distance(HexCoordinates a, HexCoordinates b)
     {
         return Mathf.Max(
@@ -96,8 +96,9 @@ public struct HexCoordinates : IEquatable<HexCoordinates>
             Mathf.Abs(a.Z - b.Z)
         );
     }
-*/
 
+
+/*
     public static int L1Distance(Vector3 a, Vector3 b)
     {
         return Mathf.Max(
@@ -106,7 +107,7 @@ public struct HexCoordinates : IEquatable<HexCoordinates>
             Mathf.Abs((int)a.z - (int)b.z)
         );
     }
-
+*/
 #nullable enable
     public override bool Equals(object? obj) => Equals(obj as HexCoordinates?);
 #nullable disable
