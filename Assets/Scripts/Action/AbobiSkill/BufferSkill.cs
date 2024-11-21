@@ -52,6 +52,7 @@ public class BufferSkill : IAction
             }
         }
         buffer.cell.actions.AddLast(new UnselectAbobus(buffer.cell, buffer));
+        buffer.cell.actions.AddLast(new UnhighlightOneCell(targetAbobus.cell));
         buffer.cell.actions.AddLast(new SimpleUnhighlight(buffer.cell, skill_trigger_cells));
         buffer.cell.actions.AddLast(new ClearActions<IAction>(buffer.cell, skill_trigger_cells));
         buffer.cell.actions.AddLast(new ReturnHighlights(buffer.cell, buffer));

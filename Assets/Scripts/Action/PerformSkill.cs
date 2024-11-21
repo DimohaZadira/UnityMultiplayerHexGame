@@ -38,5 +38,6 @@ public class PerformSkill : IAction
         disable_.Invoke();
         IAction abobus_skill = (IAction)Activator.CreateInstance(abobus.action_type, applied_to, abobus);
         abobus_skill.Invoke();
+        applied_to.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_blue);
     }
 }
