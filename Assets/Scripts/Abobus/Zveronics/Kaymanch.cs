@@ -10,6 +10,11 @@ using UnityEngine;
 на экран выводится символ «конец хода».*/
 public class Kaymanch : Abobus
 {
+    public Kaymanch()
+    {
+        action_type = typeof(KaymanchSkill);
+    }
+
     override public List<HexCell> GetPossibleMovementTurns()
     {
         return GetPossibleTurns(cell, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
@@ -33,6 +38,11 @@ public class Kaymanch : Abobus
             }
         }
         return ans;
+    }
+
+    public List<HexCell> GetPossibleSkillTurns(HexCell from)
+    {
+        return GetPossibleTurns(from, RadiusTwoComponent.GetBasisTurns(), HexCell.State.empty);
     }
 
 }
