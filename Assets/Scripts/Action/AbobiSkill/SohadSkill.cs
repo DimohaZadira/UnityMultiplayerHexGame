@@ -11,6 +11,7 @@ public class SohadSkill : IAction
     private HashSet<HexCell> visited_cells;
     public SohadSkill (HexCell applied_to, Abobus abobus)
     {
+        
         this.applied_to = applied_to;
         this.abobus = abobus;
         visited_cells = new HashSet<HexCell>();
@@ -30,7 +31,7 @@ public class SohadSkill : IAction
         return "Slong skill";
     }
 
-
+    
     public void Invoke()
     {
         Debug.Log("Sohad invokes skill");
@@ -59,7 +60,7 @@ public class SohadSkill : IAction
                 }
             }
         }
-
+/*
         foreach (HexCell cell in skill_turns)
         {
             // Подсвечиваем клетки
@@ -68,15 +69,69 @@ public class SohadSkill : IAction
             // Добавляем действия в клетку
             cell.actions.AddLast(new SimpleMovement(cell, abobus)); // Перемещение абобуса
         }
-
+*/
         // Добавляем текущую клетку в список посещённых
         visited_cells.Add(applied_to);
-
+/*
         // Очищаем подсветку и действия после хода
         foreach (HexCell cell in skill_turns)
         {
             cell.actions.AddLast(new SimpleUnhighlight(cell, skill_turns));
             cell.actions.AddLast(new ClearActions<SohadSkill>(cell, skill_turns));
         }
+*/
+
+    foreach (HexCell cell in skill_turns)
+        {
+            // Подсветка клеток
+            cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
+
+            // Добавляем действия для клеток
+            cell.actions.AddLast(new SimpleMovement(cell, game_manager.GetAbobusByHexCoordinates(applied_to.hex_coordinates))); // Перемещение цели
+            cell.actions.AddLast(new SimpleMovement(applied_to, abobus)); // Перемещение Sohad
+            cell.actions.AddLast(new SimpleUnhighlight(applied_to, skill_turns)); // Снятие подсветки
+            cell.actions.AddLast(new UnselectAbobus(cell, abobus)); // Снятие выделения
+            cell.actions.AddLast(new EndTurn(cell)); // Завершение хода
+        }
+
+        // Добавляем действия для клетки, где находится Sohad
+        abobus.cell.actions.AddLast(new SimpleUnhighlight(abobus.cell, skill_turns)); // Снятие подсветки
+        abobus.cell.actions.AddLast(new ClearActions<IAction>(abobus.cell, skill_turns)); // Очистка действий
+        abobus.cell.actions.AddLast(new ReturnHighlights(abobus.cell, abobus)); // Возвращение подсветки
     }
-}
+    }
+
+/*
+    public void Invoke()
+    {
+        Debug.Log("Sohad invokes skill");
+
+        // Убедимся, что выбран правильный персонаж
+        if (game_manager.selected_abobus == null)
+        {
+            SelectAbobus select_abobus = new SelectAbobus(abobus.cell, abobus);
+            select_abobus.Invoke();
+        }
+
+        // Получаем доступные клетки для применения навыка
+        List<HexCell> skill_turns = abobus.GetPossibleSkillTurns(applied_to);
+
+        foreach (HexCell cell in skill_turns)
+        {
+            // Подсветка клеток
+            cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_yellow);
+
+            // Добавляем действия для клеток
+            cell.actions.AddLast(new SimpleMovement(cell, game_manager.GetAbobusByHexCoordinates(applied_to.hex_coordinates))); // Перемещение цели
+            cell.actions.AddLast(new SimpleMovement(applied_to, abobus)); // Перемещение Sohad
+            cell.actions.AddLast(new SimpleUnhighlight(applied_to, skill_turns)); // Снятие подсветки
+            cell.actions.AddLast(new UnselectAbobus(cell, abobus)); // Снятие выделения
+            cell.actions.AddLast(new EndTurn(cell)); // Завершение хода
+        }
+
+        // Добавляем действия для клетки, где находится Sohad
+        abobus.cell.actions.AddLast(new SimpleUnhighlight(abobus.cell, skill_turns)); // Снятие подсветки
+        abobus.cell.actions.AddLast(new ClearActions<IAction>(abobus.cell, skill_turns)); // Очистка действий
+        abobus.cell.actions.AddLast(new ReturnHighlights(abobus.cell, abobus)); // Возвращение подсветки
+    }
+*/

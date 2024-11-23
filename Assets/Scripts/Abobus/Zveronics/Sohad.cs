@@ -18,6 +18,7 @@ public class Sohad : Abobus
     public Sohad()
     {
         visited = new List<HexCoordinates>();
+        action_type = typeof(SohadSkill);
     }
 
     override public List<HexCell> GetPossibleMovementTurns()
