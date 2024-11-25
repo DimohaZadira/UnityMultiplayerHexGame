@@ -28,10 +28,95 @@ public class SohadSkill : IAction
     
     public string DebugMessage()
     {
-        return "Slong skill";
+        return "Sohad skill";
     }
 
-    
+    public void Invoke()
+    {
+        // Логируем начало действия
+        Debug.Log("Sohad invokes skill");
+
+        // Получаем список смещений
+        Vector3[] turns = RangeTwoComponent.GetBasisTurns();
+        List<HexCell> skill_turns = new List<HexCell>();
+
+        foreach (Vector3 turn in turns)
+        {
+            // Координаты промежуточной клетки (где должен быть персонаж)
+            int intermediateX = applied_to.hex_coordinates.X + (int)turn.x;
+            int intermediateZ = applied_to.hex_coordinates.Z + (int)turn.z;
+            HexCoordinates intermediateCoordinates = HexCoordinates.FromXZ(intermediateX, intermediateZ);
+
+            // Координаты целевой клетки (за персонажем)
+            int targetX = intermediateX + (int)turn.x;
+            int targetZ = intermediateZ + (int)turn.z;
+            HexCoordinates targetCoordinates = HexCoordinates.FromXZ(targetX, targetZ);
+
+            // Проверяем, чтобы обе клетки находились в пределах сетки
+            if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(intermediateCoordinates) ||
+                game_manager.hex_grid.CheckHexCoordsOutOfBounds(targetCoordinates))
+            {
+                continue; // Пропускаем, если клетки за пределами сетки
+            }
+
+            // Получаем промежуточную и целевую клетки
+            HexCell intermediateCell = game_manager.hex_grid.GetCellByHexCoordinates(intermediateCoordinates);
+            HexCell targetCell = game_manager.hex_grid.GetCellByHexCoordinates(targetCoordinates);
+
+            // Убедимся, что в промежуточной клетке есть персонаж и целевая клетка пуста
+            if (intermediateCell != null && intermediateCell.abobus != null && 
+                targetCell != null && targetCell.abobus == null && 
+                !visited_cells.Contains(targetCell))
+            {
+                Debug.Log($"Adding target cell: {targetCell.name}");
+                skill_turns.Add(targetCell);
+            }
+        }
+
+        // Обработка найденных клеток
+        foreach (HexCell cell in skill_turns)
+        {
+            // Подсветка клетки
+            HighlightableCell highlightable = cell.GetComponent<HighlightableCell>();
+            if (highlightable != null)
+            {
+                Debug.Log($"Highlighting target cell: {cell.name}");
+                highlightable.SetState(HighlightableCell.State.highlighted_yellow);
+            }
+
+            // Добавляем действие перемещения
+            Debug.Log($"Adding move action for cell: {cell.name}");
+            cell.actions.AddLast(new SimpleMovement(cell, abobus)); // Перемещение
+        }
+
+        // Добавляем текущую клетку в список посещённых
+        visited_cells.Add(applied_to);
+
+        // Убираем подсветку и очищаем действия после завершения
+        foreach (HexCell cell in skill_turns)
+        {
+            Debug.Log($"Clearing actions for cell: {cell.name}");
+            cell.actions.AddLast(new SimpleUnhighlight(cell, skill_turns)); // Снятие подсветки
+            cell.actions.AddLast(new ClearActions<SohadSkill>(cell, skill_turns)); // Очистка действий
+        }
+
+        // Добавляем действия для текущей клетки
+        if (abobus.cell != null)
+        {
+            Debug.Log($"Clearing actions for current cell: {abobus.cell.name}");
+            abobus.cell.actions.AddLast(new SimpleUnhighlight(abobus.cell, skill_turns)); // Снятие подсветки
+            abobus.cell.actions.AddLast(new ClearActions<IAction>(abobus.cell, skill_turns)); // Очистка действий
+            abobus.cell.actions.AddLast(new ReturnHighlights(abobus.cell, abobus)); // Возвращение подсветки
+        }
+    }
+}
+
+
+
+
+
+
+    /*
     public void Invoke()
     {
         Debug.Log("Sohad invokes skill");
@@ -71,7 +156,7 @@ public class SohadSkill : IAction
         }
 */
         // Добавляем текущую клетку в список посещённых
-        visited_cells.Add(applied_to);
+//        visited_cells.Add(applied_to);
 /*
         // Очищаем подсветку и действия после хода
         foreach (HexCell cell in skill_turns)
@@ -81,6 +166,9 @@ public class SohadSkill : IAction
         }
 */
 
+
+
+/*
     foreach (HexCell cell in skill_turns)
         {
             // Подсветка клеток
@@ -100,6 +188,10 @@ public class SohadSkill : IAction
         abobus.cell.actions.AddLast(new ReturnHighlights(abobus.cell, abobus)); // Возвращение подсветки
     }
     }
+*/
+
+
+
 
 /*
     public void Invoke()
