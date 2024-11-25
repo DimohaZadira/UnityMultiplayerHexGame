@@ -37,10 +37,8 @@ public class Movement : IAction
             abobus.MoveToHexCoordinates(applied_to.hex_coordinates);
             game_manager.moved_this_turn = true;
         
-            applied_to.actions.AddLast(new SelectAbobus(applied_to, abobus));
-
-            var disable_ = new DoubleSelect(applied_to, abobus);
-            disable_.Invoke();
+            var select_ = new SelectAbobus(applied_to, abobus);
+            select_.Invoke();
 
             var highlight_ = new HighlightSkillTrigger(applied_to);
             highlight_.Invoke();
