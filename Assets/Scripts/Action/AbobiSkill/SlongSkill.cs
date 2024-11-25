@@ -38,6 +38,7 @@ public class SlongSkill : IAction
             SelectAbobus select_abobus = new SelectAbobus(abobus.cell, abobus);
             select_abobus.Invoke();
         }
+        Abobus targetAbobus = applied_to.abobus;
         List<HexCell> skill_turns = abobus.GetPossibleSkillTurns(applied_to);
         foreach (HexCell cell in skill_turns)
         {
@@ -49,6 +50,7 @@ public class SlongSkill : IAction
             cell.actions.AddLast(new EndTurn(cell));
         }
         abobus.cell.actions.AddLast(new UnselectAbobus(abobus.cell, abobus));
+        abobus.cell.actions.AddLast(new UnhighlightOneCell(targetAbobus.cell));
         abobus.cell.actions.AddLast(new SimpleUnhighlight(abobus.cell, skill_turns));
         abobus.cell.actions.AddLast(new ClearActions<IAction>(abobus.cell, skill_turns));
         abobus.cell.actions.AddLast(new ReturnHighlights(abobus.cell, abobus));

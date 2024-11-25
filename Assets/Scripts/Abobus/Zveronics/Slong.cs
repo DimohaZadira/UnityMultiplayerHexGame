@@ -34,7 +34,7 @@ public class Slong : Abobus
             if (!game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate))
             {
                 HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
-                if ((cell_candidate.state == HexCell.State.abobus) && (game_manager.GetAbobusByHexCoordinates(candidate).team != team))
+                if ((cell_candidate.state == HexCell.State.abobus) && (game_manager.GetAbobusByHexCoordinates(candidate).team != team) && !(cell_candidate.abobus is Kaymanch))
                 {
 
                     ans.Add(cell_candidate);
