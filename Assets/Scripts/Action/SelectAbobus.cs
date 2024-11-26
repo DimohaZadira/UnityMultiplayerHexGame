@@ -32,11 +32,10 @@ public class SelectAbobus : IAction
     public void Invoke()
     {
         Debug.Log("Select <color=green>" + abobus.abobus_name + " </color> abobus");
-
         abobus.transform.position += new Vector3(0, 10, 0);
-
         game_manager.selected_abobus = abobus;
-    }
 
+        game_manager.DisableAbobi(abobus);
+    }
 
 }
