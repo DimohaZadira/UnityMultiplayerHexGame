@@ -9,21 +9,21 @@ public class SohadSkill : IAction
     private Abobus abobus;
     private GameManager game_manager;
     private HashSet<HexCell> visited_cells;
+    //private List<HexCell> visited_cells;
     public SohadSkill (HexCell applied_to, Abobus abobus)
     {
         
         this.applied_to = applied_to;
         this.abobus = abobus;
         visited_cells = new HashSet<HexCell>();
+        //highlighted_cells = new List<HexCell>();
         game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
     }
 
     
     public HexCell AppliedTo { 
         get => applied_to; 
-        set {
-            applied_to = value;
-        } 
+        set => applied_to = value; 
     }
     
     public string DebugMessage()
@@ -31,87 +31,154 @@ public class SohadSkill : IAction
         return "Sohad skill";
     }
 
+    //работает но не прыгает через пупсов
     public void Invoke()
+{
+    Debug.Log("Sohad invokes skill");
+
+    Vector3[] turns = RangeOneComponent.GetBasisTurns();
+    List<HexCell> skill_turns = new List<HexCell>();
+
+    visited_cells.Clear(); // Очищаем посещённые клетки
+    visited_cells.Add(applied_to);
+
+    foreach (Vector3 turn in turns)
     {
-        // Логируем начало действия
-        Debug.Log("Sohad invokes skill");
+        // Рассчитываем координаты клеток для перемещения
+        HexCoordinates neighbourCoords = HexCoordinates.FromXZ(
+            applied_to.hex_coordinates.X + (int)turn.x,
+            applied_to.hex_coordinates.Z + (int)turn.z
+        );
+        HexCoordinates jumpCoords = HexCoordinates.FromXZ(
+            neighbourCoords.X + (int)turn.x,
+            neighbourCoords.Z + (int)turn.z
+        );
 
-        // Получаем список смещений
-        Vector3[] turns = RangeTwoComponent.GetBasisTurns();
-        List<HexCell> skill_turns = new List<HexCell>();
-
-        foreach (Vector3 turn in turns)
+        if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(neighbourCoords) ||
+            game_manager.hex_grid.CheckHexCoordsOutOfBounds(jumpCoords))
         {
-            // Координаты промежуточной клетки (где должен быть персонаж)
-            int intermediateX = applied_to.hex_coordinates.X + (int)turn.x;
-            int intermediateZ = applied_to.hex_coordinates.Z + (int)turn.z;
-            HexCoordinates intermediateCoordinates = HexCoordinates.FromXZ(intermediateX, intermediateZ);
-
-            // Координаты целевой клетки (за персонажем)
-            int targetX = intermediateX + (int)turn.x;
-            int targetZ = intermediateZ + (int)turn.z;
-            HexCoordinates targetCoordinates = HexCoordinates.FromXZ(targetX, targetZ);
-
-            // Проверяем, чтобы обе клетки находились в пределах сетки
-            if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(intermediateCoordinates) ||
-                game_manager.hex_grid.CheckHexCoordsOutOfBounds(targetCoordinates))
-            {
-                continue; // Пропускаем, если клетки за пределами сетки
-            }
-
-            // Получаем промежуточную и целевую клетки
-            HexCell intermediateCell = game_manager.hex_grid.GetCellByHexCoordinates(intermediateCoordinates);
-            HexCell targetCell = game_manager.hex_grid.GetCellByHexCoordinates(targetCoordinates);
-
-            // Убедимся, что в промежуточной клетке есть персонаж и целевая клетка пуста
-            if (intermediateCell != null && intermediateCell.abobus != null && 
-                targetCell != null && targetCell.abobus == null && 
-                !visited_cells.Contains(targetCell))
-            {
-                Debug.Log($"Adding target cell: {targetCell.name}");
-                skill_turns.Add(targetCell);
-            }
+            continue;
         }
 
-        // Обработка найденных клеток
-        foreach (HexCell cell in skill_turns)
+        HexCell neighbourCell = game_manager.hex_grid.GetCellByHexCoordinates(neighbourCoords);
+        HexCell jumpCell = game_manager.hex_grid.GetCellByHexCoordinates(jumpCoords);
+
+        if (neighbourCell != null && neighbourCell.abobus != null &&
+            jumpCell != null && jumpCell.state == HexCell.State.empty &&
+            !visited_cells.Contains(jumpCell))
         {
-            // Подсветка клетки
-            HighlightableCell highlightable = cell.GetComponent<HighlightableCell>();
-            if (highlightable != null)
-            {
-                Debug.Log($"Highlighting target cell: {cell.name}");
-                highlightable.SetState(HighlightableCell.State.highlighted_yellow);
-            }
-
-            // Добавляем действие перемещения
-            Debug.Log($"Adding move action for cell: {cell.name}");
-            cell.actions.AddLast(new SimpleMovement(cell, abobus)); // Перемещение
-        }
-
-        // Добавляем текущую клетку в список посещённых
-        visited_cells.Add(applied_to);
-
-        // Убираем подсветку и очищаем действия после завершения
-        foreach (HexCell cell in skill_turns)
-        {
-            Debug.Log($"Clearing actions for cell: {cell.name}");
-            cell.actions.AddLast(new SimpleUnhighlight(cell, skill_turns)); // Снятие подсветки
-            cell.actions.AddLast(new ClearActions<SohadSkill>(cell, skill_turns)); // Очистка действий
-        }
-
-        // Добавляем действия для текущей клетки
-        if (abobus.cell != null)
-        {
-            Debug.Log($"Clearing actions for current cell: {abobus.cell.name}");
-            abobus.cell.actions.AddLast(new SimpleUnhighlight(abobus.cell, skill_turns)); // Снятие подсветки
-            abobus.cell.actions.AddLast(new ClearActions<IAction>(abobus.cell, skill_turns)); // Очистка действий
-            abobus.cell.actions.AddLast(new ReturnHighlights(abobus.cell, abobus)); // Возвращение подсветки
+            skill_turns.Add(jumpCell);
+            visited_cells.Add(jumpCell);
         }
     }
+
+    // Подсветка клеток
+    foreach (HexCell cell in skill_turns)
+    {
+        HighlightableCell highlightable = cell.GetComponent<HighlightableCell>();
+        if (highlightable != null)
+        {
+            highlightable.SetState(HighlightableCell.State.highlighted_yellow);
+        }
+
+        // Добавление действий для перемещения персонажа
+        cell.actions.AddLast(new SimpleMovement(cell, abobus));
+    }
+}
 }
 
 
+/*
+
+    //вроде работает но плохо работает
+    public void Invoke()
+    {
+        // Логируем начало действия
+    Debug.Log("Sohad invokes skill");
+
+    // Используем RangeOneComponent для смещений радиуса 1
+    Vector3[] turns = RangeOneComponent.GetBasisTurns();
+    List<HexCell> skill_turns = new List<HexCell>();
+
+    // Добавляем текущую клетку персонажа в список посещённых
+    visited_cells.Add(applied_to);
+    Debug.Log($"Current cell added to visited: {applied_to.hex_coordinates}");
+
+    foreach (Vector3 turn in turns)
+    {
+        // Координаты промежуточной клетки (радиус 1 от текущей клетки)
+        int intermediateX = applied_to.hex_coordinates.X + (int)turn.x;
+        int intermediateZ = applied_to.hex_coordinates.Z + (int)turn.z;
+        HexCoordinates intermediateCoordinates = HexCoordinates.FromXZ(intermediateX, intermediateZ);
+
+        // Координаты целевой клетки (радиус 2 от текущей клетки)
+        int targetX = intermediateX + (int)turn.x;
+        int targetZ = intermediateZ + (int)turn.z;
+        HexCoordinates targetCoordinates = HexCoordinates.FromXZ(targetX, targetZ);
+
+        // Проверяем, чтобы обе клетки находились в пределах сетки
+        if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(intermediateCoordinates) ||
+            game_manager.hex_grid.CheckHexCoordsOutOfBounds(targetCoordinates))
+        {
+            continue; // Пропускаем, если клетки за пределами сетки
+        }
+
+        // Получаем промежуточную и целевую клетки
+        HexCell intermediateCell = game_manager.hex_grid.GetCellByHexCoordinates(intermediateCoordinates);
+        HexCell targetCell = game_manager.hex_grid.GetCellByHexCoordinates(targetCoordinates);
+
+        // Убедимся, что промежуточная клетка содержит персонажа
+        if (intermediateCell != null && intermediateCell.abobus != null)
+        {
+            Debug.Log($"Intermediate cell {intermediateCell.name} has a character.");
+
+            // Убедимся, что целевая клетка пуста, существует и не была посещена
+            if (targetCell != null && targetCell.abobus == null && !visited_cells.Contains(targetCell))
+            {
+                Debug.Log($"Target cell {targetCell.name} is valid and added.");
+                skill_turns.Add(targetCell);
+            }
+        }
+    }
+
+    // Обработка найденных клеток
+    foreach (HexCell cell in skill_turns)
+    {
+        // Подсветка клетки
+        HighlightableCell highlightable = cell.GetComponent<HighlightableCell>();
+        if (highlightable != null)
+        {
+            Debug.Log($"Highlighting target cell: {cell.name}");
+            highlightable.SetState(HighlightableCell.State.highlighted_yellow);
+        }
+
+        // Добавляем действие перемещения
+        Debug.Log($"Adding move action for cell: {cell.name}");
+        cell.actions.AddLast(new SimpleMovement(cell, abobus)); // Перемещение
+    }
+
+
+
+    // Убираем подсветку и очищаем действия после завершения
+    foreach (HexCell cell in skill_turns)
+    {
+        Debug.Log($"Clearing actions for cell: {cell.name}");
+        cell.actions.AddLast(new SimpleUnhighlight(cell, skill_turns)); // Снятие подсветки
+        cell.actions.AddLast(new ClearActions<SohadSkill>(cell, skill_turns)); // Очистка действий
+    }
+
+    // Добавляем действия для текущей клетки
+    if (abobus.cell != null)
+    {
+        Debug.Log($"Clearing actions for current cell: {abobus.cell.name}");
+        abobus.cell.actions.AddLast(new SimpleUnhighlight(abobus.cell, skill_turns)); // Снятие подсветки
+        abobus.cell.actions.AddLast(new ClearActions<IAction>(abobus.cell, skill_turns)); // Очистка действий
+        abobus.cell.actions.AddLast(new ReturnHighlights(abobus.cell, abobus)); // Возвращение подсветки
+    }
+    }
+}
+
+*/
 
 
 
