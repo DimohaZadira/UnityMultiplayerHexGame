@@ -32,6 +32,8 @@ public class UnselectAbobus : IAction
         Debug.Log("Unselect <color=green>" + abobus.abobus_name + " </color> abobus");
         game_manager.selected_abobus = null;
         abobus.transform.position += new Vector3(0, -10, 0);
+        
+        game_manager.EnableAbobi(abobus);
     }
 
     

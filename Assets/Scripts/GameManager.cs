@@ -48,11 +48,10 @@ public class GameManager : MonoBehaviour
                 Abobus abobus = abobus_in_team.GetComponent<Abobus>();
                 if (!moved_this_turn) {
                     abobus.cell.actions.AddLast(new HighlightMovement(abobus.cell));
+                    abobus.cell.actions.AddLast(new HighlightSkillTrigger(abobus.cell));
+                    abobus.cell.actions.AddLast(new SelectAbobus(abobus.cell, abobus));
+                    abobus.cell.actions.AddLast(new DisableAbobi(abobus.cell, abobus));
                 }
-                abobus.cell.actions.AddLast(new HighlightSkillTrigger(abobus.cell));
-                abobus.cell.actions.AddLast(new SelectAbobus(abobus.cell, abobus));
-                abobus.cell.actions.AddLast(new DisableAbobi(abobus.cell, abobus));
-                // abobus.cell.actions.AddLast(new BringInNextClickUnselectAbobi(abobus.cell, abobus));
             }
         }
     }
