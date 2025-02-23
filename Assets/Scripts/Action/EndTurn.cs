@@ -7,7 +7,6 @@ public class EndTurn : IAction
 {
     private HexCell applied_to;
     private GameManager game_manager;
-    private Abobus abobus;
     public EndTurn (HexCell applied_to)
     {
         this.applied_to = applied_to;
