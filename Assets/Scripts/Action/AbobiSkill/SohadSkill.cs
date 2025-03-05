@@ -43,6 +43,12 @@ public class SohadSkill : IAction
         HexCell before = sohad.cell;
         sohad.visited.Add(before);
         sohad.MoveToHexCoordinates(applied_to.hex_coordinates);
+        game_manager.skill_started = true;
+        if (game_manager.selected_abobus == null)
+        {
+            SelectAbobus select_abobus = new SelectAbobus(sohad.cell, sohad);
+            select_abobus.Invoke();
+        }
         List<HexCell> keks = sohad.GetPossibleSkillTriggerTurns();
         if (keks.Count == 0)
         {
@@ -59,5 +65,7 @@ public class SohadSkill : IAction
             kek.actions.AddLast(new PerformSkill(kek, sohad));
         }
         applied_to.actions.AddLast(new UnhighlightOneCell(applied_to));
+        applied_to.actions.AddLast(new SimpleUnhighlight(applied_to, keks));
+        applied_to.actions.AddLast(new UnselectAbobus(applied_to, sohad));
     }
 }

@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     private TouchControls touchControls;
     public TextMeshProUGUI team_turn_text;
     public Abobus selected_abobus;
-    public bool moved_this_turn;
+    public bool moved_this_turn, skill_started;
 
     public enum Team {
         blue = 0, 
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         foreach(GameObject abobus_in_team in abobi[team_turn]) {
             if (abobus_in_team.GetComponent<Abobus>() != except) {
                 Abobus abobus = abobus_in_team.GetComponent<Abobus>();
-                if (!moved_this_turn) {
+                if (!moved_this_turn & !skill_started) {
                     abobus.cell.actions.AddLast(new HighlightMovement(abobus.cell));
                     abobus.cell.actions.AddLast(new HighlightSkillTrigger(abobus.cell));
                     abobus.cell.actions.AddLast(new SelectAbobus(abobus.cell, abobus));
@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour
         }
         selected_abobus = null;
         moved_this_turn = false;
+        skill_started = false;
         ClearAllHighlightedCells();
         ClearAllActions();
 
