@@ -23,6 +23,7 @@ public class Sohad : Abobus
 
     override public List<HexCell> GetPossibleMovementTurns()
     {
+        visited.Clear();
         List<HexCell> ans = new List<HexCell>();
         Vector3[] basis_turns = RangeOneComponent.GetBasisTurns();
         foreach (Vector3 turn in basis_turns)
