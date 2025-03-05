@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 /*ВЫБРАН СОХАД: зеленым подсвечиваются все гексы в радиусе 2 за исключением тех, на которых стоят другие звероники. 
 Если СОХАД граничит с любым другим звероником и по направлению от Сохада к этому зверонику следующий гекс свободен, 
@@ -13,11 +11,14 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Sohad : Abobus
 {
-
-    private List<HexCoordinates> visited;
+    public List<HexCell> visited;
     public Sohad()
     {
-        visited = new List<HexCoordinates>();
+        visited = new List<HexCell>();    
+    }
+    public override Type GetSkillType()
+    {
+        return typeof(SohadSkill);
     }
 
     override public List<HexCell> GetPossibleMovementTurns()
@@ -52,7 +53,7 @@ public class Sohad : Abobus
         return ans;
     }
 
-    private List<HexCell> GetSkillTurns(HexCell hc)
+    public List<HexCell> GetSkillTurns(HexCell hc)
     {
         List<HexCell> ans = new List<HexCell>();
         Vector3[] basis_turns = RangeOneComponent.GetBasisTurns();
@@ -70,7 +71,7 @@ public class Sohad : Abobus
             HexCell cell_candidate = game_manager.hex_grid.GetCellByHexCoordinates(candidate);
             if ((cell_neighbour.state == HexCell.State.abobus)
               && (cell_candidate.state == HexCell.State.empty)
-              && !visited.Contains(candidate))
+              && !visited.Contains(cell_candidate))
             {
                 ans.Add(cell_candidate);
             }

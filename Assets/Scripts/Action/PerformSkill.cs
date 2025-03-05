@@ -36,7 +36,7 @@ public class PerformSkill : IAction
         from.actions.Clear();
         var disable_ = new DisableAbobi(applied_to, abobus);
         disable_.Invoke();
-        IAction abobus_skill = (IAction)Activator.CreateInstance(abobus.action_type, applied_to, abobus);
+        IAction abobus_skill = (IAction)Activator.CreateInstance(abobus.GetSkillType(), applied_to, abobus);
         abobus_skill.Invoke();
         applied_to.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.highlighted_blue);
     }

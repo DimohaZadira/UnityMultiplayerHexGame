@@ -35,6 +35,7 @@ public class SlongSkill : IAction
         Debug.Log("Slong invokes skill");
         if (game_manager.selected_abobus == null)
         {
+            throw new ShitHappenedException();
             SelectAbobus select_abobus = new SelectAbobus(abobus.cell, abobus);
             select_abobus.Invoke();
         }
