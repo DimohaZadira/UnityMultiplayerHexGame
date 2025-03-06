@@ -65,7 +65,7 @@ public class Sohad : Abobus
 
             if (game_manager.hex_grid.CheckHexCoordsOutOfBounds(neighbour) || game_manager.hex_grid.CheckHexCoordsOutOfBounds(candidate))
             {
-                break;
+                continue;
             }
 
             HexCell cell_neighbour = game_manager.hex_grid.GetCellByHexCoordinates(neighbour);
