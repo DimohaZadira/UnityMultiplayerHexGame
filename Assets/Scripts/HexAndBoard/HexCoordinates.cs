@@ -37,7 +37,7 @@ public struct HexCoordinates : IEquatable<HexCoordinates>{
     {
         return new HexCoordinates(-y - z, z);
     }
-
+ 
     public int Y {
 		get {
 			return -X - Z;

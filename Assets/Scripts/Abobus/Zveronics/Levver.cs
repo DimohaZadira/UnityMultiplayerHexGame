@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,10 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Levver : Abobus
 {
+    public override Type GetSkillType()
+    {
+        throw new NotImplementedException();
+    }
     override public List<HexCell> GetPossibleMovementTurns()
     {
         return GetPossibleTurns(cell, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
@@ -29,4 +34,5 @@ public class Levver : Abobus
         return ans;
     }
 
+    
 }

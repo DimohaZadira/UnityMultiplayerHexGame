@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     private TouchControls touchControls;
     public TextMeshProUGUI team_turn_text;
     public Abobus selected_abobus;
-    public bool moved_this_turn, started_skill_perform;
+    public bool moved_this_turn, skill_started;
 
     public enum Team {
         blue = 0, 
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         foreach(GameObject abobus_in_team in abobi[team_turn]) {
             if (abobus_in_team.GetComponent<Abobus>() != except) {
                 Abobus abobus = abobus_in_team.GetComponent<Abobus>();
-                if (!moved_this_turn) {
+                if (!moved_this_turn & !skill_started) {
                     abobus.cell.actions.AddLast(new HighlightMovement(abobus.cell));
                     abobus.cell.actions.AddLast(new HighlightSkillTrigger(abobus.cell));
                     abobus.cell.actions.AddLast(new SelectAbobus(abobus.cell, abobus));
@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
         }
         selected_abobus = null;
         moved_this_turn = false;
-        started_skill_perform = false;
+        skill_started = false;
         ClearAllHighlightedCells();
         ClearAllActions();
 
@@ -106,46 +106,27 @@ public class GameManager : MonoBehaviour
     //Buffer // Kaymanch // Levver // Medver // Primar // Slong // Sohad // Volcher
     void SpawnAbobi ()
     {
-        GameObject abobus_go = SpawnAbobus<Buffer>(Resources.Load("Abobi/RookPrefab"), new Vector2(5, 9), Team.blue, new string("cyan"));
-        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.cyan;
+        GameObject abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/RookPrefab"), new Vector2(5, 9), Team.blue, "Blue Sohad 1");
+        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
         
-        abobus_go = SpawnAbobus<Medver>(Resources.Load("Abobi/QueenPrefab"), new Vector2(5, 10), Team.blue,"blue");
+        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/QueenPrefab"), new Vector2(5, 8), Team.blue, "Blue Sohad 2");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/PawnPrefab"), new Vector2(5, 11), Team.blue,"lightblue");
-        abobus_go.GetComponentInChildren<Renderer>().material.color = new Color(0.038f, 0.574f, 1.000f);
-        abobi[Team.blue].Add(abobus_go);
+        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/PawnPrefab"), new Vector2(6, 7), Team.blue,"Yellow Sohad 1");
+        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
+        abobi[Team.yellow].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Kaymanch>(Resources.Load("Abobi/BishopPrefab"), new Vector2(4, 11), Team.blue, "purple");
-        abobus_go.GetComponentInChildren<Renderer>().material.color = new Color(0.372f,0.109f,1.000f);
-        abobi[Team.blue].Add(abobus_go);  
-        abobus_go.GetComponent<Abobus>().cell.Refresh();
-
-        
-        abobus_go = SpawnAbobus<Medver>(Resources.Load("Abobi/QueenPrefab"), new Vector2(4, 9), Team.yellow, "yellow");
+        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/BishopPrefab"), new Vector2(7, 8), Team.blue, "Yellow Sohad 2");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
-
-        abobus_go = SpawnAbobus<Buffer>(Resources.Load("Abobi/RookPrefab"), new Vector2(4, 8), Team.yellow, "red");
-        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.red;
-        abobi[Team.yellow].Add(abobus_go);  
-        abobus_go.GetComponent<Abobus>().cell.Refresh();
-
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/PawnPrefab"), new Vector2(4, 7), Team.yellow, "orange");
-        abobus_go.GetComponentInChildren<Renderer>().material.color = new Color(1.0f, 0.295f, 0.004f);
-        abobi[Team.yellow].Add(abobus_go);  
-        abobus_go.GetComponent<Abobus>().cell.Refresh();
-
-        abobus_go = SpawnAbobus<Kaymanch>(Resources.Load("Abobi/BishopPrefab"), new Vector2(5, 7), Team.yellow, "lime");
-        abobus_go.GetComponentInChildren<Renderer>().material.color = new Color(1.000f,0.998f,0.364f);
-        abobi[Team.yellow].Add(abobus_go);  
-        abobus_go.GetComponent<Abobus>().cell.Refresh();
+        
+        
 
 
     }
@@ -172,10 +153,10 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
-        teams_num = System.Enum.GetNames(typeof(Team)).Length;
+        teams_num = Enum.GetNames(typeof(Team)).Length;
 
         abobi = new Dictionary<Team, List<GameObject>>();
-        foreach (Team team in System.Enum.GetValues(typeof(Team))) {
+        foreach (Team team in Enum.GetValues(typeof(Team))) {
             abobi.Add(team, new List<GameObject>());
         }
 

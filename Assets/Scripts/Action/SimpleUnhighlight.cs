@@ -7,6 +7,7 @@ public class SimpleUnhighlight : IAction
     private List<HexCell> to_unhighligt;
     public SimpleUnhighlight (HexCell applied_to, List<HexCell> to_unhighligt)
     {
+        game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
         this.applied_to = applied_to;
         this.to_unhighligt = to_unhighligt;
     }
@@ -28,6 +29,10 @@ public class SimpleUnhighlight : IAction
     public void Invoke()
     {
         Debug.Log("Simply unhighlight");
+        if (to_unhighligt is null || to_unhighligt.Count == 0) {
+            game_manager.ClearAllHighlightedCells();
+            return;
+        }
         foreach (HexCell cell in to_unhighligt) {
             cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
         }

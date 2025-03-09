@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 /*ВЫБРАН БАФФЕР: зеленым подсвечиваются все гексы в радиусе 2 за исключением тех, на которых стоят другие звероники. 
 Если БАФФЕР граничит с другим звероником (кроме КАЙМАНЧА), то гекс с соседом подсвечивается желтым. 
 При нажатии на него желтым подсвечиваются все гексы в радиусе 1 от выбранного. 
@@ -10,9 +11,9 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Buffer : Abobus
 {
-    public Buffer()
+    public override Type GetSkillType()
     {
-        action_type = typeof(BufferSkill);
+        return typeof(BufferSkill);
     }
 
     override public List<HexCell> GetPossibleMovementTurns()

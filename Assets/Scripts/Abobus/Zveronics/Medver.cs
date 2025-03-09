@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 /*ВЫБРАН МЕДВЕР: зелёным подсвечиваются все гексы в радиусе 1 за исключением тех, на которых стоят другие звероники. 
 Гексы и силуэты всех звероников, граничащих с МЕДВЕРОМ, и гекс, на котором стоит сам МЕДВЕР, подсвечиваются жёлтым, 
 и между всеми соседними стоят обоюдные стрелочки. После клика на любую пару подсвеченных гексов звероники, 
@@ -8,9 +9,9 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Medver : Abobus
 {
-    public Medver()
+    public override Type GetSkillType()
     {
-        action_type = typeof(MedverSkill);
+        return typeof(MedverSkill);
     }
 
     override public List<HexCell> GetPossibleMovementTurns()
