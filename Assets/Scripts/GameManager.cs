@@ -116,19 +116,20 @@ public class GameManager : MonoBehaviour
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/PawnPrefab"), new Vector2(6, 7), Team.blue,"Yellow Sohad 1");
+        abobus_go = SpawnAbobus<Levver>(Resources.Load("Abobi/QueenPrefab"), new Vector2(6, 8), Team.blue, "Blue Levver");
+        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
+        abobi[Team.blue].Add(abobus_go);
+        abobus_go.GetComponent<Abobus>().cell.Refresh();
+
+        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/PawnPrefab"), new Vector2(6, 7), Team.yellow,"Yellow Sohad 1");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/BishopPrefab"), new Vector2(7, 8), Team.blue, "Yellow Sohad 2");
+        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/BishopPrefab"), new Vector2(7, 8), Team.yellow, "Yellow Sohad 2");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
-        
-        
-
-
     }
     GameObject SpawnAbobus<T>(UnityEngine.Object original, Vector2 hex_coords_vec, Team team, String name)
     where T:UnityEngine.Component
