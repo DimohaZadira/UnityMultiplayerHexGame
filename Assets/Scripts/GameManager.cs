@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     public void EnableAbobi(Abobus except = null)
     {
         foreach(GameObject abobus_in_team in abobi[team_turn]) {
@@ -106,27 +107,40 @@ public class GameManager : MonoBehaviour
     //Buffer // Kaymanch // Levver // Medver // Primar // Slong // Sohad // Volcher
     void SpawnAbobi ()
     {
-        GameObject abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/RookPrefab"), new Vector2(5, 9), Team.blue, "Blue Sohad 1");
+        // Спавним Sohad для синей команды
+        GameObject abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/RookPrefab"), new Vector2(5, 9), Team.blue, "Blue Sohad");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
         
-        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/QueenPrefab"), new Vector2(5, 8), Team.blue, "Blue Sohad 2");
+        // Спавним 3 примара для синей команды
+        abobus_go = SpawnAbobus<Primar>(Resources.Load("Abobi/QueenPrefab"), new Vector2(5, 8), Team.blue, "Blue Primar 1");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Levver>(Resources.Load("Abobi/QueenPrefab"), new Vector2(6, 8), Team.blue, "Blue Levver");
+        abobus_go = SpawnAbobus<Primar>(Resources.Load("Abobi/QueenPrefab"), new Vector2(6, 8), Team.blue, "Blue Primar 2");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/PawnPrefab"), new Vector2(6, 7), Team.yellow,"Yellow Sohad 1");
+        abobus_go = SpawnAbobus<Primar>(Resources.Load("Abobi/QueenPrefab"), new Vector2(6, 7), Team.blue, "Blue Primar 3");
+        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
+        abobi[Team.blue].Add(abobus_go);
+        abobus_go.GetComponent<Abobus>().cell.Refresh();
+
+        // Спавним 3 примара для желтой команды
+        abobus_go = SpawnAbobus<Primar>(Resources.Load("Abobi/QueenPrefab"), new Vector2(7, 8), Team.yellow, "Yellow Primar 1");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Sohad>(Resources.Load("Abobi/BishopPrefab"), new Vector2(7, 8), Team.yellow, "Yellow Sohad 2");
+        abobus_go = SpawnAbobus<Primar>(Resources.Load("Abobi/QueenPrefab"), new Vector2(7, 7), Team.yellow, "Yellow Primar 2");
+        abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
+        abobi[Team.yellow].Add(abobus_go);  
+        abobus_go.GetComponent<Abobus>().cell.Refresh();
+
+        abobus_go = SpawnAbobus<Primar>(Resources.Load("Abobi/QueenPrefab"), new Vector2(8, 7), Team.yellow, "Yellow Primar 3");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
