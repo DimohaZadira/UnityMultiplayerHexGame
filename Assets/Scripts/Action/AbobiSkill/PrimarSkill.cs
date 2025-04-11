@@ -11,6 +11,7 @@ public class PrimarSkill : IAction {
     private readonly Primar primar;
     private readonly GameManager game_manager;
     private HexCoordinates initial_position;
+    private HexCell start_cell;
 
     public PrimarSkill(HexCell target_cell, Primar primar)
     {
@@ -18,6 +19,7 @@ public class PrimarSkill : IAction {
         this.primar = primar;
         game_manager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
         initial_position = primar.cell.hex_coordinates;
+        start_cell = game_manager.hex_grid.GetCellByHexCoordinates(initial_position);
     }
 
     public HexCell AppliedTo 
@@ -68,11 +70,17 @@ public class PrimarSkill : IAction {
             
             // Подсвечиваем свободные клетки зеленым
             List<HexCell> empty_cells = primar.GetPossibleTurns(target_cell, RangeOneComponent.GetBasisTurns(), HexCell.State.empty);
-            
+        
+            if (!empty_cells.Contains(start_cell))
+            {
+                empty_cells.Add(start_cell);
+            }
+        
             // Подсвечиваем звероников желтым (исключая посещенные)
             List<HexCell> abobi_cells = primar.GetPossibleTurns(target_cell, RangeOneComponent.GetBasisTurns(), HexCell.State.abobus)
-                .Where(cell => !primar.visited.Contains(cell.hex_coordinates))
+                .Where(cell => !primar.visited.Contains(cell.hex_coordinates) && !cell.hex_coordinates.Equals(initial_position))
                 .ToList();
+                
             if (empty_cells.Count == 0 && abobi_cells.Count == 0)
             {
                 primar.MoveToHexCoordinates(initial_position);
