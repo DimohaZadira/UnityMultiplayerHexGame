@@ -393,6 +393,9 @@ MonoBehaviour:
   selected_abobus: {fileID: 0}
   moved_this_turn: 0
   started_skill_perform: 0
+  selected_abobus: {fileID: 0}
+  moved_this_turn: 0
+  started_skill_perform: 0
   team_turn: 0
 --- !u!4 &845149906
 Transform:
@@ -1014,6 +1017,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4740987696240139594, guid: cff526d2095523141b400014406b9fa8,
+        type: 3}
+      propertyPath: state
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5611295950084657667, guid: cff526d2095523141b400014406b9fa8,
+        type: 3}
+      propertyPath: state
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9211003566415576202, guid: cff526d2095523141b400014406b9fa8,
         type: 3}

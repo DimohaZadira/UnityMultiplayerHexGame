@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     private TouchControls touchControls;
     public TextMeshProUGUI team_turn_text;
     public Abobus selected_abobus;
-    public bool moved_this_turn, started_skill_perform;
+    public bool moved_this_turn, skill_started;
 
     public enum Team {
         blue = 0, 
@@ -50,12 +50,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     public void EnableAbobi(Abobus except = null)
     {
         foreach(GameObject abobus_in_team in abobi[team_turn]) {
             if (abobus_in_team.GetComponent<Abobus>() != except) {
                 Abobus abobus = abobus_in_team.GetComponent<Abobus>();
-                if (!moved_this_turn) {
+                if (!moved_this_turn & !skill_started) {
                     abobus.cell.actions.AddLast(new HighlightMovement(abobus.cell));
                     abobus.cell.actions.AddLast(new HighlightSkillTrigger(abobus.cell));
                     abobus.cell.actions.AddLast(new SelectAbobus(abobus.cell, abobus));
@@ -98,7 +99,7 @@ public class GameManager : MonoBehaviour
         }
         selected_abobus = null;
         moved_this_turn = false;
-        started_skill_perform = false;
+        skill_started = false;
         ClearAllHighlightedCells();
         ClearAllActions();
 
@@ -120,7 +121,8 @@ public class GameManager : MonoBehaviour
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
         
-        abobus_go = SpawnAbobus<Medver>(Resources.Load(MedverPrefabPath), new Vector2(5, 10), Team.blue,"blue");
+        // Спавним 3 примара для синей команды
+        abobus_go = SpawnAbobus<Primar>(Resources.Load(MedverPrefabPath), new Vector2(5, 8), Team.blue, "Blue Primar 1");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
@@ -138,7 +140,7 @@ public class GameManager : MonoBehaviour
         
         abobus_go = SpawnAbobus<Medver>(Resources.Load(MedverPrefabPath), new Vector2(4, 9), Team.yellow, "yellow");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
-        abobi[Team.yellow].Add(abobus_go);  
+        abobi[Team.yellow].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
         abobus_go = SpawnAbobus<Buffer>(Resources.Load(BufferPrefabPath), new Vector2(4, 8), Team.yellow, "red");
@@ -179,10 +181,10 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
-        teams_num = System.Enum.GetNames(typeof(Team)).Length;
+        teams_num = Enum.GetNames(typeof(Team)).Length;
 
         abobi = new Dictionary<Team, List<GameObject>>();
-        foreach (Team team in System.Enum.GetValues(typeof(Team))) {
+        foreach (Team team in Enum.GetValues(typeof(Team))) {
             abobi.Add(team, new List<GameObject>());
         }
 

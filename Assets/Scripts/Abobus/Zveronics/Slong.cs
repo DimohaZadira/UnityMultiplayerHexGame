@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 /*ВЫБРАН СЛОНГ: зеленым подсвечиваются все гексы в радиусе 1 за исключением тех, на которых стоят другие звероники. 
 Если СЛОНГ граничит с противником, гекс, на котором стоит противник, подсвечивается желтым 
 (если противник не КАЙМАНЧ, гекс с КАЙМАНЧЕМ не подсвечивается). 
@@ -13,9 +14,9 @@ using UnityEngine;
 Когда продолжение хода будет невозможно, на экран выводится символ «конец хода».*/
 public class Slong : Abobus
 {
-    public Slong()
+    public override Type GetSkillType()
     {
-        action_type = typeof(SlongSkill);
+        return typeof(SlongSkill);
     }
 
     override public List<HexCell> GetPossibleMovementTurns()

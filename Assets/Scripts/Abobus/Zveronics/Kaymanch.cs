@@ -1,6 +1,5 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 /*ВЫБРАН КАЙМАНЧ: зеленым подсвечиваются все гексы в радиусе 1 за исключением тех, на которых стоят другие звероники. 
 Если КАЙМАНЧ граничит с союзным звероником, то гекс с этим союзником подсвечивается желтым. 
@@ -10,9 +9,9 @@ using UnityEngine;
 на экран выводится символ «конец хода».*/
 public class Kaymanch : Abobus
 {
-    public Kaymanch()
+    public override Type GetSkillType()
     {
-        action_type = typeof(KaymanchSkill);
+        return typeof(KaymanchSkill);
     }
 
     override public List<HexCell> GetPossibleMovementTurns()

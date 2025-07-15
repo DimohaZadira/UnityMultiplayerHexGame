@@ -7,7 +7,8 @@ public class HighlightableCell : MonoBehaviour
     public enum State {
         default_, highlighted_red, highlighted_blue, highlighted_green, highlighted_yellow
     };
-    private State state;
+    [SerializeField]
+    private State state = State.default_;
     public bool is_highlighted;
 
     public State GetState()

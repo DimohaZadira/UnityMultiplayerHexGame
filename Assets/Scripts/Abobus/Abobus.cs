@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 
 public abstract class Abobus : MonoBehaviour
 {
-    public Type action_type;
     public GameManager game_manager;
     public GameManager.Team team;
     public HexCell cell;
@@ -14,6 +13,7 @@ public abstract class Abobus : MonoBehaviour
     public String abobus_name;
     public abstract List<HexCell> GetPossibleMovementTurns();
     public abstract List<HexCell> GetPossibleSkillTriggerTurns();
+    public abstract Type GetSkillType();
 
     public void Init(GameManager gm, GameManager.Team team_, HexCoordinates start_hc, String name)
     {

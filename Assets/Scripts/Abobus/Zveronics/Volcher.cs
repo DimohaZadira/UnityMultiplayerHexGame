@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 /*ВЫБРАН ВОЛЧЕР: зелёным подсвечиваются все гексы в радиусе 2 за исключением тех, на которых стоят другие звероники. 
 Если по прямой от ВОЛЧЕРА находится другой звероник, то предпоследний по направлению от ВОЛЧЕРА к этому зверонику 
 гекс подсвечивается желтым. При клике на подсвеченный гекс ВОЛЧЕР перемещается на него. 
@@ -10,7 +11,11 @@ using UnityEngine;
 на экран выводится символ «конец хода».*/
 public class Volcher : Abobus
 {
-
+    public override Type GetSkillType()
+    {
+        // return typeof(VolcherSkill);
+        throw new NotImplementedException();
+    }
     override public List<HexCell> GetPossibleMovementTurns()
     {
         return GetPossibleTurns(cell, RangeTwoComponent.GetBasisTurns(), HexCell.State.empty);
