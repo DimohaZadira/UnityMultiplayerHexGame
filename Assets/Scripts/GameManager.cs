@@ -25,11 +25,20 @@ public class GameManager : MonoBehaviour
     public static int teams_num; 
     public Team team_turn;
     private static int cur_turn = -1;
-
+    
+    private string MedverPrefabPath = "Zveronics/Medver";
+    private string LevverPrefabPath = "Zveronics/Levver";
+    private string PrimarPrefabPath = "Zveronics/Primar";
+    private string SlongPrefabPath = "Zveronics/Slong";
+    private string SohadPrefabPath = "Zveronics/Sohad";
+    private string BufferPrefabPath = "Zveronics/Buffer";
+    private string KaymanchPrefabPath = "Zveronics/Kaymanch";
+    private string VolcherPrefabPath = "Zveronics/Volcher";
     
     public void ClearAllHighlightedCells()
     {
-        foreach (HexCell hex_cell in hex_grid.GetAllCells()) {
+        foreach (HexCell hex_cell in hex_grid.GetAllCells())
+        {
             hex_cell.GetComponent<HighlightableCell>().SetState(HighlightableCell.State.default_);
         }
     }
@@ -106,48 +115,46 @@ public class GameManager : MonoBehaviour
     //Buffer // Kaymanch // Levver // Medver // Primar // Slong // Sohad // Volcher
     void SpawnAbobi ()
     {
-        GameObject abobus_go = SpawnAbobus<Buffer>(Resources.Load("Abobi/RookPrefab"), new Vector2(5, 9), Team.blue, new string("cyan"));
+        GameObject abobus_go = SpawnAbobus<Buffer>(Resources.Load(BufferPrefabPath), new Vector2(5, 9), Team.blue, new string("cyan"));
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.cyan;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
         
-        abobus_go = SpawnAbobus<Medver>(Resources.Load("Abobi/QueenPrefab"), new Vector2(5, 10), Team.blue,"blue");
+        abobus_go = SpawnAbobus<Medver>(Resources.Load(MedverPrefabPath), new Vector2(5, 10), Team.blue,"blue");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.blue;
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/PawnPrefab"), new Vector2(5, 11), Team.blue,"lightblue");
+        abobus_go = SpawnAbobus<Slong>(Resources.Load(SlongPrefabPath), new Vector2(5, 11), Team.blue,"lightblue");
         abobus_go.GetComponentInChildren<Renderer>().material.color = new Color(0.038f, 0.574f, 1.000f);
         abobi[Team.blue].Add(abobus_go);
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Kaymanch>(Resources.Load("Abobi/BishopPrefab"), new Vector2(4, 11), Team.blue, "purple");
+        abobus_go = SpawnAbobus<Kaymanch>(Resources.Load(KaymanchPrefabPath), new Vector2(4, 11), Team.blue, "purple");
         abobus_go.GetComponentInChildren<Renderer>().material.color = new Color(0.372f,0.109f,1.000f);
         abobi[Team.blue].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
         
-        abobus_go = SpawnAbobus<Medver>(Resources.Load("Abobi/QueenPrefab"), new Vector2(4, 9), Team.yellow, "yellow");
+        abobus_go = SpawnAbobus<Medver>(Resources.Load(MedverPrefabPath), new Vector2(4, 9), Team.yellow, "yellow");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.yellow;
         abobi[Team.yellow].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Buffer>(Resources.Load("Abobi/RookPrefab"), new Vector2(4, 8), Team.yellow, "red");
+        abobus_go = SpawnAbobus<Buffer>(Resources.Load(BufferPrefabPath), new Vector2(4, 8), Team.yellow, "red");
         abobus_go.GetComponentInChildren<Renderer>().material.color = Color.red;
         abobi[Team.yellow].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Slong>(Resources.Load("Abobi/PawnPrefab"), new Vector2(4, 7), Team.yellow, "orange");
+        abobus_go = SpawnAbobus<Slong>(Resources.Load(SlongPrefabPath), new Vector2(4, 7), Team.yellow, "orange");
         abobus_go.GetComponentInChildren<Renderer>().material.color = new Color(1.0f, 0.295f, 0.004f);
         abobi[Team.yellow].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
 
-        abobus_go = SpawnAbobus<Kaymanch>(Resources.Load("Abobi/BishopPrefab"), new Vector2(5, 7), Team.yellow, "lime");
+        abobus_go = SpawnAbobus<Kaymanch>(Resources.Load(VolcherPrefabPath), new Vector2(5, 7), Team.yellow, "lime");
         abobus_go.GetComponentInChildren<Renderer>().material.color = new Color(1.000f,0.998f,0.364f);
         abobi[Team.yellow].Add(abobus_go);  
         abobus_go.GetComponent<Abobus>().cell.Refresh();
-
-
     }
     GameObject SpawnAbobus<T>(UnityEngine.Object original, Vector2 hex_coords_vec, Team team, String name)
     where T:UnityEngine.Component
