@@ -392,10 +392,7 @@ MonoBehaviour:
   team_turn_text: {fileID: 554471381}
   selected_abobus: {fileID: 0}
   moved_this_turn: 0
-  started_skill_perform: 0
-  selected_abobus: {fileID: 0}
-  moved_this_turn: 0
-  started_skill_perform: 0
+  skill_started: 0
   team_turn: 0
 --- !u!4 &845149906
 Transform:
@@ -961,7 +958,7 @@ PrefabInstance:
     - target: {fileID: 711467091955863176, guid: cff526d2095523141b400014406b9fa8,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2673622673561044208, guid: cff526d2095523141b400014406b9fa8,
         type: 3}
